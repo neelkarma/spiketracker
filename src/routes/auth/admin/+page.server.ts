@@ -1,5 +1,8 @@
 import { ADMIN_PASSWORD } from "$env/static/private";
-import { storeJWT } from "$lib/server/session";
+import {
+  sessionTokenPayloadFromAdmin,
+  signSessionToken,
+} from "$lib/server/session.js";
 import { fail, redirect } from "@sveltejs/kit";
 
 export const actions = {
@@ -12,7 +15,13 @@ export const actions = {
     if (password !== ADMIN_PASSWORD)
       return fail(401, { reason: "Incorrect password" });
 
-    storeJWT(cookies);
+    const payload = sessionTokenPayloadFromAdmin();
+    const sessionToken = signSessionToken(payload);
+    cookies.set("Authorization", sessionToken, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 90,
+    });
+
     redirect(302, "/");
   },
 };

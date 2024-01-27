@@ -1,4 +1,4 @@
-import { client } from "$lib/server/sbhs.js";
+import { getAuthorizationUrl } from "$lib/server/sbhs.js";
 import { redirect } from "@sveltejs/kit";
 import { STATE_COOKIE } from "./consts.js";
 
@@ -12,21 +12,12 @@ export const actions = {
       maxAge: 60 * 60,
     });
 
-    redirect(
-      302,
-      client.authorizationUrl({
-        scope: "all-ro",
-        state,
-      })
-    );
+    redirect(302, getAuthorizationUrl(state));
   },
 
   // logout (both students and coaches) - deletes the auth cookie
   logout: async ({ cookies }) => {
-    cookies.delete("Authorization", {
-      path: "/",
-      httpOnly: true,
-    });
+    cookies.delete("Authorization", { path: "/" });
     redirect(302, "/");
   },
 

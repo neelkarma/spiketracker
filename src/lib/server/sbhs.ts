@@ -1,16 +1,78 @@
 import { CLIENT_ID, CLIENT_SECRET } from "$env/static/private";
 import { API_BASE, WEBSITE_URL } from "$lib/server/consts";
-import { Issuer } from "openid-client";
+import { fetch } from "undici";
 
-const issuer = new Issuer({
-  issuer: API_BASE,
-  authorization_endpoint: `${API_BASE}/authorize`,
-  token_endpoint: `${API_BASE}/token`,
-});
+export const USER_INFO_URL = API_BASE + "/details/userinfo.json";
+const REDIRECT_URI = WEBSITE_URL + "/auth/callback";
 
-export const client = new issuer.Client({
-  client_id: CLIENT_ID,
-  client_secret: CLIENT_SECRET,
-  redirect_uris: [`${WEBSITE_URL}/auth/callback`],
-  response_types: ["code"],
-});
+export interface TokenEndpointResponse {
+  token_type: "Bearer";
+  expires_in: number;
+  access_token: string;
+  refresh_token: string;
+}
+
+export const getAuthorizationUrl = (state: string) => {
+  return (
+    API_BASE +
+    "/authorize?" +
+    new URLSearchParams({
+      response_type: "code",
+      client_id: CLIENT_ID,
+      redirect_uri: REDIRECT_URI,
+      scope: "all-ro",
+      state,
+    }).toString()
+  );
+};
+
+export const refreshTokenSet = async (
+  refreshToken: string
+): Promise<TokenEndpointResponse> => {
+  const res = await fetch(API_BASE + "/token", {
+    method: "POST",
+    body: new URLSearchParams({
+      grant_type: "authorization_code",
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      redirect_uri: REDIRECT_URI,
+      code: refreshToken,
+    }),
+  });
+  if (!res.ok)
+    throw new Error(
+      "Failed to refresh access token. API Response: " + (await res.text())
+    );
+  return (await res.json()) as TokenEndpointResponse;
+};
+
+export const getStudentInfo = async (
+  accessToken: string
+): Promise<{
+  id: number;
+  givenName: string;
+  surname: string;
+  gradYear: number;
+}> => {
+  const res = await fetch(USER_INFO_URL, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!res.ok)
+    throw new Error(
+      "Failed to get user info. API Response: " + (await res.text())
+    );
+
+  const { studentId, givenName, surname, yearGroup } =
+    (await res.json()) as any;
+  const gradYear = new Date().getFullYear() + 12 - parseInt(yearGroup);
+
+  return {
+    id: parseInt(studentId),
+    givenName,
+    surname,
+    gradYear,
+  };
+};
