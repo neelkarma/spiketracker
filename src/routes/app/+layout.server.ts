@@ -1,4 +1,6 @@
-import { getPool } from "$lib/server/db";
+import { db } from "$lib/server/db";
+import { players } from "$lib/server/db/schema";
+import { eq } from "drizzle-orm";
 import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async ({ locals }) => {
@@ -10,14 +12,13 @@ export const load: LayoutServerLoad = async ({ locals }) => {
       name: "Coach",
     };
   else {
-    const pool = await getPool();
-    const res = await pool.query("SELECT name FROM Player where id = $1", [
-      user.id,
-    ]);
+    const player = await db.query.players.findFirst({
+      where: eq(players.id, user.id),
+    });
     return {
       admin: false,
       id: user.id,
-      name: res.rows[0].name,
+      name: player?.firstName,
     };
   }
 };

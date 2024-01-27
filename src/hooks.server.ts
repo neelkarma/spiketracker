@@ -1,7 +1,9 @@
 import { building } from "$app/environment";
-import { getPool } from "$lib/server/db";
+import { db } from "$lib/server/db";
+import { players } from "$lib/server/db/schema";
 import { verifySessionToken } from "$lib/server/session";
 import { isRedirect, redirect, type Handle } from "@sveltejs/kit";
+import { eq } from "drizzle-orm";
 import { Agent } from "undici";
 
 if (!building) {
@@ -36,12 +38,10 @@ export const handle = (async ({ event, resolve }) => {
   if (event.locals.user.admin) return resolve(event);
 
   try {
-    const pool = await getPool();
-    const res = await pool.query("SELECT name FROM Player WHERE id = $1", [
-      event.locals.user.id,
-    ]);
-
-    if (res.rowCount === 0 && event.url.pathname.startsWith("/app")) {
+    const player = await db.query.players.findFirst({
+      where: eq(players.id, event.locals.user.id),
+    });
+    if (!player) {
       // player not registered
       event.cookies.delete("Authorization", { path: "/" });
       redirect(302, "/?error=not_registered");
