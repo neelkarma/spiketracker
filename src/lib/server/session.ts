@@ -1,6 +1,6 @@
 import { SESSION_SECRET } from "$env/static/private";
 import jwt from "jsonwebtoken";
-import { getStudentInfo, type TokenEndpointResponse } from "./sbhs";
+import { getStudentId, type TokenEndpointResponse } from "./sbhs";
 
 export type SessionTokenPayload =
   | {
@@ -17,7 +17,7 @@ export type SessionTokenPayload =
 export const sessionTokenPayloadFromOAuth = async (
   tokenSet: TokenEndpointResponse
 ): Promise<SessionTokenPayload> => {
-  const { id } = await getStudentInfo(tokenSet.access_token);
+  const id = await getStudentId(tokenSet.access_token);
 
   const payload: SessionTokenPayload = {
     admin: false,

@@ -46,14 +46,7 @@ export const refreshTokenSet = async (
   return (await res.json()) as TokenEndpointResponse;
 };
 
-export const getStudentInfo = async (
-  accessToken: string
-): Promise<{
-  id: number;
-  givenName: string;
-  surname: string;
-  gradYear: number;
-}> => {
+export const getStudentId = async (accessToken: string) => {
   const res = await fetch(USER_INFO_URL, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -65,14 +58,7 @@ export const getStudentInfo = async (
       "Failed to get user info. API Response: " + (await res.text())
     );
 
-  const { studentId, givenName, surname, yearGroup } =
-    (await res.json()) as any;
-  const gradYear = new Date().getFullYear() + 12 - parseInt(yearGroup);
+  const { studentId } = (await res.json()) as any;
 
-  return {
-    id: parseInt(studentId),
-    givenName,
-    surname,
-    gradYear,
-  };
+  return parseInt(studentId);
 };
