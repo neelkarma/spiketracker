@@ -5,6 +5,7 @@ import { STATE_COOKIE } from "./consts.js";
 export const actions = {
   // Login for students - redirects to SBHS OAuth
   sbhsLogin: async ({ cookies }) => {
+    // this is done to prevent CSRF attacks
     const state = crypto.randomUUID();
     cookies.set(STATE_COOKIE, state, {
       path: "/",

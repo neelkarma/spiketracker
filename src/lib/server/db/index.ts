@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import * as schema from "./schema";
 
+// Because `pg` is a CJS module, you need to first import the whole library and then destructure to get children, instead of importing `Pool` normally
 const { Pool } = pg;
 
 const pool = new Pool({
