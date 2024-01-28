@@ -1,4 +1,4 @@
-import { JWT_SECRET } from "$env/static/private";
+import { SESSION_SECRET } from "$env/static/private";
 import jwt from "jsonwebtoken";
 import { getStudentInfo, type TokenEndpointResponse } from "./sbhs";
 
@@ -34,11 +34,11 @@ export const sessionTokenPayloadFromAdmin = (): SessionTokenPayload => ({
 });
 
 export const signSessionToken = (payload: SessionTokenPayload): string => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "90d" });
+  return jwt.sign(payload, SESSION_SECRET, { expiresIn: "90d" });
 };
 
 export const verifySessionToken = (
   sessionToken: string
 ): SessionTokenPayload => {
-  return jwt.verify(sessionToken, JWT_SECRET) as SessionTokenPayload;
+  return jwt.verify(sessionToken, SESSION_SECRET) as SessionTokenPayload;
 };

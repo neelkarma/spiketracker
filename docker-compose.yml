@@ -11,11 +11,6 @@ services:
       - $PG_DATA_DIR:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-  adminer:
-    image: adminer:latest
-    restart: always
-    ports:
-      - "8080:8080"
   web:
     build: .
     restart: always

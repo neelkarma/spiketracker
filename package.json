@@ -8,8 +8,7 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "drizzle-kit": "drizzle-kit",
-    "migrate": "node ./scripts/migrate_db.js"
+    "db": "drizzle-kit"
   },
   "devDependencies": {
     "@sveltejs/adapter-node": "^2.1.0",
