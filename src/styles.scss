@@ -1,5 +1,5 @@
-@import "bootstrap/scss/bootstrap";
+@use "bulma/bulma.sass";
 
-.fullheight {
+.is-fullheight {
   height: 100vh;
 }

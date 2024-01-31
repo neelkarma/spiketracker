@@ -1,5 +1,4 @@
 <script lang="ts">
-  // import "bootstrap";
   import "../styles.scss";
 </script>
 

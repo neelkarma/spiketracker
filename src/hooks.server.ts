@@ -35,10 +35,8 @@ export const handle = (async ({ event, resolve }) => {
     event.cookies.delete("Authorization", { path: "/" });
     if (event.url.pathname.startsWith("/app"))
       redirect(302, "/?error=session_expired");
+    return resolve(event);
   }
-
-  // This is to appease TypeScript - this error should in theory be unreachable since we return in the catch block
-  if (!event.locals.user) throw new Error("unreachable");
 
   // Allow full access if admin
   if (event.locals.user.admin) return resolve(event);

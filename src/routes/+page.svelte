@@ -2,20 +2,16 @@
   import { page } from "$app/stores";
 </script>
 
-<div class="fullheight d-flex align-items-center justify-content-center">
-  <form
-    method="POST"
-    action="/auth?/sbhsLogin"
-    class="d-flex flex-column gap-1"
-  >
+<div class="columns is-mobile is-centered is-vcentered is-fullheight">
+  <form method="POST" action="/auth?/sbhsLogin" class="column is-half">
     {#if $page.url.searchParams.has("error")}
-      <div class="alert alert-danger" role="alert">
-        {$page.url.searchParams.get("error")}
+      <div class="notification is-danger" role="alert">
+        Error: {$page.url.searchParams.get("error")}
       </div>
     {/if}
-    <h1>SpikeTracker</h1>
-    <h5>Volleyball reporting software for SBHS.</h5>
-    <button class="btn btn-primary">Student Login</button>
-    <a class="btn btn-dark" href="/auth/admin">Coach Login</a>
+    <h1 class="title">SpikeTracker</h1>
+    <h5 class="subtitle">Volleyball reporting software for SBHS.</h5>
+    <button class="button is-primary">Student Login</button>
+    <a class="button" href="/auth/admin">Coach Login</a>
   </form>
 </div>

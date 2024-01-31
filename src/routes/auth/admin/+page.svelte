@@ -2,24 +2,30 @@
   export let form;
 </script>
 
-<div class="fullheight d-flex align-items-center justify-content-center">
-  <form
-    method="POST"
-    action="/auth/admin?/adminLogin"
-    class="d-flex flex-column gap-1"
-  >
-    <a href="/">Back</a>
+<div class="columns is-mobile is-centered is-vcentered is-fullheight">
+  <form method="POST" action="/auth/admin?/adminLogin" class="column is-half">
+    <a class="button is-link is-light mb-2" href="/">Back</a>
     {#if form?.reason}
-      <span>{form.reason}</span>
+      <span class="notification is-danger">{form.reason}</span>
     {/if}
-    <label for="password-field" class="form-label mb-0">Enter Password:</label>
-    <input
-      type="password"
-      name="password"
-      minlength={1}
-      id="password-field"
-      class="form-control"
-    />
-    <button class="btn btn-primary">Login</button>
+
+    <div class="field">
+      <label for="password-field" class="label">Enter Password:</label>
+      <div class="control">
+        <input
+          class="input"
+          type="password"
+          name="password"
+          minlength={1}
+          id="password-field"
+        />
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <button class="button is-primary">Login</button>
+      </div>
+    </div>
   </form>
 </div>
