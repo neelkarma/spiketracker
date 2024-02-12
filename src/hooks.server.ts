@@ -1,16 +1,20 @@
 import { building } from "$app/environment";
 import { db } from "$lib/server/db";
-import { players } from "$lib/server/db/schema";
 import { verifySessionToken } from "$lib/server/session";
 import { isRedirect, redirect, type Handle } from "@sveltejs/kit";
-import { eq } from "drizzle-orm";
+import type { Statement } from "better-sqlite3";
 import { Agent } from "undici";
+
+let playerCheckStmt: Statement;
 
 if (!building) {
   // @ts-expect-error - this increases the keep-alive timeout for undici, since the SBHS API can be pretty slow sometimes
   globalThis[Symbol.for("undici.globalDispatcher.1")] = new Agent({
     keepAliveTimeout: 10e3,
   });
+
+  // by referencing db we also run the code in lib/server/db.ts, which initializes the db
+  playerCheckStmt = db.prepare("SELECT id FROM players WHERE id = ?");
 }
 
 // This hook is run on every request - we use this for auth purposes.
@@ -43,9 +47,7 @@ export const handle = (async ({ event, resolve }) => {
 
   try {
     // check for a registered player with the given id
-    const player = await db.query.players.findFirst({
-      where: eq(players.id, event.locals.user.id),
-    });
+    const player = playerCheckStmt.get(event.locals.user.id);
 
     if (!player) {
       // player not registered

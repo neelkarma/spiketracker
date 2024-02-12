@@ -1,4 +1,5 @@
 <script lang="ts">
+  import NavBar from "$lib/components/NavBar.svelte";
   import "../styles.scss";
 </script>
 
@@ -6,4 +7,5 @@
   <title>SpikeTracker</title>
 </svelte:head>
 
+<NavBar />
 <slot />
