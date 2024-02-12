@@ -5,4 +5,4 @@ import { readFileSync } from "fs";
 export const db = new Database(DB_PATH);
 
 const initSql = readFileSync("schema.sql", "utf8");
-// db.exec(initSql);
+db.exec(initSql);

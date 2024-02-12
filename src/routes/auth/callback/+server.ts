@@ -10,7 +10,8 @@ import type { RequestHandler } from "./$types";
 export const GET = (async ({ url, cookies }) => {
   // verify the state cookie - this protects against xss attacks
   const state = url.searchParams.get("state");
-  if (state !== cookies.get(STATE_COOKIE)) error(403);
+  if (state !== cookies.get(STATE_COOKIE))
+    error(403, "State cookie does not match");
   cookies.delete(STATE_COOKIE, { path: "/" });
 
   // retrieve refresh token from url search params
