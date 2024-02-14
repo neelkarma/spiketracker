@@ -12,7 +12,7 @@
 - Git
 - NodeJS
 - pnpm
-- Docker
+- Python
 
 2. Clone this repo. (`git clone https://github.com/neelkarma/spiketracker`)
 3. Open the new folder in VS Code and start a new terminal.
