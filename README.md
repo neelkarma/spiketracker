@@ -16,30 +16,29 @@
 
 2. Clone this repo. (`git clone https://github.com/neelkarma/spiketracker`)
 3. Open the new folder in VS Code and start a new terminal.
-4. Create a `.env` file with the following:
+4. Create a `.env.dev` file in the `backend` folder with the following:
 
 ```
-CLIENT_SECRET=(sbhs client secret - ask neel for this)
-CLIENT_ID=(sbhs client id - ask neel for this)
-SESSION_SECRET=(32 random characters - you can keyboard mash this)
-ADMIN_PASSWORD=(the admin's password. set this to whatever you want)
-PG_PASSWORD=(the database password. set this to whatever you want)
-PG_USER=postgres
-PG_DATABASE=postgres
-PG_DATA_DIR=(the folder where db data is stored. if unsure, use ./db)
+FLASK_CLIENT_SECRET=(sbhs client secret - ask neel for this)
+FLASK_CLIENT_ID=(sbhs client id - ask neel for this)
+FLASK_SESSION_SECRET=(32 random characters - you can keyboard mash this)
+FLASK_ADMIN_PASSWORD=(the admin's password. set this to whatever you want)
+FLASK_DB_PATH=data.sqlite3
+FLASK_ORIGIN=localhost
+FLASK_BACKEND_BASE=http://localhost:5000
+FLASK_BACKEND_BASE=http://localhost:5173
 ```
-
-4. Run `docker compose build db` in the terminal.
 
 ### Start Developing
 
 1. Open the project in VS Code and create a new terminal.
-2. Run `docker compose up db`. This starts the local database.
-3. Create another terminal and run `pnpm dev`. This starts the web server.
+2. `cd backend`
+3. `flask run --debug` - This starts the backend server.
+4. Create another terminal.
+5. `cd frontend`
+6. `pnpm dev` - This starts the frontend server.
 
 ### Manually interacting with the database
 
-1. Open the project in VS Code and create a new terminal
-2. Run `docker compose up db`. This starts the local database.
-3. Create another terminal and run `pnpm db studio`. This starts a database
-   explorer web app, which you can use to add records and test queries.
+Use a tool like SQLiteBrowser to open the `data.sqlite3` file, which has all the
+data of the app.
