@@ -64,11 +64,11 @@ def refresh_token_set(refresh_token: str) -> TokenEndpointResponse:
 
     res = requests.post(
         TOKEN_URL,
-        params={
+        data={
             "grant_type": "authorization_code",
             "client_id": current_app.config["CLIENT_ID"],
             "client_secret": current_app.config["CLIENT_SECRET"],
-            "redirect_uri": current_app.config["API_BASE"] + "/auth/login/sbhs/cb",
+            "redirect_uri": current_app.config["BACKEND_BASE"] + "/auth/login/sbhs/cb",
             "code": refresh_token,
         },
     )
@@ -107,4 +107,4 @@ def get_student_id(access_token: str) -> int:
     if res.status_code != 200:
         raise ValueError(f"Failed to get user info. API Response: {res.text}")
 
-    return res.json()["id"]
+    return int(res.json()["studentId"])

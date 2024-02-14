@@ -50,7 +50,7 @@ def session_token_payload_from_oauth(
         "access_exp": int(datetime.now().timestamp()) + token_set["expires_in"],
         "refresh_token": token_set["refresh_token"],
         # 90 days - refresh token expiry
-        "exp": int(datetime.now().timetamp()) + 90 * 24 * 60 * 60,
+        "exp": int(datetime.now().timestamp()) + 90 * 24 * 60 * 60,
     }
 
 
@@ -125,7 +125,6 @@ def get_session() -> SessionTokenPayload | None:
     """
 
     token = request.cookies.get("Authorization")
-    print(request.cookies)
     if token is None:
         return None
 

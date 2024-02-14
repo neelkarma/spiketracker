@@ -1,13 +1,17 @@
 import sqlite3
 
-con = None
+_is_cold = True
 
 
 def get_db():
-    if con is None:
-        con = sqlite3.connect("data.sqlite3")
-        con.row_factory = sqlite3.Row
+    global _is_cold
+
+    con = sqlite3.connect("data.sqlite3")
+    con.row_factory = sqlite3.Row
+
+    if _is_cold:
         with open("schema.sql") as f:
             con.executescript(f.read())
+        _is_cold = False
 
     return con
