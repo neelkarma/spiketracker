@@ -33,10 +33,12 @@ FLASK_BACKEND_BASE=http://localhost:5173
 
 1. Open the project in VS Code and create a new terminal.
 2. `cd backend`
-3. `flask run --debug` - This starts the backend server.
-4. Create another terminal.
-5. `cd frontend`
-6. `pnpm dev` - This starts the frontend server.
+3. If this is your first time, run `pip install -r requirements.txt`.
+4. `flask run --debug` - This starts the backend server.
+5. Create another terminal.
+6. `cd frontend`
+7. If this is your first time, run `pnpm i`
+8. `pnpm dev` - This starts the frontend server.
 
 ### Manually interacting with the database
 
