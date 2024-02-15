@@ -3,11 +3,11 @@ import os
 from flask import Blueprint, current_app, jsonify, make_response, redirect, request
 
 from backend.db import get_db
-from backend.sbhs import get_authorization_url, get_student_id, refresh_token_set
+from backend.sbhs import get_authorization_url, refresh_token_set, verify_id_token
 from backend.session import (
     get_session,
     session_token_payload_from_admin,
-    session_token_payload_from_oauth,
+    session_token_payload_from_player,
     sign_session_token,
 )
 
@@ -39,20 +39,20 @@ def login_sbhs_callback():
         return jsonify({"success": False, "reason": "Invalid state param"}), 403
 
     # retrieve refresh token from url search params
-    refresh_token = request.args.get("code")
-    if refresh_token is None:
+    code = request.args.get("code")
+    if code is None:
         return (
-            jsonify(
-                {"success": False, "reason": "No auth code returned from SBHS API"}
-            ),
+            jsonify({"success": False, "reason": "No code returned from SBHS API"}),
             403,
         )
 
-    # get a new token set (includes access token) with refresh token
-    token_set = refresh_token_set(refresh_token)
+    # exchange code for id token
+    token_set = refresh_token_set(code)
+    id_token = token_set["id_token"]
+    id_token_payload = verify_id_token(id_token)
 
     # check that the student is registered
-    student_id = get_student_id(token_set["access_token"])
+    student_id = int(id_token_payload["student_id"])
     con = get_db()
     student = con.execute(
         "SELECT id FROM players WHERE id = ?", (student_id,)
@@ -60,8 +60,8 @@ def login_sbhs_callback():
     if student is None:
         return jsonify({"success": False, "reason": "Student not registered"}), 403
 
-    # create a session token
-    payload = session_token_payload_from_oauth(token_set)
+    # generate session token
+    payload = session_token_payload_from_player(student_id)
     session_token = sign_session_token(payload)
 
     # set the session token cookie and redirect the user back to the frontend

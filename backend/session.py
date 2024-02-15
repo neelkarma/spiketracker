@@ -1,55 +1,28 @@
 from datetime import datetime
-from typing import TypedDict
+from typing import Literal, TypedDict
 
 import jwt
 from flask import current_app, request
 
-from backend.sbhs import TokenEndpointResponse, get_student_id
-
 
 class AdminSessionTokenPayload(TypedDict):
-    admin: True
+    admin: Literal[True]
     exp: int
 
 
 class PlayerSessionTokenPayload(TypedDict):
-    admin: False
+    admin: Literal[False]
     id: int
-    access_token: str
-    access_exp: int
-    refresh_token: str
     exp: int
 
 
 SessionTokenPayload = AdminSessionTokenPayload | PlayerSessionTokenPayload
 
 
-def session_token_payload_from_oauth(
-    token_set: TokenEndpointResponse,
-) -> PlayerSessionTokenPayload:
-    """
-    Returns the payload for a player session token from the token set.
-
-    Params
-    ------
-    token_set: TokenEndpointResponse
-        The token set from the OAuth token endpoint.
-
-    Returns
-    -------
-    PlayerSessionTokenPayload
-        The payload for a player session token.
-    """
-
-    id = get_student_id(token_set["access_token"])
-
+def session_token_payload_from_player(student_id: int) -> PlayerSessionTokenPayload:
     return {
         "admin": False,
-        "id": id,
-        "access_token": token_set["access_token"],
-        "access_exp": int(datetime.now().timestamp()) + token_set["expires_in"],
-        "refresh_token": token_set["refresh_token"],
-        # 90 days - refresh token expiry
+        "id": student_id,
         "exp": int(datetime.now().timestamp()) + 90 * 24 * 60 * 60,
     }
 
