@@ -20,6 +20,19 @@ SessionTokenPayload = AdminSessionTokenPayload | PlayerSessionTokenPayload
 
 
 def session_token_payload_from_player(student_id: int) -> PlayerSessionTokenPayload:
+    """
+    Returns the payload for a player session token.
+
+    Params
+    ------
+    student_id: int
+        The player's student ID.
+
+    Returns
+    -------
+    PlayerSessionTokenPayload
+        The payload for a player session token.
+    """
     return {
         "admin": False,
         "id": student_id,
