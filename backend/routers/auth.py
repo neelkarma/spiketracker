@@ -18,6 +18,8 @@ STATE_COOKIE = "SBHS-State"
 
 @auth.get("/logout")
 def logout():
+    """Logout endpoint for both players and admins."""
+
     res = make_response()
     res.delete_cookie("Authorization")
     return res
@@ -25,6 +27,8 @@ def logout():
 
 @auth.get("/login/sbhs")
 def login_sbhs():
+    """Login endpoint for players. Redirects to SBHS OAuth."""
+
     state = os.urandom(16).hex()
     res = make_response(redirect(get_authorization_url(state)))
     res.set_cookie(STATE_COOKIE, state, max_age=60 * 60, httponly=True)
@@ -33,6 +37,8 @@ def login_sbhs():
 
 @auth.get("/login/sbhs/cb")
 def login_sbhs_callback():
+    """Callback endpoint for SBHS OAuth. Redirects back to the frontend with a session token."""
+
     # verify the state param - this protects against xss attacks
     state = request.args.get("state")
     if state != request.cookies.get(STATE_COOKIE):
@@ -79,6 +85,8 @@ def login_sbhs_callback():
 
 @auth.post("/login/admin")
 def login_admin():
+    """Login endpoint for admins (i.e. coaches/volleyball prefect)"""
+
     password = request.json.get("password")
 
     # check password
@@ -107,6 +115,13 @@ def login_admin():
 
 @auth.get("/status")
 def status():
+    """
+    Auth status endpoint - provides:
+    - whether the user is authorized
+    - whether the user is an admin
+    - the student id (if the user is a student)
+    """
+
     session = get_session()
     if session is None:
         return jsonify({"authorized": False})
