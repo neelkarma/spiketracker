@@ -5,14 +5,6 @@ CREATE TABLE IF NOT EXISTS players (
   last_name TEXT NOT NULL,
   grad_year INTEGER NOT NULL,
   
-  avg_ppg REAL NOT NULL DEFAULT 0,
-  kill_rate REAL NOT NULL DEFAULT 0,
-  pass_efficiency REAL NOT NULL DEFAULT 0,
-  total_points INTEGER NOT NULL DEFAULT 0,
-  total_atk_points INTEGER NOT NULL DEFAULT 0,
-  total_def_points INTEGER NOT NULL DEFAULT 0,
-  total_blk_points INTEGER NOT NULL DEFAULT 0,
-  total_srv_points INTEGER NOT NULL DEFAULT 0,
 );
 
 CREATE TABLE IF NOT EXISTS teams (
@@ -21,11 +13,6 @@ CREATE TABLE IF NOT EXISTS teams (
   year INTEGER NOT NULL,
   archived BOOLEAN NOT NULL DEFAULT 0
 
-  wins INTEGER NOT NULL DEFAULT 0,
-  losses INTEGER NOT NULL DEFAULT 0,
-  set_ratio REAL NOT NULL DEFAULT 0,
-  kill_rate REAL NOT NULL DEFAULT 0,
-  pass_efficiency REAL NOT NULL DEFAULT 0,
 );
 
 CREATE TABLE IF NOT EXISTS matches (
@@ -63,31 +50,28 @@ CREATE TABLE IF NOT EXISTS team_players (
   PRIMARY KEY (team_id, player_id)
 );
 
--- Triggers
-CREATE TRIGGER IF NOT EXISTS update_player_on_insert
-AFTER INSERT ON stats
-BEGIN
-  UPDATE players SET
-  avg_ppg =
-    (SELECT COUNT(*) FROM stats WHERE player_id = NEW.player_id)
-    / (SELECT COUNT(*) FROM matches WHERE
-    team_id IN (SELECT team_id FROM player_teams WHERE player_id = NEW.player_id)),
-  kill_rate = 0, -- ask arnav about how to calculate kr
-  pass_efficiency = 0, -- ask arnav about how to calculate pef
-  total_points = total_points + 1,
-  total_atk_points = total_atk_points + (NEW.action = 'attack'),
-  total_def_points = total_def_points + (NEW.action = 'block'),
-  total_blk_points = total_blk_points + (NEW.action = 'block'),
-  total_srv_points = total_srv_points + (NEW.action = 'serve')
-  WHERE id = NEW.player_id;
-END;
+-- Views
+CREATE VIEW IF NOT EXISTS player_stats AS
+SELECT
+  id,
+  (SELECT COUNT(*) FROM stats WHERE stats.player_id = players.id AND stats.action IN ('attack', 'block')) / (SELECT COUNT(*) FROM matches WHERE matches.team_id IN (SELECT team_id FROM team_players WHERE player_id = players.id) = players.id) AS avg_ppg,
+  (SELECT COUNT(*) FROM stats WHERE stats.player_id = players.id AND stats.action IN ('attack', 'block')) / (SELECT COUNT(*) FROM stats WHERE stats.player_id = players.player_id) AS kill_rate,
+  0 AS pass_efficiency, -- todo: ask arnav how this is calculated
+  (SELECT COUNT(*) FROM stats WHERE stats.player_id = players.id AND stats.action IN ('attack', 'block')) AS total_points,
+  (SELECT COUNT(*) FROM stats WHERE stats.player_id = players.id AND stats.action IN ('attack')) AS total_atk_points,
+  (SELECT COUNT(*) FROM stats WHERE stats.player_id = players.id AND stats.action IN ('block')) AS total_blk_points,
+  (SELECT COUNT(*) FROM stats WHERE stats.player_id = players.id AND stats.action IN ('serve')) AS total_srv_points
+  (SELECT COUNT(*) FROM stats WHERE stats.player_id = players.id AND stats.action IN ('serve_receive', 'freeball_recieve', 'set')) AS total_def_points -- ?
+FROM players;
 
--- TODO: Create triggers for:
--- - update_player_on_update
--- - update_player_on_delete
--- - update_team_on_update
--- - update_team_on_delete
--- - update_team_on_insert
+CREATE VIEW IF NOT EXISTS team_stats AS
+SELECT
+  id,
+  -- wins INTEGER NOT NULL DEFAULT 0,
+  -- losses INTEGER NOT NULL DEFAULT 0,
+  -- set_ratio REAL NOT NULL DEFAULT 0,
+  -- kill_rate REAL NOT NULL DEFAULT 0,
+  -- pass_efficiency REAL NOT NULL DEFAULT 0,
 
 -- Data
 INSERT INTO players (id, first_name, last_name, grad_year) VALUES
