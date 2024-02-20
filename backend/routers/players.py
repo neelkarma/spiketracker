@@ -35,4 +35,3 @@ def delete_player(id: int):
     )
 
     return "Success", 200
-
