@@ -2,9 +2,8 @@ import os
 
 from dotenv import load_dotenv
 from flask import Flask
-
-from backend.routers.auth import auth
-from backend.routers.players import players
+from routers.auth import auth
+from routers.players import players
 
 app = Flask(__name__)
 app.register_blueprint(auth, url_prefix="/auth")

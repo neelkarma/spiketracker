@@ -1,10 +1,9 @@
 import os
 
+from db import get_db
 from flask import Blueprint, current_app, jsonify, make_response, redirect, request
-
-from backend.db import get_db
-from backend.sbhs import get_authorization_url, refresh_token_set, verify_id_token
-from backend.session import (
+from sbhs import get_authorization_url, refresh_token_set, verify_id_token
+from session import (
     get_session,
     session_token_payload_from_admin,
     session_token_payload_from_player,
