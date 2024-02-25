@@ -7,10 +7,10 @@
   };
 </script>
 
-<nav class="navbar" aria-label="main navigation">
+<nav class="navbar is-primary" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" href="/app">
-      <h1>SpikeTracker</h1>
+      <h1 class="has-text-weight-bold">SpikeTracker</h1>
     </a>
 
     <!-- svelte-ignore a11y-missing-attribute -->

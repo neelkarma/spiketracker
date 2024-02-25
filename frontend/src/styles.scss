@@ -1,4 +1,6 @@
-@use "bulma/bulma.sass";
+$primary: #094369;
+
+@import "bulma/bulma.sass";
 
 .is-fullheight {
   height: 100vh;
