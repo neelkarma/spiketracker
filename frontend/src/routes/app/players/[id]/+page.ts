@@ -13,6 +13,10 @@ export const load = (() => {
         name: "SBHS 2nds",
         id: 2,
       },
+      {
+        name: "SBHS 3rds",
+        id: 3,
+      }
     ],
     stats: {
       ppg: 12,
