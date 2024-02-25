@@ -9,15 +9,11 @@ players = Blueprint("players", __name__)
 def me():
     session = get_session()
     if session is None:
-        return "Unauthorized", 401
-
-    if session["admin"]:
+        return "Unauthorised", 401
+    elif session["admin"]:
         return "You are an admin", 400
-
-    con = get_db()
-    con.execute(
-        "SELECT first_name, last_name FROM players WHERE id = ?", (session["id"],)
-    )
+    else:
+        return "You are a student", 400
 
 
 @players.delete("/<id>")

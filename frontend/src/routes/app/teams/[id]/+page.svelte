@@ -19,15 +19,7 @@
 
         <h2 class="column is-5 has-text-left title">{data.oppTeamName}</h2>
       </div>
-      <div class="columns is-centered">
-        {#each data.sets as { ourScore, oppScore }}
-          <div class="column is-2 is-flex">
-            <h3 class:has-text-bold={ourScore > oppScore}>{ourScore}</h3>
-            <h3>-</h3>
-            <h3 class:has-text-bold={oppScore > ourScore}>{oppScore}</h3>
-          </div>
-        {/each}
-      </div>
+      <div class="columns is-centered"></div>
     </div>
   </div>
 </div>
