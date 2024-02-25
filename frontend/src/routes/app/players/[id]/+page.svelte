@@ -1,6 +1,6 @@
 <script lang="ts">
   import Stat from "$lib/components/Stat.svelte";
-  import type { PageData } from "../../player/[id]/$types";
+  import type { PageData } from "./$types";
 
   export let data: PageData;
 </script>
