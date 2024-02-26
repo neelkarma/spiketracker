@@ -1,4 +1,5 @@
 import os
+import sys
 
 from dotenv import load_dotenv
 from flask import Flask
@@ -32,4 +33,4 @@ def ping():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug="--debug" in sys.argv)
