@@ -9,22 +9,37 @@
     <div class="container">
       <h2 class="title">{data.date.toDateString()}</h2>
       <h3 class="subtitle">{data.location}</h3>
-      <div class="columns is-centered">
-        <h2 class="column is-5 has-text-right title">{data.ourTeamName}</h2>
-        <h1 class="column is-2 title">
-          {data.sets.reduce((acc, { ourScore }) => acc + ourScore, 0)}
-          :
-          {data.sets.reduce((acc, { oppScore }) => acc + oppScore, 0)}
-        </h1>
-
-        <h2 class="column is-5 has-text-left title">{data.oppTeamName}</h2>
+      <div class="columns is-centered is-vcentered">
+        <div class="column is-5">
+          <h2 class="has-text-right title">{data.ourTeamName}</h2>
+        </div>
+        <div class="column is-2">
+          <h1 class="title is-1">
+            {data.sets.reduce((acc, { ourScore }) => acc + ourScore, 0)}
+            :
+            {data.sets.reduce((acc, { oppScore }) => acc + oppScore, 0)}
+          </h1>
+        </div>
+        <div class="column is-5">
+          <h2 class="has-text-left title">{data.oppTeamName}</h2>
+        </div>
       </div>
       <div class="columns is-centered">
         {#each data.sets as { ourScore, oppScore }}
-          <div class="column is-2 is-flex">
-            <h3 class:has-text-bold={ourScore > oppScore}>{ourScore}</h3>
-            <h3>-</h3>
-            <h3 class:has-text-bold={oppScore > ourScore}>{oppScore}</h3>
+          <div class="column is-1 is-flex is-justify-content-center">
+            <h3
+              class="subtitle"
+              class:has-text-weight-bold={ourScore > oppScore}
+            >
+              {ourScore}
+            </h3>
+            <h3 class="subtitle">-</h3>
+            <h3
+              class="subtitle"
+              class:has-text-weight-bold={oppScore > ourScore}
+            >
+              {oppScore}
+            </h3>
           </div>
         {/each}
       </div>
