@@ -1,25 +1,38 @@
 <script lang="ts">
+  import Stat from "$lib/components/Stat.svelte";
+  import { formatAsPercentage } from "$lib/utils";
   import type { PageData } from "./$types";
 
   export let data: PageData;
 </script>
 
-<div class="hero is-primary">
-  <div class="hero-body has-text-centered">
+<div class="hero">
+  <div class="hero-body">
     <div class="container">
-      <h2 class="title">{data.date.toDateString()}</h2>
-      <h3 class="subtitle">{data.location}</h3>
-      <div class="columns is-centered">
-        <h2 class="column is-5 has-text-right title">{data.ourTeamName}</h2>
-        <h1 class="column is-2 title">
-          {data.sets.reduce((acc, { ourScore }) => acc + ourScore, 0)}
-          :
-          {data.sets.reduce((acc, { oppScore }) => acc + oppScore, 0)}
-        </h1>
-
-        <h2 class="column is-5 has-text-left title">{data.oppTeamName}</h2>
+      <div class="level is-fullwidth">
+        <div class="level-left">
+          <div class="level-item">
+            <h1 class="title">{data.name}</h1>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <Stat label="W/L" value="{data.wins}-{data.losses}" />
+          </div>
+          <div class="level-item">
+            <Stat label="Set Ratio" value={formatAsPercentage(data.setRatio)} />
+          </div>
+          <div class="level-item">
+            <Stat label="Kill Rate" value={formatAsPercentage(data.kr)} />
+          </div>
+          <div class="level-item">
+            <Stat
+              label="Passing Efficiency"
+              value={formatAsPercentage(data.pef)}
+            />
+          </div>
+        </div>
       </div>
-      <div class="columns is-centered"></div>
     </div>
   </div>
 </div>
