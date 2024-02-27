@@ -1,8 +1,27 @@
 <script lang="ts">
   import Stat from "$lib/components/Stat.svelte";
+  import { formatAsPercentage } from "$lib/utils";
   import type { PageData } from "./$types";
 
   export let data: PageData;
+
+  const getMatchHistory = async () => {
+    // const res = await fetch(`/api/players/${$page.params.id}/matches`);
+    // const matches = await res.json();
+    // return matches
+
+    // dummy data
+    return [
+      {
+        id: 1,
+        date: new Date(),
+        opponent: "Newington 1sts",
+        totalPoints: 12,
+        kr: 0.5,
+        pef: 0.7,
+      },
+    ];
+  };
 </script>
 
 <div class="hero is-primary">
@@ -31,8 +50,11 @@
         </div>
         <div class="level-right">
           <Stat label="Avg PPG" value={data.stats.ppg} />
-          <Stat label="Kill Rate" value="{data.stats.kr}%" />
-          <Stat label="Passing Efficiency" value="{data.stats.pef}%" />
+          <Stat label="Kill Rate" value={formatAsPercentage(data.stats.kr)} />
+          <Stat
+            label="Passing Efficiency"
+            value={formatAsPercentage(data.stats.pef)}
+          />
           <Stat label="Total Points" value={data.stats.totalPoints} />
         </div>
       </div>
@@ -42,17 +64,43 @@
 <div class="section">
   <div class="container">
     <h1 class="title">Match History</h1>
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Open</th>
-          <th>Date</th>
-          <th>Opponent</th>
-          <th>Total Pts</th>
-          <th>KR%</th>
-          <th>PEF%</th>
-        </tr>
-      </thead>
-    </table>
+    {#await getMatchHistory()}
+      <!-- TODO: Have a better loading thing - maybe componentize it -->
+      Loading...
+    {:then matches}
+      {#if matches.length === 0}
+        <!-- TODO: Make this look nicer -->
+        <p>No matches found.</p>
+      {:else}
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Open</th>
+              <th>Date</th>
+              <th>Opponent</th>
+              <th>Total Pts</th>
+              <th>KR%</th>
+              <th>PEF%</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each matches as { id, date, opponent, totalPoints, kr, pef }}
+              <tr>
+                <td>
+                  <a class="button" href="/app/matches/{id}">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </a>
+                </td>
+                <td>{date.toDateString()}</td>
+                <td>{opponent}</td>
+                <td>{totalPoints}</td>
+                <td>{formatAsPercentage(kr)}</td>
+                <td>{formatAsPercentage(pef)}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      {/if}
+    {/await}
   </div>
 </div>
