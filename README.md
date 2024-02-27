@@ -38,7 +38,8 @@ FLASK_BACKEND_BASE=http://localhost:5173
 5. Create another terminal.
 6. `cd frontend`
 7. If this is your first time, run `pnpm i`
-8. `pnpm dev` - This starts the frontend server.
+8. `pnpm dev --open` - This starts the frontend server and opens the website on
+   your browser.
 
 ### Manually interacting with the database
 
