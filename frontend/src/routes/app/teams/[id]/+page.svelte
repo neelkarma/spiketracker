@@ -12,25 +12,17 @@
       <div class="level is-fullwidth">
         <div class="level-left">
           <div class="level-item">
-            <h1 class="title">{data.name}</h1>
+            <h1 class="title is-1">{data.name}</h1>
           </div>
         </div>
         <div class="level-right">
-          <div class="level-item">
-            <Stat label="W/L" value="{data.wins}-{data.losses}" />
-          </div>
-          <div class="level-item">
-            <Stat label="Set Ratio" value={formatAsPercentage(data.setRatio)} />
-          </div>
-          <div class="level-item">
-            <Stat label="Kill Rate" value={formatAsPercentage(data.kr)} />
-          </div>
-          <div class="level-item">
-            <Stat
-              label="Passing Efficiency"
-              value={formatAsPercentage(data.pef)}
-            />
-          </div>
+          <Stat label="W/L" value="{data.wins}-{data.losses}" />
+          <Stat label="Set Ratio" value={formatAsPercentage(data.setRatio)} />
+          <Stat label="Kill Rate" value={formatAsPercentage(data.kr)} />
+          <Stat
+            label="Passing Efficiency"
+            value={formatAsPercentage(data.pef)}
+          />
         </div>
       </div>
     </div>
