@@ -37,12 +37,12 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <a href="/app/settings" class="has-text-white">
+        <a href="/app/settings" class="has-text-white" title="Settings">
           <i class="fa-solid fa-gear"></i>
         </a>
       </div>
       <div class="navbar-item">
-        <a href="/app/help" class="has-text-white">
+        <a href="/app/help" class="has-text-white" title="Help">
           <i class="fa-solid fa-question-circle"></i>
         </a>
       </div>
@@ -53,6 +53,7 @@
           class="has-text-white"
           role="button"
           href="#"
+          title="Log Out"
         >
           <i class="fa-solid fa-sign-out-alt"></i>
         </a>
