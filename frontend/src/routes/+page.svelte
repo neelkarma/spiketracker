@@ -1,8 +1,12 @@
 <script>
   import { page } from "$app/stores";
+  import landingImg from "../assets/landing.jpg";
 </script>
 
-<div class="columns is-mobile is-centered is-vcentered is-fullheight">
+<div class="columns is-centered is-vcentered is-fullheight">
+  <div class="column is-half">
+    <img src={landingImg} alt="SBHS Volleyball Team spiking a ball" />
+  </div>
   <div class="column is-half">
     {#if $page.url.searchParams.has("error")}
       <div class="notification is-danger" role="alert">
