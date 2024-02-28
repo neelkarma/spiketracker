@@ -37,7 +37,25 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <button class="button is-light" on:click={handleLogout}>Log Out</button>
+        <a href="/app/settings" class="has-text-white">
+          <i class="fa-solid fa-gear"></i>
+        </a>
+      </div>
+      <div class="navbar-item">
+        <a href="/app/help" class="has-text-white">
+          <i class="fa-solid fa-question-circle"></i>
+        </a>
+      </div>
+      <div class="navbar-item">
+        <!-- svelte-ignore a11y-invalid-attribute -->
+        <a
+          on:click={handleLogout}
+          class="has-text-white"
+          role="button"
+          href="#"
+        >
+          <i class="fa-solid fa-sign-out-alt"></i>
+        </a>
       </div>
     </div>
   </div>
