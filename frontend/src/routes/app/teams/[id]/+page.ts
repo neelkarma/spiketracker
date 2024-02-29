@@ -9,6 +9,14 @@ export const load = (() => {
     losses: 1,
     setRatio: 0.5,
     kr: 0.5,
-    pef: 0.5
+    pef: 0.5,
+    players: [
+      {
+        playernum: 0,
+        firstName: "Guppy",
+        surname: "Gup",
+        position: "Setter",
+      },
+    ],
   };
 }) satisfies PageLoad;
