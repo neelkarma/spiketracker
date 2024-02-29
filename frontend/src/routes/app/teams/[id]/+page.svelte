@@ -70,19 +70,21 @@
             <th>Position</th>
           </tr>
         </thead>
-        {#each players as { playerNum, firstName, surname, position }}
-          <tr>
-            <td>
-              <a class="button" href="/app/teams/{id}">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-              </a>
-            </td>
-            <td>{playerNum}</td>
-            <td>{firstName}</td>
-            <td>{surname}</td>
-            <td>{position}</td>
-          </tr>
-        {/each}
+        <tbody>
+          {#each players as { playerNum, firstName, surname, position }}
+            <tr>
+              <td>
+                <a class="button" href="/app/teams/{id}">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+              </td>
+              <td>{playerNum}</td>
+              <td>{firstName}</td>
+              <td>{surname}</td>
+              <td>{position}</td>
+            </tr>
+          {/each}
+        </tbody>
       </table>
     {/await}
   </div>
