@@ -13,21 +13,18 @@
     // dummy data
     return [
       {
-        name: "SBHS 1sts",
-        id: 1,
-        wins: 1,
-        losses: 1,
-        setRatio: 0.5,
-        kr: 0.5,
-        pef: 0.5,
-        players: [
-          {
-            playernum: 0,
-            firstName: "Guppy",
-            surname: "Gup",
-            position: "Setter",
-          },
-        ],
+        id: 0,
+        playernum: 0,
+        firstName: "Guppy",
+        surname: "Gup",
+        position: "Setter",
+      },
+      {
+        id: 0,
+        playernum: 0,
+        firstName: "Guppy",
+        surname: "Gup",
+        position: "Setter",
       },
     ];
   };
@@ -71,14 +68,9 @@
           </tr>
         </thead>
         <tbody>
-          {#each players as { playerNum, firstName, surname, position }}
+          {#each players as { playernum, firstName, surname, position, id }}
             <tr>
-              <td>
-                <a class="button" href="/app/teams/{id}">
-                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                </a>
-              </td>
-              <td>{playerNum}</td>
+              <td>{playernum}</td>
               <td>{firstName}</td>
               <td>{surname}</td>
               <td>{position}</td>
