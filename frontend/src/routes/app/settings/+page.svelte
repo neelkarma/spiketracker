@@ -20,7 +20,7 @@
 
     <h2 class="subtitle">About</h2>
     <p>SpikeTracker &copy; 2024</p>
-    <p>Made by Arnav G, Nathanael T, Andrew W and Neel S</p>
+    <p>Made by Arnav Gupta, Nathanael Thie, Andrew Wang and Neel Sharma</p>
     <p>Licensed under the GNU GPL v3</p>
   </div>
 </section>
