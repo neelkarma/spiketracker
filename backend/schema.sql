@@ -23,12 +23,13 @@ CREATE TABLE IF NOT EXISTS matches (
   approved BOOLEAN NOT NULL DEFAULT 0,
   time TEXT NOT NULL,
   location TEXT NOT NULL,
+  our_win BOOLEAN,
   set_one_our_score INTEGER NOT NULL DEFAULT 0,
   set_one_opp_score INTEGER NOT NULL DEFAULT 0,
-  set_two_our_score INTEGER NOT NULL DEFAULT 0,
-  set_two_opp_score INTEGER NOT NULL DEFAULT 0,
-  set_three_our_score INTEGER NOT NULL DEFAULT 0,
-  set_three_opp_score INTEGER NOT NULL DEFAULT 0
+  set_two_our_score INTEGER,
+  set_two_opp_score INTEGER,
+  set_three_our_score INTEGER,
+  set_three_opp_score INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS stats (
