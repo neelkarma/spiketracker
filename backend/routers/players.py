@@ -1,19 +1,37 @@
 from db import get_db
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from session import get_session
 
 players = Blueprint("players", __name__)
 
 
-@players.get("/me")
-def me():
-    session = get_session()
-    if session is None:
-        return "Unauthorised", 401
-    elif session["admin"]:
-        return "You are an admin", 400
-    else:
-        return "You are a student", 400
+@players.get("/<id>")
+def get_player_data(id: int):
+    cur = get_db()
+    data = cur.execute("SELECT * FROM players WHERE id = ?", (id,)).fetchone()
+    stats = cur.execute("SELECT * FROM player_stats WHERE id = ?", (id,)).fetchone()
+    team_ids = cur.execute(
+        "SELECT team_id FROM player_teams WHERE player_id = ?", (id,)
+    ).fetchall()
+
+    teams = []
+    for team_id in team_ids:
+        team_id = team_id["team_id"]
+        team = cur.execute("SELECT name FROM teams WHERE id = ?", team_id).fetchone()
+        teams.append({"id": team_id, "name": team["name"]})
+
+    return jsonify(
+        {
+            "name": data["name"],
+            "teams": teams,
+            "stats": {
+                "ppg": stats["avg_ppg"],
+                "kr": stats["kill_rate"],
+                "pef": stats["passing_efficiency"],
+                "totalPoints": stats["total_points"],
+            },
+        }
+    )
 
 
 @players.delete("/<id>")
