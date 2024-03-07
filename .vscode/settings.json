@@ -1,0 +1,19 @@
+{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.organizeImports": "always",
+    "source.sortImports": "always"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.tabSize": 4
+  },
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  },
+  "[json][jsonc][html][javascript][typescript][markdown][sass][less][yaml][markdown][markdown-math][css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
