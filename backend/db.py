@@ -9,14 +9,15 @@ def get_db():
     con = sqlite3.connect("data.sqlite3")
     con.row_factory = sqlite3.Row
 
-    if _is_cold: # to instantiate
+    if _is_cold:  # to instantiate
         with open("schema.sql") as f:
             con.executescript(f.read())
         _is_cold = False
 
     return con
 
-def query_db(query, args=(), one=False):
+
+def query_db(query: str, args: tuple = (), one=False):
     cur = get_db().execute(query, args)
     rv = cur.fetchall()
     cur.close()
