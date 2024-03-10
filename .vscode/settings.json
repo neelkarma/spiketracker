@@ -15,5 +15,8 @@
   },
   "[json][jsonc][html][javascript][typescript][markdown][sass][less][yaml][markdown][markdown-math][css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "sqltools.format": {
+    "linesBetweenQueries": 2
   }
 }
