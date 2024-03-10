@@ -11,3 +11,12 @@ export const logout = async () => {
   await fetch("/api/auth/logout");
   goto("/");
 };
+
+export const debounce = (callback: Function, wait = 300) => {
+  let timeout: number;
+
+  return (...args: any) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => callback(...args), wait);
+  };
+};
