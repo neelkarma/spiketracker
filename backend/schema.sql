@@ -137,8 +137,7 @@ SELECT id,
 FROM players;
 
 CREATE VIEW IF NOT EXISTS match_stats AS
-SELECT id,
-  -- total our sets
+SELECT id -- total our sets
   -- total opp sets
   -- total our points for each set
 FROM matches;
@@ -155,8 +154,7 @@ SELECT id,
     FROM matches
     WHERE matches.team_id = teams.id
       AND matches.approved = 1
-  ) AS total_approved_matches,
-  -- wins INTEGER NOT NULL DEFAULT 0,
+  ) AS total_approved_matches -- wins INTEGER NOT NULL DEFAULT 0,
   -- losses INTEGER NOT NULL DEFAULT 0,
   -- set_ratio REAL NOT NULL DEFAULT 0,
   -- kill_rate REAL NOT NULL DEFAULT 0,
@@ -176,8 +174,8 @@ SELECT id,
     FROM matches
     WHERE matches.team_id = teams.id
       AND matches.approved = 1
-  ) AS total_approved_matches,
-  FROM teams;
+  ) AS total_approved_matches
+FROM teams;
 
 -- Data
 INSERT
