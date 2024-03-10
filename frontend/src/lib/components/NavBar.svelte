@@ -7,7 +7,12 @@
 <nav class="navbar is-primary" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" href="/app">
-      <h1 class="has-text-weight-bold">SpikeTracker</h1>
+      <span class="icon-text">
+        <span class="icon is-size-4">
+          <i class="fa-solid fa-volleyball"></i>
+        </span>
+        <span class="has-text-weight-bold">SpikeTracker</span>
+      </span>
     </a>
 
     <!-- svelte-ignore a11y-interactive-supports-focus -->
