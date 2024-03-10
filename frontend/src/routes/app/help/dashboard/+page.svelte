@@ -1,17 +1,6 @@
-<script lang="ts">
-  import { logout } from "$lib/utils";
-  import navbarImage from "../../../../assets/navbar-image.jpg";
-</script>
-
 <div class="content p-has-background-light">
-  <h1>Quick Start</h1>
-  <p>
-    Welcome to SpikeTracker! SpikeTracker is your all-in-one solution for
-    efficiently managing and tracking statistics for your high school's
-    volleyball program. Whether you're a coach or a player, SpikeTracker
-    provides the tools you need to stay organized and informed throughout the
-    volleyball season.
-  </p>
+  <h1>Dashboard</h1>
+  <p>your mother</p>
   <h4>Navigation</h4>
 
   <figure class="navbar-image">
