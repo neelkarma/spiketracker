@@ -1,12 +1,7 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
+  import { logout } from "$lib/utils";
 
   let isOpen = false;
-
-  const handleLogout = async () => {
-    await fetch("/api/auth/logout");
-    goto("/");
-  };
 </script>
 
 <nav class="navbar is-primary" aria-label="main navigation">
@@ -68,7 +63,7 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-missing-attribute -->
         <a
-          on:click={handleLogout}
+          on:click={logout}
           class="has-text-white is-hidden-touch"
           role="button"
           title="Log Out"
@@ -79,7 +74,7 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-missing-attribute -->
         <a
-          on:click={handleLogout}
+          on:click={logout}
           class="is-hidden-desktop"
           role="button"
           title="Log Out"
