@@ -14,9 +14,9 @@
     return [
       {
         id: 0,
-        playernum: 0,
-        firstName: "Guppy",
-        surname: "Gup",
+        playernum: 123,
+        firstName: "ovuvuevuevue enyetuenwuevue ugbemugbem osas",
+        surname: "ovuvuevuevue enyetuenwuevue ugbemugbem osas",
         position: "Setter",
       },
       {
@@ -24,7 +24,28 @@
         playernum: 0,
         firstName: "Guppy",
         surname: "Gup",
-        position: "Setter",
+        position: "Defensive Specialist",
+      },
+      {
+        id: 0,
+        playernum: 0,
+        firstName: "Guppy",
+        surname: "Gup",
+        position: "Middle Blocker",
+      },
+      {
+        id: 0,
+        playernum: 0,
+        firstName: "Guppy",
+        surname: "Gup",
+        position: "Outside Hitter",
+      },
+      {
+        id: 0,
+        playernum: 0,
+        firstName: "Guppy",
+        surname: "Gup",
+        position: "Opposite Hitter",
       },
     ];
   };
