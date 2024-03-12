@@ -20,6 +20,14 @@
         kr: 0.5,
         pef: 0.7,
       },
+      {
+        id: 2,
+        date: new Date(),
+        opponent: "Newington 2nds",
+        totalPoints: 14,
+        kr: 0.4,
+        pef: 0.2,
+      },
     ];
   };
 </script>

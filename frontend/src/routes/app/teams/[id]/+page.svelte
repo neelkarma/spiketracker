@@ -102,32 +102,3 @@
     {/await}
   </div>
 </div>
-
-<!--
-  <thead>
-            <tr>
-              <th>Open</th>
-              <th>Date</th>
-              <th>Opponent</th>
-              <th>Total Pts</th>
-              <th>KR%</th>
-              <th>PEF%</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each matches as { id, date, opponent, totalPoints, kr, pef }}
-              <tr>
-                <td>
-                  <a class="button" href="/app/matches/{id}">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                  </a>
-                </td>
-                <td>{date.toDateString()}</td>
-                <td>{opponent}</td>
-                <td>{totalPoints}</td>
-                <td>{formatAsPercentage(kr)}</td>
-                <td>{formatAsPercentage(pef)}</td>
-              </tr>
-            {/each}
-          </tbody>
--->
