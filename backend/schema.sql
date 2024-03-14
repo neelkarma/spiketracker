@@ -226,6 +226,12 @@ SELECT id,
     WHERE matches.team_id = teams.id
       AND matches.approved = 1
   ) AS total_approved_matches,
+  (
+    SELECT COUNT(*) -- needs to be altered
+    FROM matches
+    WHERE matches.team_id = teams.id
+      AND matches.approved = 1
+  ) AS wing_hitting_avg,
   -- wins INTEGER NOT NULL DEFAULT 0,
   -- losses INTEGER NOT NULL DEFAULT 0,
   -- set_ratio REAL NOT NULL DEFAULT 0,
