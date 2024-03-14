@@ -62,7 +62,14 @@
       <strong>Admin Actions</strong>
       <div class="container">
         <div class="notification is-secondary">
-          <div class="box"></div>
+          <div class="box">
+            <div class="columns">
+              <div class="column">Hi</div>
+              <div class="column">Hi</div>
+              <div class="column">Hi</div>
+              <div class="column">Hi</div>
+            </div>
+          </div>
           <div class="box"></div>
           <div class="box"></div>
         </div>
