@@ -48,40 +48,41 @@
   };
 </script>
 
-<div class="container is-max-desktop">
-  <div class="notification is-secondary">
-    <div class="box">
-      <div class="table-container"></div>
-      <div class="section">
-        <div class="container">
-          <h1 class="title">{"SBHS 1sts"}</h1>
-          {#await getTeamPlayerStats()}
-            Loading...
-          {:then players}
-            <table class="table is-fullwidth">
-              <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>Firstname</th>
-                  <th>Surname</th>
-                  <th>Position</th>
-                </tr>
-              </thead>
-              <tbody>
-                {#each players as { playernum, firstName, surname, position, id }}
-                  <tr>
-                    <td>{playernum}</td>
-                    <td>{firstName}</td>
-                    <td>{surname}</td>
-                    <td>{position}</td>
-                  </tr>
-                {/each}
-              </tbody>
-            </table>
-          {/await}
+<div class="columns is-mobile">
+  <div class="column is-half">
+    <strong>Matches to Approve</strong>
+    <div class="container">
+      <div class="notification is-secondary">
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+      </div>
+    </div>
+    <div class="column">
+      <strong>Admin Actions</strong>
+      <div class="container">
+        <div class="notification is-secondary">
+          <div class="box"></div>
+          <div class="box"></div>
+          <div class="box"></div>
         </div>
       </div>
     </div>
   </div>
+  <div class="column is-half">
+    <strong>Upcoming Matches</strong>
+    <div class="container">
+      <div class="notification is-secondary">
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+      </div>
+    </div>
+  </div>
 </div>
+
 <pre>{JSON.stringify(data, undefined, 2)}</pre>
