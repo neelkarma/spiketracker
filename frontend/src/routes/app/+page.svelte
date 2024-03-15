@@ -8,6 +8,7 @@
     // return matches
 
     // dummy data
+
     return [
       {
         id: 0,
@@ -53,9 +54,40 @@
     <strong>Matches to Approve</strong>
     <div class="container">
       <div class="notification is-secondary">
-        <div class="box"></div>
-        <div class="box"></div>
-        <div class="box"></div>
+        <div class="box">
+          <div class="columns">
+            <div class="column is-3">
+              <h1>2 Jan</h1>
+              <p>9:00-10:00</p>
+              <h2>SBHS Gym</h2>
+            </div>
+            <div class="column is-8">
+              <div class="container">
+                <div class="columns">
+                  <div class="column is-one-fifth">SBHS</div>
+                  <div class="column">Q1</div>
+                  <div class="column">Q2</div>
+                  <div class="column">Q3</div>
+                  <div class="column">Q4</div>
+                </div>
+              </div>
+              <div class="container">
+                <div class="columns">
+                  <div class="column is-one-fifth">Newington</div>
+                  <div class="column">Q1</div>
+                  <div class="column">Q2</div>
+                  <div class="column">Q3</div>
+                  <div class="column">Q4</div>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <h1>APPROVE</h1>
+              <img src="/images/tick.png" alt="My Image" />
+              <h1>EDIT</h1>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="column">
@@ -64,10 +96,10 @@
         <div class="notification is-secondary">
           <div class="box">
             <div class="columns">
-              <div class="column">Hi</div>
-              <div class="column">Hi</div>
-              <div class="column">Hi</div>
-              <div class="column">Hi</div>
+              <div class="column"></div>
+              <div class="column"></div>
+              <div class="column"></div>
+              <div class="column"></div>
             </div>
           </div>
           <div class="box"></div>
