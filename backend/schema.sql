@@ -128,8 +128,8 @@ FROM stats
 WHERE action in ('freeball_receive');
 
 CREATE VIEW IF NOT EXISTS error_stats AS
-SELECT id,
-  FROM stats
+SELECT id
+FROM stats
 WHERE rating = 0;
 
 CREATE VIEW IF NOT EXISTS games_played AS
@@ -207,8 +207,7 @@ SELECT id,
 FROM players;
 
 CREATE VIEW IF NOT EXISTS match_stats AS
-SELECT id,
-  -- total our sets
+SELECT id -- total our sets
   -- total opp sets
   -- total our points for each set
 FROM matches;
@@ -231,8 +230,7 @@ SELECT id,
     FROM matches
     WHERE matches.team_id = teams.id
       AND matches.approved = 1
-  ) AS wing_hitting_avg,
-  -- wins INTEGER NOT NULL DEFAULT 0,
+  ) AS wing_hitting_avg -- wins INTEGER NOT NULL DEFAULT 0,
   -- losses INTEGER NOT NULL DEFAULT 0,
   -- set_ratio REAL NOT NULL DEFAULT 0,
   -- kill_rate REAL NOT NULL DEFAULT 0,
