@@ -41,6 +41,20 @@ FLASK_BACKEND_BASE=http://localhost:5173
 8. `pnpm dev --open` - This starts the frontend server and opens the website on
    your browser.
 
+### Common Issues
+
+#### Getting a backend error whenever the database is instantiated
+
+Check if the database schema is valid by opening a new terminal and typing
+
+```sh
+cd backend
+sqlite3 < schema.sql
+```
+
+In most cases, this will give you a hint as to where the problem is in the
+schema. If there's no problem in the schema, gg.
+
 ### Manually interacting with the database
 
 Use a tool like SQLiteBrowser to open the `data.sqlite3` file, which has all the

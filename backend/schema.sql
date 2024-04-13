@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS players (
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
   grad_year INTEGER NOT NULL,
-  positions TEXT NOT NULL -- string[]
+  positions TEXT DEFAULT "[]" NOT NULL -- string[]
 );
 
 CREATE TABLE IF NOT EXISTS teams (
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS matches (
   approved BOOLEAN NOT NULL DEFAULT 0,
   time TEXT NOT NULL,
   location TEXT NOT NULL,
-  points TEXT NOT NULL -- { our: number; opp: number; }[]
+  points TEXT DEFAULT "[]" NOT NULL -- { our: number; opp: number; }[]
 );
 
 CREATE TABLE IF NOT EXISTS stats (
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS stats (
       'set'
     )
   ) NOT NULL,
-  rating INTEGER CHECK (rating IN (1, 2, 3)) NOT NULL,
+  rating INTEGER CHECK (rating IN (0, 1, 2, 3)) NOT NULL,
   position TEXT CHECK (
     position in (
       'outside',
@@ -53,19 +53,19 @@ CREATE TABLE IF NOT EXISTS stats (
   ) NOT NULL,
   x_pos_in INTEGER CHECK (
     x_pos_in >= 0
-    AND x_pos_in <= 18
+    AND x_pos_in <= 22
   ) NOT NULL,
   y_pos_in INTEGER CHECK (
     y_pos_in >= 0
-    AND y_pos_in <= 18
+    AND y_pos_in <= 22
   ) NOT NULL,
   x_pos_out INTEGER CHECK (
     x_pos_out >= 0
-    AND x_pos_out <= 18
+    AND x_pos_out <= 22
   ) NOT NULL,
   y_pos_out INTEGER CHECK (
     y_pos_out >= 0
-    AND y_pos_out <= 18
+    AND y_pos_out <= 22
   ) NOT NULL
 );
 
