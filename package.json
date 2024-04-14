@@ -1,0 +1,15 @@
+{
+  "name": "spiketracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently -n frontend,backend, \"cd frontend && pnpm dev --open\" \"cd backend && python app.py --debug\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -32,14 +32,18 @@ FLASK_BACKEND_BASE=http://localhost:5173
 ### Start Developing
 
 1. Open the project in VS Code and create a new terminal.
-2. `cd backend`
-3. If this is your first time, run `pip install -r requirements.txt`.
-4. `py ./app.py --debug` - This starts the backend server.
-5. Create another terminal.
-6. `cd frontend`
-7. If this is your first time, run `pnpm i`
-8. `pnpm dev --open` - This starts the frontend server and opens the website on
-   your browser.
+2. If this is your first time, run the following:
+
+```sh
+cd backend
+pip install -r requirements.txt
+cd ../frontend
+pnpm i
+cd ..
+pnpm i
+```
+
+3. Run `pnpm start` to start both backend and frontend
 
 ### Common Issues
 
