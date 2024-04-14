@@ -57,13 +57,21 @@
           </div>
         </div>
         <div class="level-right">
-          <Stat label="Avg PPG" value={data.stats.ppg} />
-          <Stat label="Kill Rate" value={formatAsPercentage(data.stats.kr)} />
-          <Stat
-            label="Passing Efficiency"
-            value={formatAsPercentage(data.stats.pef)}
-          />
-          <Stat label="Total Points" value={data.stats.totalPoints} />
+          <div class="level-item">
+            <Stat label="Avg PPG" value={data.stats.ppg} />
+          </div>
+          <div class="level-item">
+            <Stat label="Kill Rate" value={formatAsPercentage(data.stats.kr)} />
+          </div>
+          <div class="level-item">
+            <Stat
+              label="Passing Efficiency"
+              value={formatAsPercentage(data.stats.pef)}
+            />
+          </div>
+          <div class="level-item">
+            <Stat label="Total Points" value={data.stats.totalPoints} />
+          </div>
         </div>
       </div>
     </div>

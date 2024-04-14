@@ -3,7 +3,7 @@
     <h1 class="title">Help</h1>
 
     <div class="columns">
-      <div class="column is-one-quarter">
+      <div class="column is-narrow">
         <aside class="menu">
           <p class="menu-label">Users</p>
           <ul class="menu-list">

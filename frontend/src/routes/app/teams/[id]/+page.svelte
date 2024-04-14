@@ -61,13 +61,21 @@
           </div>
         </div>
         <div class="level-right">
-          <Stat label="W/L" value="{data.wins}-{data.losses}" />
-          <Stat label="Set Ratio" value={formatAsPercentage(data.setRatio)} />
-          <Stat label="Kill Rate" value={formatAsPercentage(data.kr)} />
-          <Stat
-            label="Passing Efficiency"
-            value={formatAsPercentage(data.pef)}
-          />
+          <div class="level-item">
+            <Stat label="W/L" value="{data.wins}-{data.losses}" />
+          </div>
+          <div class="level-item">
+            <Stat label="Set Ratio" value={formatAsPercentage(data.setRatio)} />
+          </div>
+          <div class="level-item">
+            <Stat label="Kill Rate" value={formatAsPercentage(data.kr)} />
+          </div>
+          <div class="level-item">
+            <Stat
+              label="Passing Efficiency"
+              value={formatAsPercentage(data.pef)}
+            />
+          </div>
         </div>
       </div>
     </div>
