@@ -15,9 +15,9 @@
         </div>
         <div class="column is-2">
           <h1 class="title is-1">
-            {data.sets.reduce((acc, { ourScore }) => acc + ourScore, 0)}
+            {data.points.reduce((acc, { our }) => acc + our, 0)}
             :
-            {data.sets.reduce((acc, { oppScore }) => acc + oppScore, 0)}
+            {data.points.reduce((acc, { opp }) => acc + opp, 0)}
           </h1>
         </div>
         <div class="column is-5">

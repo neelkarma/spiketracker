@@ -1,37 +1,22 @@
 <script lang="ts">
-  export let date: Date;
-  export let location: string;
-  export let ourTeamName: string;
-  export let oppTeamName: string;
+  import { page } from "$app/stores";
+  import type { MatchInfo } from "$lib/types";
+  import MatchCardBody from "./MatchCardBody.svelte";
+  import MatchCardDetailsPart from "./MatchCardDetailsPart.svelte";
+  import MatchCardTeamsPart from "./MatchCardTeamsPart.svelte";
+
+  export let data: MatchInfo;
 </script>
 
-<div class="box py-1 px-3 compress">
-  <div class="level compress">
+<MatchCardBody>
+  <MatchCardDetailsPart date={data.date} location={data.location} />
+  <MatchCardTeamsPart
+    ourTeamName={data.ourTeamName}
+    oppTeamName={data.oppTeamName}
+  />
+  {#if $page.data.admin}
     <div class="level-item">
-      <div>
-        <h2 class="title is-5">
-          {date.toLocaleDateString("en-AU", { day: "numeric", month: "short" })}
-        </h2>
-        <h3 class="subtitle is-6">
-          {date.toLocaleTimeString("en-AU", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </h3>
-        <h3 class="subtitle is-6">{location}</h3>
-      </div>
+      <a class="button" href="/app/matches/edit/{data.id}">Edit</a>
     </div>
-    <div class="level-item">
-      <table class="table">
-        <tbody>
-          <tr>
-            <th>{ourTeamName}</th>
-          </tr>
-          <tr>
-            <th>{oppTeamName}</th>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+  {/if}
+</MatchCardBody>

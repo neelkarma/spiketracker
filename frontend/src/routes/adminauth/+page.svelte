@@ -22,18 +22,26 @@
 
 <div class="columns is-mobile is-centered is-vcentered is-fullheight">
   <form class="column is-half" on:submit={handleSubmit}>
-    <a class="button" href="/">Back</a>
-
     {#if error}
       <div class="notification is-danger" role="alert">
         Error: {error}
       </div>
     {/if}
 
-    <label>
-      Password
-      <input type="password" name="password" />
-    </label>
-    <button class="button is-primary">Login</button>
+    <div class="field">
+      <label for="password-input">Password</label>
+      <div class="control">
+        <input
+          id="password-input"
+          class="input"
+          type="password"
+          name="password"
+        />
+      </div>
+    </div>
+    <div class="buttons">
+      <button class="button is-primary">Login</button>
+      <a href="/" class="button">Back</a>
+    </div>
   </form>
 </div>

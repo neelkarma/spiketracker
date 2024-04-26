@@ -2,6 +2,7 @@
   import MatchApproveCard from "$lib/components/MatchApproveCard.svelte";
   import MatchUpcomingCard from "$lib/components/MatchUpcomingCard.svelte.svelte";
   import Stat from "$lib/components/Stat.svelte";
+  import { SAMPLE_MATCH_INFO } from "$lib/types";
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -16,18 +17,7 @@
             <h1 class="title is-4">Matches to Approve</h1>
             {#each { length: 5 } as _}
               <div class="is-align-self-center mb-3">
-                <MatchApproveCard
-                  date={new Date(2024, 0, 2, 9, 0)}
-                  location="SBHS Gymnasium"
-                  ourTeamName="SBHS 1sts"
-                  oppTeamName="Newington 2nds"
-                  points={[
-                    { our: 25, opp: 20 },
-                    { our: 26, opp: 14 },
-                    { our: 28, opp: 23 },
-                  ]}
-                  matchId={1}
-                />
+                <MatchApproveCard data={SAMPLE_MATCH_INFO} />
               </div>
             {/each}
           </div>
@@ -49,12 +39,7 @@
           <div class="is-flex is-flex-direction-column">
             {#each { length: 5 } as _}
               <div class="is-align-self-center mb-3">
-                <MatchUpcomingCard
-                  date={new Date(2024, 0, 2, 9, 0)}
-                  location="SBHS Gymnasium"
-                  ourTeamName="SBHS 1sts"
-                  oppTeamName="Newington 2nds"
-                />
+                <MatchUpcomingCard data={SAMPLE_MATCH_INFO} />
               </div>
             {/each}
           </div>

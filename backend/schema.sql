@@ -7,24 +7,28 @@ CREATE TABLE IF NOT EXISTS players (
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
   grad_year INTEGER NOT NULL,
-  positions TEXT DEFAULT "[]" NOT NULL -- string[]
+  positions TEXT NOT NULL DEFAULT "[]",
+  -- string[]
+  visible BOOLEAN NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS teams (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   year INTEGER NOT NULL,
-  archived BOOLEAN NOT NULL DEFAULT 0
+  archived BOOLEAN NOT NULL DEFAULT 0,
+  visible BOOLEAN NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS matches (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   team_id INTEGER NOT NULL REFERENCES teams (id),
   opponent_name TEXT NOT NULL,
-  approved BOOLEAN NOT NULL DEFAULT 0,
   time TEXT NOT NULL,
   location TEXT NOT NULL,
   points TEXT DEFAULT "[]" NOT NULL -- { our: number; opp: number; }[]
+  visible BOOLEAN NOT NULL DEFAULT 0,
+  scoring BOOLEAN NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS stats (

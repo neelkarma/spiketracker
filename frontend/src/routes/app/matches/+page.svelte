@@ -1,12 +1,14 @@
 <script lang="ts">
+  import MatchCardBody from "$lib/components/MatchCardBody.svelte";
+  import MatchCardDetailsPart from "$lib/components/MatchCardDetailsPart.svelte";
+  import MatchCardTeamsPart from "$lib/components/MatchCardTeamsPart.svelte";
   import Modal from "$lib/components/Modal.svelte";
-  import TeamCard from "$lib/components/TeamCard.svelte";
-  import { SAMPLE_TEAM_INFO, type TeamInfo } from "$lib/types";
+  import { SAMPLE_MATCH_INFO, type MatchInfo } from "$lib/types";
   import { debounce, wait } from "$lib/utils";
   import type { PageData } from "./$types";
 
   interface SortOptions {
-    sortBy: "name" | "year";
+    sortBy: "time" | "team";
     reverse: boolean;
   }
 
@@ -14,19 +16,21 @@
 
   let query = "";
   let sortOptions: SortOptions = {
-    sortBy: "name",
+    sortBy: "time",
     reverse: false,
   };
   let filterModalIsOpen = false;
 
-  let filteredTeams: TeamInfo[];
+  let filteredUpcomingMatches: MatchInfo[];
+  let filteredPastMatches: MatchInfo[];
 
   const handleChange = async (query: string, sortOptions: SortOptions) => {
     // const data = await fetch("/api/teams", { ... }).then((res) => res.json());
 
-    // again, network simuation
+    // simulate network delay
     await wait(1000);
-    filteredTeams = [SAMPLE_TEAM_INFO];
+    filteredUpcomingMatches = [SAMPLE_MATCH_INFO];
+    filteredPastMatches = [SAMPLE_MATCH_INFO];
   };
 
   const handleChangeDebounced = debounce(handleChange);
@@ -58,18 +62,18 @@
             type="radio"
             name="sortby"
             value="name"
-            checked={sortOptions.sortBy === "name"}
+            checked={sortOptions.sortBy === "time"}
           />
-          Team Name (A-Z)
+          Match Time
         </label>
         <label class="radio">
           <input
             type="radio"
             name="sortby"
             value="year"
-            checked={sortOptions.sortBy === "year"}
+            checked={sortOptions.sortBy === "team"}
           />
-          Year
+          SBHS Team Name
         </label>
       </div>
     </div>
@@ -98,15 +102,15 @@
 
 <section class="section">
   <div class="container">
-    <h1 class="title">Teams</h1>
+    <h1 class="title">Matches</h1>
     <div class="field is-grouped">
       {#if data.admin}
         <div class="control">
-          <a href="/app/teams/new" class="button is-primary">
+          <a href="/app/matches/new" class="button is-primary">
             <span class="icon">
               <i class="fas fa-plus"></i>
             </span>
-            <span>New Team</span>
+            <span>New Match</span>
           </a>
         </div>
       {/if}
@@ -114,7 +118,7 @@
         <input
           class="input"
           type="email"
-          placeholder="Search teams..."
+          placeholder="Search matches..."
           bind:value={query}
         />
         <span class="icon is-left">
@@ -130,14 +134,36 @@
         </button>
       </div>
     </div>
-    {#if filteredTeams}
-      {#each filteredTeams as team}
-        <TeamCard data={team} />
-      {/each}
-    {:else}
-      {#each { length: 5 } as _}
-        <div class="skeleton-block"></div>
-      {/each}
-    {/if}
+    <div class="box">
+      <div class="title is-4">Upcoming Matches</div>
+      {#if filteredUpcomingMatches}
+        {#each filteredUpcomingMatches as { id, date, oppTeamName, ourTeamName, location }}
+          <MatchCardBody>
+            <MatchCardDetailsPart {date} {location} />
+            <MatchCardTeamsPart {ourTeamName} {oppTeamName} />
+            <div class="level-item">
+              <a href="/app/matches/edit/{id}" class="button">Edit</a>
+            </div>
+          </MatchCardBody>
+          <!-- <TeamCard {...match} /> -->
+        {/each}
+      {:else}
+        {#each { length: 5 } as _}
+          <div class="skeleton-block"></div>
+        {/each}
+      {/if}
+    </div>
+    <div class="box">
+      <div class="title is-4">Past Matches</div>
+      {#if filteredPastMatches}
+        TODO: actually put shit here
+      {:else}
+        {#each { length: 5 } as _}
+          <div class="skeleton-block"></div>
+        {/each}
+      {/if}
+    </div>
   </div>
 </section>
+
+<!-- TODO: Implement the results -->
