@@ -4,7 +4,7 @@ import { wait } from "$lib/utils";
 import type { PageLoad } from "./$types";
 
 export const load = (async ({ params }): Promise<MatchInfo> => {
-  const id = parseInt(params.id);
+  const id = Number.parseInt(params.id);
 
   // Simulate network latency
   if (browser) await wait(1000);

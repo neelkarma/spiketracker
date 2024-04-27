@@ -8,7 +8,7 @@
   let cancelBtn: HTMLButtonElement;
   onMount(() => cancelBtn.focus());
 
-  const dispatch = createEventDispatcher<{ confirm: void; cancel: void }>();
+  const dispatch = createEventDispatcher<{ confirm: null; cancel: null }>();
 </script>
 
 <Modal bind:isOpen>

@@ -40,7 +40,7 @@
     //@ts-ignore
     value = [
       ...value,
-      teams.find(({ id: teamsId }) => teamsId === parseInt(id))!,
+      teams.find(({ id: teamsId }) => teamsId === Number.parseInt(id))!,
     ];
     e.currentTarget.value = "";
   };

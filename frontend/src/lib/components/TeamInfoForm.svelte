@@ -13,8 +13,8 @@
 
   const dispatch = createEventDispatcher<{
     submit: TeamInfo;
-    cancel: void;
-    delete: void;
+    cancel: null;
+    delete: null;
   }>();
 
   let deleteModalOpen = false;

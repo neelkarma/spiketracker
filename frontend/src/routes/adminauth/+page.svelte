@@ -1,9 +1,10 @@
 <script lang="ts">
+  import type { FormEventHandler } from "svelte/elements";
+
   let error: string | null = null;
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    const password = e.target.password.value;
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    const password = new FormData(e.currentTarget).get("password")!;
     const res = await fetch("/api/auth/login/admin", {
       method: "POST",
       body: JSON.stringify({ password }),
@@ -21,7 +22,7 @@
 </script>
 
 <div class="columns is-mobile is-centered is-vcentered is-fullheight">
-  <form class="column is-half" on:submit={handleSubmit}>
+  <form class="column is-half" on:submit|preventDefault={handleSubmit}>
     {#if error}
       <div class="notification is-danger" role="alert">
         Error: {error}

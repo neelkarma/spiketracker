@@ -12,8 +12,8 @@
 
   const dispatch = createEventDispatcher<{
     submit: MatchInfo;
-    cancel: void;
-    delete: void;
+    cancel: null;
+    delete: null;
   }>();
 
   let pointsOverridden = data.pointsOverridden;
@@ -46,8 +46,8 @@
     const out = [];
     for (let i = 0; formData.has(`our-${i}`); i++) {
       out.push({
-        our: parseInt(formData.get(`our-${i}`)!.toString()),
-        opp: parseInt(formData.get(`opp-${i}`)!.toString()),
+        our: Number.parseInt(formData.get(`our-${i}`)!.toString()),
+        opp: Number.parseInt(formData.get(`opp-${i}`)!.toString()),
       });
     }
     return out;
@@ -60,7 +60,7 @@
 
     const formData = new FormData(e.currentTarget);
     const pointsOverridden = !!formData.get("pointsOverridden")?.toString();
-    const ourTeamId = parseInt(formData.get("ourTeamId")!.toString());
+    const ourTeamId = Number.parseInt(formData.get("ourTeamId")!.toString());
 
     dispatch("submit", {
       id: data.id,

@@ -12,8 +12,8 @@
 
   const dispatch = createEventDispatcher<{
     submit: PlayerInfo;
-    cancel: void;
-    delete: void;
+    cancel: null;
+    delete: null;
   }>();
 
   let deleteModalOpen = false;
