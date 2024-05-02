@@ -1,11 +1,37 @@
 <script lang="ts">
   import Modal from "$lib/components/Modal.svelte";
+  import TeamCard from "$lib/components/TeamCard.svelte";
+  import { SAMPLE_TEAM_INFO, type TeamInfo } from "$lib/types";
+  import { debounce, wait } from "$lib/utils";
+  import type { PageData } from "./$types";
 
-  let sortOptions = {
+  interface SortOptions {
+    sortBy: "name" | "year";
+    reverse: boolean;
+  }
+
+  export let data: PageData;
+
+  let query = "";
+  let sortOptions: SortOptions = {
     sortBy: "name",
     reverse: false,
   };
   let filterModalIsOpen = false;
+
+  let filteredTeams: TeamInfo[];
+
+  const handleChange = async (query: string, sortOptions: SortOptions) => {
+    // const data = await fetch("/api/teams", { ... }).then((res) => res.json());
+
+    // again, network simuation
+    await wait(1000);
+    filteredTeams = [SAMPLE_TEAM_INFO];
+  };
+
+  const handleChangeDebounced = debounce(handleChange);
+
+  $: handleChangeDebounced(query, sortOptions);
 </script>
 
 <Modal bind:isOpen={filterModalIsOpen}>
@@ -23,7 +49,7 @@
       filterModalIsOpen = false;
     }}
   >
-    <div class="title">Sort Options</div>
+    <div class="title">Sorting Options</div>
     <div class="field">
       <p class="label">Sort By:</p>
       <div class="control">
@@ -74,8 +100,23 @@
   <div class="container">
     <h1 class="title">Teams</h1>
     <div class="field is-grouped">
+      {#if data.admin}
+        <div class="control">
+          <a href="/app/teams/new" class="button is-primary">
+            <span class="icon">
+              <i class="fas fa-plus"></i>
+            </span>
+            <span>New Team</span>
+          </a>
+        </div>
+      {/if}
       <div class="control has-icons-left is-expanded">
-        <input class="input" type="email" placeholder="Search teams..." />
+        <input
+          class="input"
+          type="email"
+          placeholder="Search teams..."
+          bind:value={query}
+        />
         <span class="icon is-left">
           <i class="fas fa-search"></i>
         </span>
@@ -85,11 +126,18 @@
           <span class="icon">
             <i class="fas fa-sliders"></i>
           </span>
-          <span>Filter and Sort</span>
+          <span>Sorting Options</span>
         </button>
       </div>
     </div>
+    {#if filteredTeams}
+      {#each filteredTeams as team}
+        <TeamCard data={team} />
+      {/each}
+    {:else}
+      {#each { length: 5 } as _}
+        <div class="skeleton-block"></div>
+      {/each}
+    {/if}
   </div>
 </section>
-
-<!-- TODO: Implement the results -->

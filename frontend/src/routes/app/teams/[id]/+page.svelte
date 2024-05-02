@@ -1,52 +1,22 @@
 <script lang="ts">
   import Stat from "$lib/components/Stat.svelte";
+  import { SAMPLE_PLAYER_INFO, type PlayerInfo } from "$lib/types";
   import { formatAsPercentage } from "$lib/utils";
   import type { PageData } from "./$types";
 
   export let data: PageData;
 
-  const getTeamPlayerStats = async () => {
+  const getTeamPlayerStats = async (): Promise<PlayerInfo[]> => {
     // const res = await fetch(`/api/players/${$page.params.id}/matches`);
     // const matches = await res.json();
     // return matches
 
     // dummy data
     return [
-      {
-        id: 0,
-        playernum: 123,
-        firstName: "ovuvuevuevue enyetuenwuevue ugbemugbem osas",
-        surname: "ovuvuevuevue enyetuenwuevue ugbemugbem osas",
-        position: "Setter",
-      },
-      {
-        id: 0,
-        playernum: 0,
-        firstName: "Guppy",
-        surname: "Gup",
-        position: "Defensive Specialist",
-      },
-      {
-        id: 0,
-        playernum: 0,
-        firstName: "Guppy",
-        surname: "Gup",
-        position: "Middle Blocker",
-      },
-      {
-        id: 0,
-        playernum: 0,
-        firstName: "Guppy",
-        surname: "Gup",
-        position: "Outside Hitter",
-      },
-      {
-        id: 0,
-        playernum: 0,
-        firstName: "Guppy",
-        surname: "Gup",
-        position: "Opposite Hitter",
-      },
+      SAMPLE_PLAYER_INFO,
+      SAMPLE_PLAYER_INFO,
+      SAMPLE_PLAYER_INFO,
+      SAMPLE_PLAYER_INFO,
     ];
   };
 </script>
@@ -61,13 +31,21 @@
           </div>
         </div>
         <div class="level-right">
-          <Stat label="W/L" value="{data.wins}-{data.losses}" />
-          <Stat label="Set Ratio" value={formatAsPercentage(data.setRatio)} />
-          <Stat label="Kill Rate" value={formatAsPercentage(data.kr)} />
-          <Stat
-            label="Passing Efficiency"
-            value={formatAsPercentage(data.pef)}
-          />
+          <div class="level-item">
+            <Stat label="W/L" value="{data.wins}-{data.losses}" />
+          </div>
+          <div class="level-item">
+            <Stat label="Set Ratio" value={formatAsPercentage(data.setRatio)} />
+          </div>
+          <div class="level-item">
+            <Stat label="Kill Rate" value={formatAsPercentage(data.kr)} />
+          </div>
+          <div class="level-item">
+            <Stat
+              label="Passing Efficiency"
+              value={formatAsPercentage(data.pef)}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -82,19 +60,23 @@
       <table class="table is-fullwidth">
         <thead>
           <tr>
-            <th>No.</th>
-            <th>Firstname</th>
+            <th>First Name</th>
             <th>Surname</th>
-            <th>Position</th>
+            <th>Avg PPG</th>
+            <th>Avg Kill Rate</th>
+            <th>Avg Passing Efficiency</th>
+            <th>Total Points</th>
           </tr>
         </thead>
         <tbody>
-          {#each players as { playernum, firstName, surname, position, id }}
+          {#each players as { firstName, surname, ppg, kr, pef, totalPoints }}
             <tr>
-              <td>{playernum}</td>
               <td>{firstName}</td>
               <td>{surname}</td>
-              <td>{position}</td>
+              <td>{formatAsPercentage(ppg)}</td>
+              <td>{formatAsPercentage(kr)}</td>
+              <td>{formatAsPercentage(pef)}</td>
+              <td>{totalPoints}</td>
             </tr>
           {/each}
         </tbody>
@@ -102,32 +84,3 @@
     {/await}
   </div>
 </div>
-
-<!--
-  <thead>
-            <tr>
-              <th>Open</th>
-              <th>Date</th>
-              <th>Opponent</th>
-              <th>Total Pts</th>
-              <th>KR%</th>
-              <th>PEF%</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each matches as { id, date, opponent, totalPoints, kr, pef }}
-              <tr>
-                <td>
-                  <a class="button" href="/app/matches/{id}">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                  </a>
-                </td>
-                <td>{date.toDateString()}</td>
-                <td>{opponent}</td>
-                <td>{totalPoints}</td>
-                <td>{formatAsPercentage(kr)}</td>
-                <td>{formatAsPercentage(pef)}</td>
-              </tr>
-            {/each}
-          </tbody>
--->

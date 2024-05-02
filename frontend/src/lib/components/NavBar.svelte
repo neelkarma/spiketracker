@@ -7,7 +7,12 @@
 <nav class="navbar is-primary" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" href="/app">
-      <h1 class="has-text-weight-bold">SpikeTracker</h1>
+      <span class="icon-text">
+        <span class="icon is-size-4">
+          <i class="fa-solid fa-volleyball"></i>
+        </span>
+        <span class="has-text-weight-bold">SpikeTracker</span>
+      </span>
     </a>
 
     <!-- svelte-ignore a11y-interactive-supports-focus -->
@@ -37,25 +42,15 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <a
-          href="/app/settings"
-          title="Settings"
-          class="has-text-white is-hidden-touch"
-        >
+        <a href="/app/settings" class="has-text-white">
           <i class="fa-solid fa-gear"></i>
-        </a>
-        <a href="/app/settings" class="is-hidden-desktop">
-          <i class="fa-solid fa-gear"></i>
-          <span>Settings</span>
+          <span class="is-hidden-desktop">Settings</span>
         </a>
       </div>
       <div class="navbar-item">
-        <a href="/app/help" title="Help" class="has-text-white is-hidden-touch">
+        <a href="/app/help" class="has-text-white">
           <i class="fa-solid fa-question-circle"></i>
-        </a>
-        <a href="/app/help" class="is-hidden-desktop">
-          <i class="fa-solid fa-question-circle"></i>
-          <span>Help</span>
+          <span class="is-hidden-desktop">Help</span>
         </a>
       </div>
       <div class="navbar-item">
@@ -64,23 +59,12 @@
         <!-- svelte-ignore a11y-missing-attribute -->
         <a
           on:click={logout}
-          class="has-text-white is-hidden-touch"
           role="button"
           title="Log Out"
+          class="has-text-white"
         >
           <i class="fa-solid fa-sign-out-alt"></i>
-        </a>
-        <!-- svelte-ignore a11y-interactive-supports-focus -->
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-missing-attribute -->
-        <a
-          on:click={logout}
-          class="is-hidden-desktop"
-          role="button"
-          title="Log Out"
-        >
-          <i class="fa-solid fa-sign-out-alt"></i>
-          <span>Log Out</span>
+          <span class="is-hidden-desktop">Log Out</span>
         </a>
       </div>
     </div>

@@ -3,9 +3,7 @@
   export let value: string | number;
 </script>
 
-<div class="level-item">
-  <div>
-    <p class="heading">{label}</p>
-    <p class="title">{value}</p>
-  </div>
+<div {...$$restProps}>
+  <p class="heading">{label}</p>
+  <p class="title">{value}</p>
 </div>

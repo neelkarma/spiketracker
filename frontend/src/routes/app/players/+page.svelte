@@ -1,0 +1,188 @@
+<script lang="ts">
+  import Modal from "$lib/components/Modal.svelte";
+  import { SAMPLE_PLAYER_INFO, type PlayerInfo } from "$lib/types";
+  import { debounce, formatAsPercentage, wait } from "$lib/utils";
+  import type { PageData } from "./$types";
+
+  interface SortOptions {
+    sortBy:
+      | "firstName"
+      | "surname"
+      | "ppg"
+      | "kr"
+      | "pef"
+      | "totalPoints"
+      | "gradYear";
+    reverse: boolean;
+  }
+
+  export let data: PageData;
+
+  let query = "";
+  let sortOptions: SortOptions = {
+    sortBy: "surname",
+    reverse: false,
+  };
+  let filterModalIsOpen = false;
+
+  let filteredPlayers: PlayerInfo[];
+
+  const handleChange = async (query: string, sortOptions: SortOptions) => {
+    // const data = await fetch("/api/teams", { ... }).then((res) => res.json());
+
+    // again, network simuation
+    await wait(1000);
+    filteredPlayers = [SAMPLE_PLAYER_INFO];
+  };
+
+  const handleChangeDebounced = debounce(handleChange);
+
+  $: handleChangeDebounced(query, sortOptions);
+</script>
+
+<Modal bind:isOpen={filterModalIsOpen}>
+  <form
+    class="box"
+    on:submit|preventDefault={(e) => {
+      const formData = new FormData(e.currentTarget);
+
+      sortOptions = {
+        //@ts-ignore
+        sortBy: formData.get("sortby"),
+        reverse: formData.has("reverse"),
+      };
+
+      filterModalIsOpen = false;
+    }}
+  >
+    <div class="title">Sorting Options</div>
+    <div class="field">
+      <p class="label">Sort By:</p>
+      <div class="control">
+        {#each [["firstName", "First Name (A-Z)"], ["surname", "Surname (A-Z)"], ["ppg", "Avg PPG (Desc)"], ["kr", "Kill Rate (Desc)"], ["pef", "Passing Efficiency (Desc)"], ["totalPoints", "Total Points (Desc)"], ["gradYear", "Graduation Year (Desc)"]] as [value, label]}
+          <label class="radio">
+            <input
+              type="radio"
+              name="sortby"
+              {value}
+              checked={sortOptions.sortBy === value}
+            />
+            {label}
+          </label>
+        {/each}
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <label class="checkbox">
+          <input type="checkbox" name="reverse" checked={sortOptions.reverse} />
+          Reverse Order
+        </label>
+      </div>
+    </div>
+    <div class="field">
+      <div class="control is-grouped">
+        <button class="button is-primary">Apply</button>
+        <button
+          class="button"
+          type="button"
+          on:click={() => (filterModalIsOpen = false)}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
+</Modal>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Players</h1>
+    <div class="field is-grouped">
+      {#if data.admin}
+        <div class="control">
+          <a href="/app/players/new" class="button is-primary">
+            <span class="icon">
+              <i class="fas fa-plus"></i>
+            </span>
+            <span>Add Player</span>
+          </a>
+        </div>
+      {/if}
+      <div class="control has-icons-left is-expanded">
+        <input
+          class="input"
+          type="email"
+          placeholder="Search players..."
+          bind:value={query}
+        />
+        <span class="icon is-left">
+          <i class="fas fa-search"></i>
+        </span>
+      </div>
+      <div class="control">
+        <button class="button" on:click={() => (filterModalIsOpen = true)}>
+          <span class="icon">
+            <i class="fas fa-sliders"></i>
+          </span>
+          <span>Sorting Options</span>
+        </button>
+      </div>
+    </div>
+    {#if filteredPlayers}
+      <div class="table-container">
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Open</th>
+              <th>First Name</th>
+              <th>Surname</th>
+              <th>Team(s)</th>
+              <th>Avg PPG</th>
+              <th>Kill Rate</th>
+              <th>Passing Efficiency</th>
+              <th>Total Points</th>
+              <th>Edit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each filteredPlayers as { id, firstName, surname, teams, ppg, kr, pef, totalPoints }}
+              <tr>
+                <td
+                  ><a href="/app/players/{id}" class="button"
+                    ><span class="icon"
+                      ><i class="fa-solid fa-arrow-up-right-from-square"
+                      ></i></span
+                    ></a
+                  >
+                </td>
+                <td>{firstName}</td>
+                <td>{surname}</td>
+                <td
+                  >{#each teams as { name: teamName, id: teamId }}<a
+                      href="/app/teams/{teamId}">{teamName}</a
+                    >
+                  {/each}</td
+                >
+                <td>{ppg}</td>
+                <td>{formatAsPercentage(kr)}</td>
+                <td>{formatAsPercentage(pef)}</td>
+                <td>{totalPoints}</td>
+                <td
+                  ><a href="/app/players/edit/{id}" class="button"
+                    ><span class="icon"><i class="fa-solid fa-pencil"></i></span
+                    ></a
+                  ></td
+                >
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {:else}
+      {#each { length: 10 } as _}
+        <div class="skeleton-block"></div>
+      {/each}
+    {/if}
+  </div>
+</section>

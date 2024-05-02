@@ -1,4 +1,3 @@
-import { building } from "$app/environment";
 import { redirect, type Handle } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -6,13 +5,17 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   if (event.url.pathname.startsWith("/api")) return resolve(event);
 
-  const res = await fetch("/api/auth/status");
-  const data = await res.json();
+  const data = await fetch("/api/auth/status").then((res) => res.json());
 
   if (data.authorized && !event.url.pathname.startsWith("/app"))
     throw redirect(302, "/app");
   if (!data.authorized && event.url.pathname.startsWith("/app"))
     throw redirect(302, "/");
+  if (
+    !data.admin &&
+    event.url.pathname.split("/").some((seg) => ["new", "edit"].includes(seg))
+  )
+    throw redirect(302, "/app");
 
   return resolve(event);
 };
