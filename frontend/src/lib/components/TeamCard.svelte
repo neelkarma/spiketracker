@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import type { TeamInfo } from "$lib/types";
-  import { formatAsPercentage } from "$lib/utils";
   import Stat from "./Stat.svelte";
 
   export let data: TeamInfo;
@@ -19,19 +18,11 @@
     </div>
     <div class="level-right">
       <Stat label="W/L" value="{data.wins}-{data.losses}" class="mr-4" />
-      <Stat
-        label="Set Ratio"
-        value={formatAsPercentage(data.setRatio)}
-        class="mr-4"
-      />
-      <Stat
-        label="Kill Rate"
-        value={formatAsPercentage(data.kr)}
-        class="mr-4"
-      />
+      <Stat label="Set Ratio" value={data.setRatio.toFixed(3)} class="mr-4" />
+      <Stat label="Kill Rate" value={data.kr.toFixed(3)} class="mr-4" />
       <Stat
         label="Passing Efficiency"
-        value={formatAsPercentage(data.pef)}
+        value={data.pef.toFixed(3)}
         class="mr-4"
       />
       {#if $page.data.admin}
