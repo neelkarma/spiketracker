@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint
 
 from backend.db import get_db
@@ -17,3 +18,8 @@ def delete_match(id: int):
     con.execute("DELETE FROM matches WHERE id = ?", (id,))
 
     return "Success", 200
+
+con.execute("SELECT points from matches WHERE id = ?", (id,))
+
+points_str = cursor.fetchall()
+point_dict = json.loads(points_str)

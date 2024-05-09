@@ -276,7 +276,12 @@ SELECT id,
     WHERE middle_attacks.team_id = teams.id
       AND matches.approved = 1
   ) AS middle_hitting_avg,
-  -- wins INTEGER NOT NULL DEFAULT 0,
+  (
+    SELECT SUM(rating) / COUNT(rating) -- needs to be altered
+    FROM middle_attacks
+    WHERE middle_attacks.team_id = teams.id
+      AND matches.approved = 1
+  ) AS set_ratio -- wins INTEGER NOT NULL DEFAULT 0,
   -- losses INTEGER NOT NULL DEFAULT 0,
   -- set_ratio REAL NOT NULL DEFAULT 0,
   -- kill_rate REAL NOT NULL DEFAULT 0,
