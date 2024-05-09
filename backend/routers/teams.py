@@ -16,3 +16,17 @@ def get_team_data(id: int):
         return "Not Found", 404
 
     # TODO: incomplete
+
+@teams.delete("/<id>")
+def delete_team(id: int):
+    session = get_session()
+    if session is None:
+        return "Unauthorized", 401
+
+    if not session["admin"]:
+        return "You a student", 401
+
+    con = get_db()
+    con.execute("DELETE FROM teams WHERE id = ?", (id,))
+
+    return "Success", 200
