@@ -1,7 +1,7 @@
 <script lang="ts">
   import Modal from "$lib/components/Modal.svelte";
   import { SAMPLE_PLAYER_INFO, type PlayerInfo } from "$lib/types";
-  import { debounce, formatAsPercentage, wait } from "$lib/utils";
+  import { debounce, wait } from "$lib/utils";
   import type { PageData } from "./$types";
 
   interface SortOptions {
@@ -165,8 +165,8 @@
                   {/each}</td
                 >
                 <td>{ppg}</td>
-                <td>{formatAsPercentage(kr)}</td>
-                <td>{formatAsPercentage(pef)}</td>
+                <td>{kr.toFixed(3)}</td>
+                <td>{pef.toFixed(3)}</td>
                 <td>{totalPoints}</td>
                 <td
                   ><a href="/app/players/edit/{id}" class="button"

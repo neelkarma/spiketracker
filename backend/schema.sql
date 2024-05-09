@@ -84,57 +84,93 @@ CREATE VIEW IF NOT EXISTS points AS
 SELECT *
 FROM stats
 WHERE action IN ('attack', 'block', 'serve')
-  AND rating = 3;
+  AND rating = 3
+  AND approved = TRUE;
 
 CREATE VIEW IF NOT EXISTS attacks AS
 SELECT *
 FROM stats
-WHERE action IN ('attack');
+WHERE action IN ('attack')
+  AND approved = TRUE;
 
 CREATE VIEW IF NOT EXISTS successful_attacks AS
 SELECT *
 FROM attacks
 WHERE rating = 3;
 
+CREATE VIEW if NOT EXISTS wing_attacks AS
+SELECT *
+FROM attacks
+WHERE position = 'outside'
+  OR position = 'opposition';
+
+CREATE VIEW if NOT EXISTS middle_attacks AS
+SELECT *
+FROM attacks
+WHERE position = 'middle';
+
 CREATE VIEW IF NOT EXISTS serves AS
 SELECT *
 FROM stats
-WHERE action IN ('serve');
+WHERE action IN ('serve')
+  AND approved = TRUE;
 
 CREATE VIEW IF NOT EXISTS successful_serves AS
 SELECT *
 FROM serves
 WHERE rating = 3;
 
+CREATE VIEW IF NOT EXISTS pos1_serve_eff AS
+SELECT *
+FROM serves
+WHERE x_pos_out < 6;
+
+CREATE VIEW IF NOT EXISTS pos2_serve_eff AS
+SELECT *
+FROM serves
+WHERE x_pos_out > 6
+  AND x_pos_out < 12;
+
+CREATE VIEW IF NOT EXISTS pos3_serve_eff AS
+SELECT *
+FROM serves
+WHERE x_pos_out > 12;
+
 CREATE VIEW IF NOT EXISTS blocks AS
 SELECT *
 FROM stats
-WHERE action IN ('block');
+WHERE action IN ('block')
+  AND approved = TRUE;
 
 CREATE VIEW IF NOT EXISTS successful_blocks AS
 SELECT *
 FROM blocks
-WHERE rating = 3;
+WHERE rating = 3
+  AND approved = TRUE;
 
 CREATE VIEW IF NOT EXISTS set_passes AS
 SELECT *
 FROM stats
-WHERE action IN ('set');
+WHERE action IN ('set')
+  AND approved = TRUE;
 
 CREATE VIEW IF NOT EXISTS serve_recieves AS
 SELECT *
 FROM stats
-WHERE action in ('serve_receive');
+WHERE action in ('serve_receive')
+  AND approved = TRUE;
 
 CREATE VIEW IF NOT EXISTS freeball_recieves AS
 SELECT *
 FROM stats
-WHERE action in ('freeball_receive');
+WHERE action in ('freeball_receive')
+  AND approved = TRUE;
 
 CREATE VIEW IF NOT EXISTS error_stats AS
-SELECT id
-FROM stats
-WHERE rating = 0;
+SELECT id,
+  FROM stats
+WHERE rating = 0
+  AND approved = TRUE;
 
 CREATE VIEW IF NOT EXISTS games_played AS
 SELECT player_id,
@@ -216,7 +252,7 @@ SELECT id -- total our sets
   -- total our points for each set
 FROM matches;
 
-CREATE VIEW IF NOT EXISTS team_stats AS
+CREATE VIEW IF NOT EXISTS team_stats AS -- how to check approved for everything
 SELECT id,
   (
     SELECT COUNT(*)
@@ -230,11 +266,18 @@ SELECT id,
       AND matches.approved = 1
   ) AS total_approved_matches,
   (
-    SELECT COUNT(*) -- needs to be altered
-    FROM matches
-    WHERE matches.team_id = teams.id
+    SELECT SUM(rating) / COUNT(rating) -- needs to be altered
+    FROM wing_attacks
+    WHERE wing_attacks.team_id = teams.id
       AND matches.approved = 1
-  ) AS wing_hitting_avg -- wins INTEGER NOT NULL DEFAULT 0,
+  ) AS wing_hitting_avg,
+  (
+    SELECT SUM(rating) / COUNT(rating) -- needs to be altered
+    FROM middle_attacks
+    WHERE middle_attacks.team_id = teams.id
+      AND matches.approved = 1
+  ) AS middle_hitting_avg,
+  -- wins INTEGER NOT NULL DEFAULT 0,
   -- losses INTEGER NOT NULL DEFAULT 0,
   -- set_ratio REAL NOT NULL DEFAULT 0,
   -- kill_rate REAL NOT NULL DEFAULT 0,
