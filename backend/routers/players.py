@@ -22,14 +22,16 @@ def get_player_data(id: int):
 
     return jsonify(
         {
-            "name": data["name"],
-            "teams": teams,
-            "stats": {
-                "ppg": stats["avg_ppg"],
-                "kr": stats["kill_rate"],
-                "pef": stats["passing_efficiency"],
-                "totalPoints": stats["total_points"],
-            },
+            "id": id,
+            "firstName": data["first_name"],
+            "surname": data["surname"],
+            "gradYear": data["gradYear"],
+            "teams": data["teams"],
+            "ppg": data["ppg"],
+            "kr": data["kr"],
+            "pef": data["pef"],
+            "totalPoints": data["totalPoints"],
+            "visible": data["visible"]
         }
     )
 
