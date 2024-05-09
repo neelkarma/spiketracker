@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS matches (
   opponent_name TEXT NOT NULL,
   time TEXT NOT NULL,
   location TEXT NOT NULL,
-  points TEXT DEFAULT "[]" NOT NULL -- { our: number; opp: number; }[]
+  points TEXT DEFAULT "[]" NOT NULL,
+  -- { our: number; opp: number; }[]
   visible BOOLEAN NOT NULL DEFAULT 0,
   scoring BOOLEAN NOT NULL DEFAULT 0
 );
@@ -166,8 +167,8 @@ WHERE action in ('freeball_receive')
   AND approved = TRUE;
 
 CREATE VIEW IF NOT EXISTS error_stats AS
-SELECT id,
-  FROM stats
+SELECT id
+FROM stats
 WHERE rating = 0
   AND approved = TRUE;
 
@@ -275,8 +276,7 @@ SELECT id,
     FROM middle_attacks
     WHERE middle_attacks.team_id = teams.id
       AND matches.approved = 1
-  ) AS middle_hitting_avg,
-  -- wins INTEGER NOT NULL DEFAULT 0,
+  ) AS middle_hitting_avg -- wins INTEGER NOT NULL DEFAULT 0,
   -- losses INTEGER NOT NULL DEFAULT 0,
   -- set_ratio REAL NOT NULL DEFAULT 0,
   -- kill_rate REAL NOT NULL DEFAULT 0,
