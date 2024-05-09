@@ -24,9 +24,15 @@
           </ul>
         </aside>
       </div>
-      <div class="column">
+      <div class="column p-6 has-background-light" id="content">
         <slot />
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  #content {
+    border-radius: 16px;
+  }
+</style>

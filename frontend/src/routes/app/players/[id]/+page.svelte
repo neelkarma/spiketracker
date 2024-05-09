@@ -1,7 +1,6 @@
 <script lang="ts">
   import Stat from "$lib/components/Stat.svelte";
   import { SAMPLE_MATCH_INFO, type MatchInfo } from "$lib/types";
-  import { formatAsPercentage } from "$lib/utils";
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -68,13 +67,10 @@
             <Stat label="Avg PPG" value={data.ppg} />
           </div>
           <div class="level-item">
-            <Stat label="Kill Rate" value={formatAsPercentage(data.kr)} />
+            <Stat label="Kill Rate" value={data.kr.toFixed(3)} />
           </div>
           <div class="level-item">
-            <Stat
-              label="Passing Efficiency"
-              value={formatAsPercentage(data.pef)}
-            />
+            <Stat label="Passing Efficiency" value={data.pef.toFixed(3)} />
           </div>
           <div class="level-item">
             <Stat label="Total Points" value={data.totalPoints} />
@@ -134,8 +130,8 @@
                   ></td
                 >
                 <td>{points}</td>
-                <td>{formatAsPercentage(kr)}</td>
-                <td>{formatAsPercentage(pef)}</td>
+                <td>{kr.toFixed(3)}</td>
+                <td>{pef.toFixed(3)}</td>
               </tr>
             {/each}
           </tbody>
