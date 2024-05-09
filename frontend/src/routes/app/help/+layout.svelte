@@ -3,7 +3,7 @@
     <h1 class="title">Help</h1>
 
     <div class="columns">
-      <div class="column is-one-quarter">
+      <div class="column is-narrow">
         <aside class="menu">
           <p class="menu-label">Users</p>
           <ul class="menu-list">
@@ -24,9 +24,15 @@
           </ul>
         </aside>
       </div>
-      <div class="column">
+      <div class="column p-6 has-background-light" id="content">
         <slot />
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  #content {
+    border-radius: 16px;
+  }
+</style>

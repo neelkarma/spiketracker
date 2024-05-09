@@ -1,7 +1,19 @@
-$primary: #094369;
+@use "bulma/sass" with (
+  $primary: #094369
+);
 
-@import "bulma/bulma.sass";
+html {
+  scroll-behavior: smooth;
+}
+
+.table td {
+  vertical-align: middle;
+}
 
 .is-fullheight {
   height: 100vh;
+}
+
+.compress {
+  max-width: fit-content;
 }

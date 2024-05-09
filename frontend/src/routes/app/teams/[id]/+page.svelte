@@ -1,52 +1,21 @@
 <script lang="ts">
   import Stat from "$lib/components/Stat.svelte";
-  import { formatAsPercentage } from "$lib/utils";
+  import { SAMPLE_PLAYER_INFO, type PlayerInfo } from "$lib/types";
   import type { PageData } from "./$types";
 
   export let data: PageData;
 
-  const getTeamPlayerStats = async () => {
+  const getTeamPlayerStats = async (): Promise<PlayerInfo[]> => {
     // const res = await fetch(`/api/players/${$page.params.id}/matches`);
     // const matches = await res.json();
     // return matches
 
     // dummy data
     return [
-      {
-        id: 0,
-        playernum: 123,
-        firstName: "ovuvuevuevue enyetuenwuevue ugbemugbem osas",
-        surname: "ovuvuevuevue enyetuenwuevue ugbemugbem osas",
-        position: "Setter",
-      },
-      {
-        id: 0,
-        playernum: 0,
-        firstName: "Guppy",
-        surname: "Gup",
-        position: "Defensive Specialist",
-      },
-      {
-        id: 0,
-        playernum: 0,
-        firstName: "Guppy",
-        surname: "Gup",
-        position: "Middle Blocker",
-      },
-      {
-        id: 0,
-        playernum: 0,
-        firstName: "Guppy",
-        surname: "Gup",
-        position: "Outside Hitter",
-      },
-      {
-        id: 0,
-        playernum: 0,
-        firstName: "Guppy",
-        surname: "Gup",
-        position: "Opposite Hitter",
-      },
+      SAMPLE_PLAYER_INFO,
+      SAMPLE_PLAYER_INFO,
+      SAMPLE_PLAYER_INFO,
+      SAMPLE_PLAYER_INFO,
     ];
   };
 </script>
@@ -61,13 +30,18 @@
           </div>
         </div>
         <div class="level-right">
-          <Stat label="W/L" value="{data.wins}-{data.losses}" />
-          <Stat label="Set Ratio" value={formatAsPercentage(data.setRatio)} />
-          <Stat label="Kill Rate" value={formatAsPercentage(data.kr)} />
-          <Stat
-            label="Passing Efficiency"
-            value={formatAsPercentage(data.pef)}
-          />
+          <div class="level-item">
+            <Stat label="W/L" value="{data.wins}-{data.losses}" />
+          </div>
+          <div class="level-item">
+            <Stat label="Set Ratio" value={data.setRatio.toFixed(3)} />
+          </div>
+          <div class="level-item">
+            <Stat label="Kill Rate" value={data.kr.toFixed(3)} />
+          </div>
+          <div class="level-item">
+            <Stat label="Passing Efficiency" value={data.pef.toFixed(3)} />
+          </div>
         </div>
       </div>
     </div>
@@ -82,19 +56,23 @@
       <table class="table is-fullwidth">
         <thead>
           <tr>
-            <th>No.</th>
-            <th>Firstname</th>
+            <th>First Name</th>
             <th>Surname</th>
-            <th>Position</th>
+            <th>Avg PPG</th>
+            <th>Avg Kill Rate</th>
+            <th>Avg Passing Efficiency</th>
+            <th>Total Points</th>
           </tr>
         </thead>
         <tbody>
-          {#each players as { playernum, firstName, surname, position, id }}
+          {#each players as { firstName, surname, ppg, kr, pef, totalPoints }}
             <tr>
-              <td>{playernum}</td>
               <td>{firstName}</td>
               <td>{surname}</td>
-              <td>{position}</td>
+              <td>{ppg}</td>
+              <td>{kr.toFixed(3)}</td>
+              <td>{pef.toFixed(3)}</td>
+              <td>{totalPoints}</td>
             </tr>
           {/each}
         </tbody>

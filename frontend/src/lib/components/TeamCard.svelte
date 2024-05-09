@@ -1,56 +1,38 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { formatAsPercentage } from "$lib/utils";
+  import type { TeamInfo } from "$lib/types";
   import Stat from "./Stat.svelte";
 
-  export let id: number;
-  export let name: string;
-  export let memberCount: number;
-  export let wins: number;
-  export let losses: number;
-  export let setRatio: number;
-  export let killRate: number;
-  export let passingEfficiency: number;
+  export let data: TeamInfo;
 </script>
 
-<a class="box" href="/app/teams/{id}">
+<a class="box" href="/app/teams/{data.id}">
   <div class="level">
     <div class="level-left">
       <div class="level-item">
         <div>
-          <p class="title mb-5">{name}</p>
-          <p class="subtitle">{memberCount} Members</p>
+          <p class="title mb-5">{data.name}</p>
+          <p class="subtitle">{data.playerIds.length} Members</p>
         </div>
       </div>
     </div>
     <div class="level-right">
-      <Stat label="W/L" value="{wins}-{losses}" class="mr-4" />
-      <Stat
-        label="Set Ratio"
-        value={formatAsPercentage(setRatio)}
-        class="mr-4"
-      />
-      <Stat
-        label="Kill Rate"
-        value={formatAsPercentage(killRate)}
-        class="mr-4"
-      />
+      <Stat label="W/L" value="{data.wins}-{data.losses}" class="mr-4" />
+      <Stat label="Set Ratio" value={data.setRatio.toFixed(3)} class="mr-4" />
+      <Stat label="Kill Rate" value={data.kr.toFixed(3)} class="mr-4" />
       <Stat
         label="Passing Efficiency"
-        value={formatAsPercentage(passingEfficiency)}
+        value={data.pef.toFixed(3)}
         class="mr-4"
       />
       {#if $page.data.admin}
         <div class="level-item">
-          <button
-            class="button"
-            on:click|stopPropagation|preventDefault={() => {}}
-          >
+          <a class="button" href="/app/teams/edit/{data.id}">
             <span class="icon">
               <i class="fa-solid fa-pencil"></i>
             </span>
             <span>Edit</span>
-          </button>
+          </a>
         </div>
       {/if}
     </div>

@@ -47,6 +47,7 @@ def get_authorization_url(state: str) -> str:
             "state": state,
         },
     )
+    assert req.url is not None # appease typechecker
     return req.url
 
 
