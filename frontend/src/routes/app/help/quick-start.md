@@ -1,6 +1,6 @@
 # Dashboard
 
-## Navigation
+##### Navigation
 
 ![Navbar image](/help/navbar-image.jpg)
 
