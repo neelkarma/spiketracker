@@ -59,6 +59,6 @@ def get_match_data(id: int):
         attribute = get_attribute_to_edit()
         new_value = get_new_value()
         con = get_db()
-        con.execute("UPDATE players SET ? = ? WHERE id = ?", (attribute, new_value, id)) 
+        con.execute("UPDATE matches SET ? = ? WHERE id = ?", (attribute, new_value, id)) 
         
         return "Success", 200
