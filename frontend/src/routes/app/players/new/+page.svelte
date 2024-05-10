@@ -19,7 +19,7 @@
 
 <section class="section">
   <div class="container">
-    <h1 class="title">New Match</h1>
+    <h1 class="title">New Player</h1>
     <PlayerInfoForm
       submitLabel="Add"
       data={EMPTY_PLAYER_INFO}
