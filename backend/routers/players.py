@@ -43,9 +43,24 @@ def delete_player(id: int):
         return "Unauthorized", 401
 
     if not session["admin"]:
-        return "You a student", 401
+        return "You are a student", 401
 
     con = get_db()
     con.execute("DELETE FROM players WHERE id = ?", (id,))
 
+    return "Success", 200
+
+@players.post("/<id>")
+def post_player(id: int):
+    session = get_session()
+    if session is None:
+        return "Unauthorized", 401
+    if not session['admin']:
+        return "You are a student", 401
+    
+    attribute = get_attribute_to_edit()
+    new_value = get_new_value()
+    con = get_db()
+    con.execute("UPDATE players SET ? = ? WHERE id = ?", (attribute, new_value, id)) 
+    
     return "Success", 200

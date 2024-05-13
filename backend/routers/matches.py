@@ -1,6 +1,6 @@
-from flask import Blueprint, jsonify
-
-from backend.db import get_db
+from db import get_db
+from flask import Blueprint, jsonify, request
+from session import get_session
 
 matches = Blueprint("/matches", __name__)
 
@@ -43,3 +43,27 @@ def get_match_data(id: int):
             "scoring": data["scoring"],
         }
     )
+
+    @matches.post("/<id>")
+    def get_attribute_to_edit(value: str):
+        pass
+
+    def get_new_value(value: int):
+        pass
+
+
+@matches.post("/<id>")
+def update_matches(id: int):
+    session = get_session()
+    if session is None:
+        return "Unauthorized", 401
+
+    if not session["admin"]:
+        return "You are a student", 401
+
+    data = request.get_json()
+
+    con = get_db()
+    con.execute("UPDATE matches SET ? = ? WHERE id = ?", (attribute, new_value, id))
+
+    return "Success", 200
