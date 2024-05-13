@@ -25,20 +25,14 @@
         </div>
       </div>
       <div class="columns is-centered">
-        {#each data.sets as { ourScore, oppScore }}
+        {#each data.points as { our, opp }}
           <div class="column is-1 is-flex is-justify-content-center">
-            <h3
-              class="subtitle"
-              class:has-text-weight-bold={ourScore > oppScore}
-            >
-              {ourScore}
+            <h3 class="subtitle" class:has-text-weight-bold={our > opp}>
+              {our}
             </h3>
             <h3 class="subtitle">-</h3>
-            <h3
-              class="subtitle"
-              class:has-text-weight-bold={oppScore > ourScore}
-            >
-              {oppScore}
+            <h3 class="subtitle" class:has-text-weight-bold={opp > our}>
+              {opp}
             </h3>
           </div>
         {/each}
