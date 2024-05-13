@@ -29,6 +29,7 @@ def login_sbhs():
     """Login endpoint for players. Redirects to SBHS OAuth."""
 
     state = os.urandom(16).hex()
+    print(get_authorization_url(state))
     res = make_response(redirect(get_authorization_url(state)))
     res.set_cookie(STATE_COOKIE, state, max_age=60 * 60, httponly=True)
     return res
