@@ -4,10 +4,21 @@
   export let data: TeamInfo;
 </script>
 
-<div class="columns">
-  <div class="column is-narrow"></div>
+<div class="columns is-fullheight">
+  <div class="column is-narrow p-5">
+    <div class="field">
+      <label for="set-input" class="label">Current Set</label>
+      <div class="control">
+        <div class="select">
+          <select id="set-input">
+            <option value="1">Set 1</option>
+            <option value="2">Set 2</option>
+            <option value="3">Set 3</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="column"></div>
   <div class="column is-narrow"></div>
 </div>
-<div>aaaaaaaa</div>
-<pre>{JSON.stringify(data, undefined, 2)}</pre>
