@@ -1,11 +1,9 @@
-import json
-
-import jsonify
-from flask import Blueprint
+from flask import Blueprint, jsonify
 
 from backend.db import get_db
 
 matches = Blueprint("/matches", __name__)
+
 
 @matches.delete("/<id>")
 def delete_match(id: int):
@@ -21,15 +19,16 @@ def delete_match(id: int):
 
     return "Success", 200
 
+
 @matches.get("/<id>")
 def get_match_data(id: int):
     cur = get_db()
     data = cur.execute("SELECT * FROM matches WHERE id = ?", (id,)).fetchone()
     if data is None:
         return "Not Found", 404
-    
+
     # TODO: incomplete
-    
+
     jsonify(
         {
             "id": data["id"],
@@ -41,6 +40,6 @@ def get_match_data(id: int):
             "pointsOverriden": data["pointsOverriden"],
             "points": data["points"],
             "visible": data["visible"],
-            "scoring": data["scoring"]
+            "scoring": data["scoring"],
         }
     )
