@@ -155,8 +155,17 @@
     </div>
     <div class="box">
       <div class="title is-4">Past Matches</div>
+
       {#if filteredPastMatches}
-        TODO: actually put shit here
+        {#each filteredUpcomingMatches as { id, date, oppTeamName, ourTeamName, location }}
+          <MatchCardBody href="/app/matches/{id}">
+            <MatchCardDetailsPart {date} {location} />
+            <MatchCardTeamsPart {ourTeamName} {oppTeamName} />
+            <div class="level-item">
+              <a href="/app/matches/edit/{id}" class="button">Edit</a>
+            </div>
+          </MatchCardBody>
+        {/each}
       {:else}
         {#each { length: 5 } as _}
           <div class="skeleton-block"></div>
