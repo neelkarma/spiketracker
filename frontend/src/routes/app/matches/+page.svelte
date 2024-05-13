@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import MatchCardBody from "$lib/components/MatchCardBody.svelte";
   import MatchCardDetailsPart from "$lib/components/MatchCardDetailsPart.svelte";
   import MatchCardTeamsPart from "$lib/components/MatchCardTeamsPart.svelte";
@@ -141,9 +142,11 @@
           <MatchCardBody>
             <MatchCardDetailsPart {date} {location} />
             <MatchCardTeamsPart {ourTeamName} {oppTeamName} />
-            <div class="level-item">
-              <a href="/app/matches/edit/{id}" class="button">Edit</a>
-            </div>
+            {#if $page.data.admin}
+              <div class="level-item">
+                <a href="/app/matches/edit/{id}" class="button">Edit</a>
+              </div>
+            {/if}
           </MatchCardBody>
           <!-- <TeamCard {...match} /> -->
         {/each}
