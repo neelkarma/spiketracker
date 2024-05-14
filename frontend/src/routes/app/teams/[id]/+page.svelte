@@ -20,16 +20,24 @@
   };
 </script>
 
-<div class="hero">
+<div class="hero is-primary has-background-primary-dark">
   <div class="hero-body">
     <div class="container">
       <div class="level is-fullwidth">
         <div class="level-left">
-          <div class="level-item">
-            <h1 class="title is-1">{data.name}</h1>
+          <div>
+            <a href="/app/players" class="has-text-link-light is-underlined">
+              <span>
+                <i class="fas fa-arrow-left"></i>
+                Back to All Teams
+              </span></a
+            >
+            <div class="level-item">
+              <h1 class="title is-1 has-text-white">{data.name}</h1>
+            </div>
           </div>
         </div>
-        <div class="level-right">
+        <div class="level-right has-text-white">
           <div class="level-item">
             <Stat label="W/L" value="{data.wins}-{data.losses}" />
           </div>

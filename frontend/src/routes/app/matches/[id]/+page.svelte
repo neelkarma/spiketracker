@@ -4,41 +4,43 @@
   export let data: PageData;
 </script>
 
-<div class="hero is-primary">
+<div class="hero is-primary has-background-primary-dark">
   <div class="hero-body has-text-centered">
     <div class="container">
-      <h2 class="title">{data.date.toDateString()}</h2>
-      <h3 class="subtitle">{data.location}</h3>
+      <h2 class="title has-text-white">{data.date.toDateString()}</h2>
+      <h3 class="subtitle has-text-white">{data.location}</h3>
       <div class="columns is-centered is-vcentered">
         <div class="column is-5">
-          <h2 class="has-text-right title">{data.ourTeamName}</h2>
+          <h2 class="has-text-right title has-text-white">
+            {data.ourTeamName}
+          </h2>
         </div>
         <div class="column is-2">
-          <h1 class="title is-1">
+          <h1 class="title is-1 has-text-white">
             {data.points.reduce((acc, { our }) => acc + our, 0)}
             :
             {data.points.reduce((acc, { opp }) => acc + opp, 0)}
           </h1>
         </div>
         <div class="column is-5">
-          <h2 class="has-text-left title">{data.oppTeamName}</h2>
+          <h2 class="has-text-left title has-text-white">{data.oppTeamName}</h2>
         </div>
       </div>
       <div class="columns is-centered">
-        {#each data.sets as { ourScore, oppScore }}
+        {#each data.points as { our, opp }}
           <div class="column is-1 is-flex is-justify-content-center">
             <h3
-              class="subtitle"
-              class:has-text-weight-bold={ourScore > oppScore}
+              class="subtitle has-text-white"
+              class:has-text-weight-bold={our > opp}
             >
-              {ourScore}
+              {our}
             </h3>
-            <h3 class="subtitle">-</h3>
+            <h3 class="subtitle has-text-white">-</h3>
             <h3
-              class="subtitle"
-              class:has-text-weight-bold={oppScore > ourScore}
+              class="subtitle has-text-white"
+              class:has-text-weight-bold={opp > our}
             >
-              {oppScore}
+              {opp}
             </h3>
           </div>
         {/each}

@@ -38,7 +38,7 @@
   };
 </script>
 
-<div class="hero is-primary">
+<div class="hero is-primary has-background-primary-dark">
   <div class="hero-body">
     <div class="container">
       <div class="level">
@@ -50,8 +50,11 @@
                 Back to All Players
               </span></a
             >
-            <h1 class="title is-1">{data.firstName} {data.surname}</h1>
-            <h2 class="is-flex">
+            <h1 class="title is-1 has-text-white">
+              {data.firstName}
+              {data.surname}
+            </h1>
+            <h2 class="is-flex has-text-white">
               {#each data.teams as team}
                 <!-- ik using mr instead of flex gap is kinda sus but i cant find bulma docs for that so too bad -->
                 <a
@@ -62,7 +65,7 @@
             </h2>
           </div>
         </div>
-        <div class="level-right">
+        <div class="level-right has-text-white">
           <div class="level-item">
             <Stat label="Avg PPG" value={data.ppg} />
           </div>
