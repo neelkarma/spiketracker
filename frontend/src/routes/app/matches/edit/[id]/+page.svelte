@@ -16,8 +16,6 @@
 
     // simulate network
     await wait(1000);
-
-    window.scrollTo({ top: 0 });
     status = "success";
   };
 

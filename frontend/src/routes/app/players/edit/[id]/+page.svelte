@@ -17,6 +17,11 @@
     // simulate network
     await wait(1000);
 
+    const res = await fetch(`/api/players/${player.id}`, {
+      method: "POST",
+      body: JSON.stringify(player),
+    });
+
     window.scrollTo({ top: 0 });
     status = "success";
   };

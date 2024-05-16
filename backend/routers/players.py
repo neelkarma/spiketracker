@@ -1,5 +1,5 @@
 from db import get_db
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from session import get_session
 
 players = Blueprint("players", __name__)
@@ -27,9 +27,9 @@ def get_player_data(id: int):
             "surname": data["surname"],
             "gradYear": data["gradYear"],
             "teams": data["teams"],
-            "ppg": data["ppg"],
-            "kr": data["kr"],
-            "pef": data["pef"],
+            #"ppg": data["ppg"],
+            #"kr": data["kr"],
+            #"pef": data["pef"],
             "totalPoints": data["totalPoints"],
             "visible": data["visible"]
         }
@@ -58,9 +58,10 @@ def post_player(id: int):
     if not session['admin']:
         return "You are a student", 401
     
-    attribute = get_attribute_to_edit()
-    new_value = get_new_value()
-    con = get_db()
-    con.execute("UPDATE players SET ? = ? WHERE id = ?", (attribute, new_value, id)) 
+    data = request.get_json()
     
+    con = get_db()
+    con.execute("UPDATE players SET first_name = ?, last_name = ?, grad_year = ?, visible = ? WHERE id = ?", (data["firstName"], data["surname"], data["gradYear"], data["visible"])) 
+    #con.execute("UPDATE players SET firstName = GUPPPPPPPPPPPP WHERE id = ?",  (id))
+
     return "Success", 200
