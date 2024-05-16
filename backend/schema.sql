@@ -313,10 +313,10 @@ INSERT
   )
 VALUES (
     1,
-    "Newington 2nds",
-    "0:00",
-    "SBHS Gymnasium",
-    "[]",
+    'Newington 2nds',
+    '0:00',
+    'SBHS Gymnasium',
+    '[]',
     true,
     false
   );
@@ -333,4 +333,4 @@ INSERT
     x_pos_out,
     y_pos_out
   )
-VALUES (440805299, 1, "set", "outside", 3, 1, 1, 3, 2);
+VALUES (440805299, 1, 'set', 3, 'outside', 3, 1, 1, 3);

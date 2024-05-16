@@ -11,19 +11,37 @@ def get_player_data():
     match_id = request.args.get("match_id")
     team_id = request.args.get("team_id")
     player_id = request.args.get("player_id")
-    if match_id is None and team_id is None and player_id is None:
-        return "No params given"
-    if match_id is None:
-        match_id = "*"
-    if team_id is None:
-        team_id = "*"
-    if player_id is None:
-        player_id = "*"
-    cur = get_db()
 
+    if match_id is None and team_id is None and player_id is None:
+        return "No params given", 400
+
+    if match_id is not None:
+        if match_id.isdigit():
+            match_id = int(match_id)
+        else:
+            return "match_id must be an integer", 400
+    if team_id is not None:
+        if team_id.isdigit():
+            team_id = int(team_id)
+        else:
+            return "team_id must be an integer", 400
+    if player_id is not None:
+        if player_id.isdigit():
+            player_id = int(player_id)
+        else:
+            return "player_id must be an integer", 400
+
+    cur = get_db()
     data = cur.execute(
-        "SELECT stats.id FROM stats INNER JOIN stats ON s.match_id = matches.id INNER JOIN stats ON stats.player_id = players.id WHERE stats.match_id = ? AND matches.team_id = ? AND stats.player_id = ?",
-        (match_id, team_id, player_id),
+        "SELECT * FROM stats INNER JOIN matches ON stats.match_id = matches.id INNER JOIN players ON stats.player_id = players.id WHERE (? = 1 OR stats.match_id = ?) AND (? = 1 OR matches.team_id = ?) AND (? = 1 OR stats.player_id = ?)",
+        (
+            int(match_id is None),
+            match_id,
+            int(team_id is None),
+            team_id,
+            int(player_id is None),
+            player_id,
+        ),
     ).fetchall()
 
-    return jsonify(data)
+    return jsonify([dict(row) for row in data])
