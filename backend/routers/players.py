@@ -27,9 +27,9 @@ def get_player_data(id: int):
             "surname": data["surname"],
             "gradYear": data["gradYear"],
             "teams": data["teams"],
-            "ppg": data["ppg"],
-            "kr": data["kr"],
-            "pef": data["pef"],
+            #"ppg": data["ppg"],
+            #"kr": data["kr"],
+            #"pef": data["pef"],
             "totalPoints": data["totalPoints"],
             "visible": data["visible"]
         }
