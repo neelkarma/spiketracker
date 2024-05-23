@@ -276,14 +276,7 @@ SELECT id,
     FROM middle_attacks
     WHERE middle_attacks.team_id = teams.id
       AND matches.approved = 1
-  ) AS middle_hitting_avg,
-  (
-    SELECT SUM(rating) / COUNT(rating) -- needs to be altered
-    FROM middle_attacks
-    WHERE middle_attacks.team_id = teams.id
-      AND matches.approved = 1
-  ) AS set_ratio -- wins INTEGER NOT NULL DEFAULT 0,
-  -- losses INTEGER NOT NULL DEFAULT 0,
+  ) AS middle_hitting_avg -- losses INTEGER NOT NULL DEFAULT 0,
   -- set_ratio REAL NOT NULL DEFAULT 0,
   -- kill_rate REAL NOT NULL DEFAULT 0,
   -- pass_efficiency REAL NOT NULL DEFAULT 0,
@@ -307,3 +300,37 @@ VALUES (1, 440805299),
   (1, 447507684),
   (1, 442097500),
   (1, 442031151);
+
+INSERT
+  OR IGNORE INTO matches (
+    team_id,
+    opponent_name,
+    time,
+    location,
+    points,
+    visible,
+    scoring
+  )
+VALUES (
+    1,
+    'Newington 2nds',
+    '0:00',
+    'SBHS Gymnasium',
+    '[]',
+    true,
+    false
+  );
+
+INSERT
+  OR IGNORE INTO stats (
+    player_id,
+    match_id,
+    action,
+    rating,
+    position,
+    x_pos_in,
+    y_pos_in,
+    x_pos_out,
+    y_pos_out
+  )
+VALUES (440805299, 1, 'set', 3, 'outside', 3, 1, 1, 3);

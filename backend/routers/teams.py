@@ -1,8 +1,8 @@
 import json
 
+from db import get_db
 from flask import Blueprint, jsonify
-
-from backend.db import get_db
+from session import get_session
 
 teams = Blueprint("/teams", __name__)
 
@@ -20,7 +20,8 @@ def get_team_data(id: int):
     ).fetchall()
     wins = 0
     losses = 0
-
+    set_wins = 0
+    set_losses = 0
     for points in match_points:
         points = json.loads(points)
         set_wins = 0
@@ -34,7 +35,7 @@ def get_team_data(id: int):
             wins += 1
         else:
             losses += 1
-
+    set_ratio = str(set_wins) + ":" + str(set_losses)
     if data is None:
         return "Not Found", 404
 
@@ -44,7 +45,7 @@ def get_team_data(id: int):
             "name": data["name"],
             "wins": wins,
             "losses": losses,
-            "setRatio": data["setRatio"],
+            "set_ratio": set_ratio,
             "kr": data["kr"],
             "pef": data["pef"],
             "player_ids": player_ids,

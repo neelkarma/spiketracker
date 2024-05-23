@@ -5,10 +5,12 @@ from dotenv import load_dotenv
 from flask import Flask
 from routers.auth import auth
 from routers.players import players
+from routers.stats import stats
 
 app = Flask(__name__)
 app.register_blueprint(auth, url_prefix="/auth")
 app.register_blueprint(players, url_prefix="/players")
+app.register_blueprint(stats, url_prefix="/stats")
 
 if os.environ.get("FLASK_ENV") == "production":
     load_dotenv(".env.prod")
