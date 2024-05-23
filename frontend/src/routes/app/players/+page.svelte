@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import Modal from "$lib/components/Modal.svelte";
   import { SAMPLE_PLAYER_INFO, type PlayerInfo } from "$lib/types";
   import { debounce, wait } from "$lib/utils";
@@ -142,7 +143,9 @@
               <th>Kill Rate</th>
               <th>Passing Efficiency</th>
               <th>Total Points</th>
-              <th>Edit</th>
+              {#if $page.data.admin}
+                <th>Edit</th>
+              {/if}
             </tr>
           </thead>
           <tbody>
@@ -168,12 +171,15 @@
                 <td>{kr.toFixed(3)}</td>
                 <td>{pef.toFixed(3)}</td>
                 <td>{totalPoints}</td>
-                <td
-                  ><a href="/app/players/edit/{id}" class="button"
-                    ><span class="icon"><i class="fa-solid fa-pencil"></i></span
-                    ></a
-                  ></td
-                >
+                {#if $page.data.admin}
+                  <td
+                    ><a href="/app/players/edit/{id}" class="button"
+                      ><span class="icon"
+                        ><i class="fa-solid fa-pencil"></i></span
+                      ></a
+                    ></td
+                  >
+                {/if}
               </tr>
             {/each}
           </tbody>

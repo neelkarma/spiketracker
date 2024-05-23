@@ -164,9 +164,11 @@
           <MatchCardBody href="/app/matches/{id}">
             <MatchCardDetailsPart {date} {location} />
             <MatchCardTeamsPart {ourTeamName} {oppTeamName} />
-            <div class="level-item">
-              <a href="/app/matches/edit/{id}" class="button">Edit</a>
-            </div>
+            {#if $page.data.admin}
+              <div class="level-item">
+                <a href="/app/matches/edit/{id}" class="button">Edit</a>
+              </div>
+            {/if}
           </MatchCardBody>
         {/each}
       {:else}
