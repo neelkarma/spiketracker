@@ -1,4 +1,6 @@
-# Dashboard
+# SpikeTracker Help
+
+Welcome to SpikeTracker, a volleyball stat tracking app for SBHS.
 
 ##### Navigation
 

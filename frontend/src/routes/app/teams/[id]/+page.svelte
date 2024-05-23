@@ -26,7 +26,7 @@
       <div class="level is-fullwidth">
         <div class="level-left">
           <div>
-            <a href="/app/players" class="has-text-link-light is-underlined">
+            <a href="/app/teams" class="has-text-link-light is-underlined">
               <span>
                 <i class="fas fa-arrow-left"></i>
                 Back to All Teams
