@@ -4,6 +4,7 @@ from session import get_session
 
 matches = Blueprint("/matches", __name__)
 
+
 @matches.delete("/<id>")
 def delete_match(id: int):
     session = get_session()
@@ -18,15 +19,16 @@ def delete_match(id: int):
 
     return "Success", 200
 
+
 @matches.get("/<id>")
 def get_match_data(id: int):
     cur = get_db()
     data = cur.execute("SELECT * FROM matches WHERE id = ?", (id,)).fetchone()
     if data is None:
         return "Not Found", 404
-    
+
     # TODO: incomplete
-    
+
     jsonify(
         {
             "id": data["id"],
@@ -38,28 +40,30 @@ def get_match_data(id: int):
             "pointsOverriden": data["pointsOverriden"],
             "points": data["points"],
             "visible": data["visible"],
-            "scoring": data["scoring"]
+            "scoring": data["scoring"],
         }
     )
 
     @matches.post("/<id>")
     def get_attribute_to_edit(value: str):
         pass
+
     def get_new_value(value: int):
         pass
+
 
 @matches.post("/<id>")
 def update_matches(id: int):
     session = get_session()
     if session is None:
         return "Unauthorized", 401
-        
-    if not session['admin']:
+
+    if not session["admin"]:
         return "You are a student", 401
-    
+
     data = request.get_json()
-    
+
     con = get_db()
-    con.execute("UPDATE matches SET ? = ? WHERE id = ?", (attribute, new_value, id)) 
-    
+    con.execute("UPDATE matches SET ? = ? WHERE id = ?", (attribute, new_value, id))
+
     return "Success", 200
