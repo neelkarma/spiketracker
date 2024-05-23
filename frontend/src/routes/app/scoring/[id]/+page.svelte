@@ -1,7 +1,19 @@
 <script lang="ts">
   import type { TeamInfo } from "$lib/types";
+  import svg from "../../../../assets/volleyball-court.svg?raw";
 
   export let data: TeamInfo;
+
+  const handleClick = (e: MouseEvent) => {
+    const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const gridX = Math.floor((x / rect.width) * 20);
+    const gridY = Math.floor((y / rect.height) * 20);
+
+    console.log(gridX, gridY);
+  };
 </script>
 
 <div class="columns is-fullheight">
@@ -19,6 +31,8 @@
       </div>
     </div>
   </div>
-  <div class="column"></div>
+  <div class="column">
+    <div on:click={handleClick}>{@html svg}</div>
+  </div>
   <div class="column is-narrow"></div>
 </div>
