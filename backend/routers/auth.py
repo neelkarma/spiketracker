@@ -29,7 +29,7 @@ def login_sbhs():
     """Login endpoint for players. Redirects to SBHS OAuth."""
 
     state = os.urandom(16).hex()
-    print(get_authorization_url(state))
+    # print(get_authorization_url(state))
     res = make_response(redirect(get_authorization_url(state)))
     res.set_cookie(STATE_COOKIE, state, max_age=60 * 60, httponly=True)
     return res
@@ -42,15 +42,16 @@ def login_sbhs_callback():
     # verify the state param - this protects against xss attacks
     state = request.args.get("state")
     if state != request.cookies.get(STATE_COOKIE):
-        return jsonify({"success": False, "reason": "Invalid state param"}), 403
+        # invalid state param
+        print("auth: invalid state")
+        return redirect(current_app.config["FRONTEND_BASE"] + "/?error=state")
 
     # retrieve refresh token from url search params
     code = request.args.get("code")
     if code is None:
-        return (
-            jsonify({"success": False, "reason": "No code returned from SBHS API"}),
-            403,
-        )
+        # no code returned from the sbhs api
+        print("auth: no code returned from sbhs api. query args: " + request.args)
+        return redirect(current_app.config["FRONTEND_BASE"] + "/?error=sbhs")
 
     # exchange code for id token
     token_set = refresh_token_set(code)
@@ -64,7 +65,9 @@ def login_sbhs_callback():
         "SELECT id FROM players WHERE id = ?", (student_id,)
     ).fetchone()
     if student is None:
-        return jsonify({"success": False, "reason": "Student not registered"}), 403
+        # student not registered
+        print("auth: student not registered")
+        return redirect(current_app.config["FRONTEND_BASE"] + "/?error=forbidden")
 
     # generate session token
     payload = session_token_payload_from_player(student_id)
