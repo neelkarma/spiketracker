@@ -47,7 +47,7 @@ def get_authorization_url(state: str) -> str:
             "state": state,
         },
     )
-    assert req.url is not None # appease typechecker
+    assert req.url is not None  # appease typechecker
     return req.url
 
 
@@ -108,10 +108,12 @@ def verify_id_token(id_token: str) -> dict[str, Any]:
         If the token is invalid.
     """
     signing_key = jwks_client.get_signing_key_from_jwt(id_token)
+    # signing_key = get_signing_key()
 
     return jwt.decode(
         id_token,
         key=signing_key.key,
+        # key=signing_key,
         algorithms=signing_algos,
         audience=current_app.config["CLIENT_ID"],
     )
