@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { page } from "$app/stores";
   import landingImg from "../assets/landing.jpg";
 </script>
@@ -8,12 +8,18 @@
     <img src={landingImg} alt="SBHS Volleyball Team spiking a ball" />
   </div>
   <div class="column is-half">
-    {#if $page.url.searchParams.has("error")}
-      <div class="notification is-danger" role="alert">
-        Error: {$page.url.searchParams.get("error")}
-      </div>
-    {/if}
     <div class="column is-four-fifths pl-5">
+      {#if $page.url.searchParams.has("error")}
+        {@const error = $page.url.searchParams.get("error")}
+        <div class="notification is-danger">
+          {#if error === "forbidden"}
+            You have not been allowed access to SpikeTracker. If you think this
+            is a mistake, please contact your coach.
+          {:else}
+            Something unexpected occurred. Please try again later.
+          {/if}
+        </div>
+      {/if}
       <h1 class="title">SpikeTracker</h1>
       <h5 class="subtitle">Volleyball reporting software for SBHS.</h5>
       <a href="/api/auth/login/sbhs" class="button is-primary">Student Login</a>
