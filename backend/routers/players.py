@@ -5,7 +5,7 @@ from session import get_session
 players = Blueprint("players", __name__)
 
 
-@players.put()
+@players.put("/")
 def create_player(id: int):
     session = get_session()
     if session is None:
