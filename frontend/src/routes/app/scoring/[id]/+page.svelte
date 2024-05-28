@@ -1,9 +1,11 @@
 <script lang="ts">
+  import ScoringNavBar from "$lib/components/ScoringNavBar.svelte";
   import type { TeamInfo } from "$lib/types";
 
   export let data: TeamInfo;
 </script>
 
+<ScoringNavBar />
 <div class="columns is-fullheight">
   <div class="column is-narrow p-5">
     <div class="field">
