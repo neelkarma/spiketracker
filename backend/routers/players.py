@@ -61,7 +61,27 @@ def post_player(id: int):
     data = request.get_json()
     
     con = get_db()
-    con.execute("UPDATE players SET first_name = ?, last_name = ?, grad_year = ?, visible = ? WHERE id = ?", (data["firstName"], data["surname"], data["gradYear"], data["visible"])) 
-    #con.execute("UPDATE players SET firstName = GUPPPPPPPPPPPP WHERE id = ?",  (id))
+    con.execute("UPDATE players SET first_name = ?, last_name = ?, grad_year = ?, visible = ? WHERE id = ?", 
+                (data["firstName"], data["surname"], data["gradYear"], data["visible"])) 
 
     return "Success", 200
+
+@players.put(" /<id>")
+def put_player(id: int):
+    session = get_session()
+    if session is None:
+        return "Unauthorized", 401
+    if not session['admin']:
+        return "You are a student", 401
+    
+    data = request.get_json(f"http://localhost:5173/app/players/edit/{id}") #get data from user inputs
+    
+    id = data["id"]
+    first_name = data["firstNameInput"]
+    last_name = data["surnameInput"]
+    grad_year = data[""]
+    positions = data[[""]]
+    visible = data[""]
+    con = get_db()
+    con.execute("INSERT INTO players (id, first_name, last_name, grad_year, positions, visible) VALUES (?, ?, ?, ?, ?)", (id, first_name, last_name, grad_year, positions, visible))
+    
