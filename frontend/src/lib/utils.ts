@@ -12,7 +12,7 @@ export const logout = async () => {
   goto("/");
 };
 
-export const debounce = <F extends (...args: unknown[]) => void>(
+export const debounce = <F extends (...args: any[]) => void>(
   callback: F,
   wait = 300
 ) => {
