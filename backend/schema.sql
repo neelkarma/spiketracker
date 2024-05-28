@@ -4,11 +4,9 @@ PRAGMA foreign_keys = ON;
 -- Tables
 CREATE TABLE IF NOT EXISTS players (
   id INTEGER PRIMARY KEY,
-  first_name TEXT NOT NULL,
-  last_name TEXT NOT NULL,
-  grad_year INTEGER NOT NULL,
-  positions TEXT NOT NULL DEFAULT "[]",
-  -- string[]
+  firstName TEXT NOT NULL,
+  lastName TEXT NOT NULL,
+  gradYear INTEGER NOT NULL,
   visible BOOLEAN NOT NULL DEFAULT 0
 );
 
@@ -21,8 +19,8 @@ CREATE TABLE IF NOT EXISTS teams (
 
 CREATE TABLE IF NOT EXISTS matches (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  team_id INTEGER NOT NULL REFERENCES teams (id),
-  opponent_name TEXT NOT NULL,
+  teamId INTEGER NOT NULL REFERENCES teams (id),
+  oppName TEXT NOT NULL,
   time TEXT NOT NULL,
   location TEXT NOT NULL,
   points TEXT DEFAULT "[]" NOT NULL,
@@ -33,8 +31,8 @@ CREATE TABLE IF NOT EXISTS matches (
 
 CREATE TABLE IF NOT EXISTS stats (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  player_id INTEGER NOT NULL REFERENCES players (id),
-  match_id INTEGER NOT NULL REFERENCES matches (id),
+  playerId INTEGER NOT NULL REFERENCES players (id),
+  matchId INTEGER NOT NULL REFERENCES matches (id),
   action TEXT CHECK (
     action in (
       'attack',
@@ -55,28 +53,28 @@ CREATE TABLE IF NOT EXISTS stats (
       'libero'
     )
   ) NOT NULL,
-  x_pos_in INTEGER CHECK (
-    x_pos_in >= 0
-    AND x_pos_in <= 22
+  xPosIn INTEGER CHECK (
+    xPosIn >= 0
+    AND xPosIn <= 22
   ) NOT NULL,
-  y_pos_in INTEGER CHECK (
-    y_pos_in >= 0
-    AND y_pos_in <= 22
+  yPosIn INTEGER CHECK (
+    yPosIn >= 0
+    AND yPosIn <= 22
   ) NOT NULL,
-  x_pos_out INTEGER CHECK (
-    x_pos_out >= 0
-    AND x_pos_out <= 22
+  xPosOut INTEGER CHECK (
+    xPosOut >= 0
+    AND xPosOut <= 22
   ) NOT NULL,
-  y_pos_out INTEGER CHECK (
-    y_pos_out >= 0
-    AND y_pos_out <= 22
+  yPosOut INTEGER CHECK (
+    yPosOut >= 0
+    AND yPosOut <= 22
   ) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS team_players (
-  team_id INTEGER NOT NULL REFERENCES teams (id),
-  player_id INTEGER NOT NULL REFERENCES players (id),
-  PRIMARY KEY (team_id, player_id)
+CREATE TABLE IF NOT EXISTS teamPlayers (
+  teamId INTEGER NOT NULL REFERENCES teams (id),
+  playerId INTEGER NOT NULL REFERENCES players (id),
+  PRIMARY KEY (teamId, playerId)
 );
 
 -- Views
@@ -93,18 +91,18 @@ FROM stats
 WHERE action IN ('attack')
   AND approved = TRUE;
 
-CREATE VIEW IF NOT EXISTS successful_attacks AS
+CREATE VIEW IF NOT EXISTS successfulAttacks AS
 SELECT *
 FROM attacks
 WHERE rating = 3;
 
-CREATE VIEW if NOT EXISTS wing_attacks AS
+CREATE VIEW if NOT EXISTS wingAttacks AS
 SELECT *
 FROM attacks
 WHERE position = 'outside'
   OR position = 'opposition';
 
-CREATE VIEW if NOT EXISTS middle_attacks AS
+CREATE VIEW if NOT EXISTS middleAttacks AS
 SELECT *
 FROM attacks
 WHERE position = 'middle';
@@ -115,23 +113,23 @@ FROM stats
 WHERE action IN ('serve')
   AND approved = TRUE;
 
-CREATE VIEW IF NOT EXISTS successful_serves AS
+CREATE VIEW IF NOT EXISTS successfulServes AS
 SELECT *
 FROM serves
 WHERE rating = 3;
 
-CREATE VIEW IF NOT EXISTS pos1_serve_eff AS
+CREATE VIEW IF NOT EXISTS pos1ServeEff AS
 SELECT *
 FROM serves
 WHERE x_pos_out < 6;
 
-CREATE VIEW IF NOT EXISTS pos2_serve_eff AS
+CREATE VIEW IF NOT EXISTS pos2ServeEff AS
 SELECT *
 FROM serves
 WHERE x_pos_out > 6
   AND x_pos_out < 12;
 
-CREATE VIEW IF NOT EXISTS pos3_serve_eff AS
+CREATE VIEW IF NOT EXISTS pos3ServeEff AS
 SELECT *
 FROM serves
 WHERE x_pos_out > 12;
@@ -142,141 +140,141 @@ FROM stats
 WHERE action IN ('block')
   AND approved = TRUE;
 
-CREATE VIEW IF NOT EXISTS successful_blocks AS
+CREATE VIEW IF NOT EXISTS successfulBlocks AS
 SELECT *
 FROM blocks
 WHERE rating = 3
   AND approved = TRUE;
 
-CREATE VIEW IF NOT EXISTS set_passes AS
+CREATE VIEW IF NOT EXISTS setPasses AS
 SELECT *
 FROM stats
 WHERE action IN ('set')
   AND approved = TRUE;
 
-CREATE VIEW IF NOT EXISTS serve_recieves AS
+CREATE VIEW IF NOT EXISTS serveRecieves AS
 SELECT *
 FROM stats
 WHERE action in ('serve_receive')
   AND approved = TRUE;
 
-CREATE VIEW IF NOT EXISTS freeball_recieves AS
+CREATE VIEW IF NOT EXISTS freeballRecieves AS
 SELECT *
 FROM stats
 WHERE action in ('freeball_receive')
   AND approved = TRUE;
 
-CREATE VIEW IF NOT EXISTS error_stats AS
+CREATE VIEW IF NOT EXISTS errorStats AS
 SELECT id
 FROM stats
 WHERE rating = 0
   AND approved = TRUE;
 
-CREATE VIEW IF NOT EXISTS games_played AS
+CREATE VIEW IF NOT EXISTS gamesPlayed AS
 SELECT player_id,
-  COUNT(DISTINCT match_id) AS number_games
+  COUNT(DISTINCT match_id) AS numberGames
 FROM stats
-GROUP BY player_id;
+GROUP BY playerId;
 
-CREATE VIEW IF NOT EXISTS player_stats AS
+CREATE VIEW IF NOT EXISTS playerStats AS
 SELECT id,
   (
     SELECT COUNT(*)
-    FROM successful_attacks
-    WHERE successful_attacks.player_id = players.id
+    FROM successfulAttacks
+    WHERE successfulAttacks.playerId = players.id
   ) / (
     SELECT COUNT(*)
     FROM attacks
-    WHERE attacks.player_id = players.id
-  ) AS kill_rate,
+    WHERE attacks.playerId = players.id
+  ) AS killRate,
   (
     SELECT SUM(rating) / COUNT(rating) / 3
     FROM attacks
-    WHERE attacks.player_id = players.id
-  ) AS attack_eff,
+    WHERE attacks.playerId = players.id
+  ) AS attackEff,
   (
     SELECT SUM(rating) / COUNT(rating) / 3
     FROM blocks
-    WHERE blocks.player_id = players.id
-  ) AS blocking_avg,
+    WHERE blocks.playerId = players.id
+  ) AS blockingAvg,
   (
     SELECT SUM(rating) / COUNT(rating) / 3
     FROM serves
-    WHERE serves.player_id = players.id
-  ) AS serving_avg,
+    WHERE serves.playerId = players.id
+  ) AS servingAvg,
   (
     SELECT SUM(rating) / COUNT(rating) / 3
-    FROM set_passes
-    WHERE set_passes.player_id = players.id
-  ) AS setting_avg,
+    FROM setPasses
+    WHERE setPasses.playerId = players.id
+  ) AS settingAvg,
   (
     SELECT COUNT(*)
-    FROM successful_serves
-    WHERE successful_serves.player_id = players.id
+    FROM successfulServes
+    WHERE successfulServes.playerId = players.id
   ) / (
     SELECT COUNT(*)
     FROM serves
-    WHERE serves.player_id = players.id
-  ) AS ace_rate,
+    WHERE serves.playerId = players.id
+  ) AS aceRate,
   (
     SELECT SUM(rating) / COUNT(rating) / 3
-    FROM serve_receives
-    WHERE serve_receives.player_id = players.id
-  ) AS serve_rec_avg,
+    FROM serveReceives
+    WHERE serveReceives.playerId = players.id
+  ) AS serveRecAvg,
   (
     SELECT SUM(rating) / COUNT(rating) / 3
-    FROM freeball_receives
-    WHERE freeball_receives.player_id = players.id
-  ) AS freeball_rec_avg,
+    FROM freeballReceives
+    WHERE freeballReceives.playerId = players.id
+  ) AS freeballRecAvg,
   (
     (
       SELECT -1 * COUNT(*)
-      FROM error_stats
-      WHERE error_stats.player_id = players.id
+      FROM errorStats
+      WHERE errorStats.playerId = players.id
     ) + (
       SELECT COUNT(*)
       FROM points
-      WHERE points.player_id = players.id
+      WHERE points.playerId = players.id
     )
   ) / (
     -- number of matches played by game
-    SELECT number_games
-    FROM games_played
-    WHERE games_played.player_id = players.id
-  ) AS box_plus_minus
+    SELECT numberGames
+    FROM gamesPlayed
+    WHERE gamesPlayed.playerId = players.id
+  ) AS boxPlusMinus
 FROM players;
 
-CREATE VIEW IF NOT EXISTS match_stats AS
+CREATE VIEW IF NOT EXISTS matchStats AS
 SELECT id -- total our sets
   -- total opp sets
   -- total our points for each set
 FROM matches;
 
-CREATE VIEW IF NOT EXISTS team_stats AS -- how to check approved for everything
+CREATE VIEW IF NOT EXISTS teamStats AS -- how to check approved for everything
 SELECT id,
   (
     SELECT COUNT(*)
     FROM matches
-    WHERE matches.team_id = teams.id
-  ) AS total_matches,
+    WHERE matches.teamId = teams.id
+  ) AS totalMatches,
   (
     SELECT COUNT(*)
     FROM matches
-    WHERE matches.team_id = teams.id
+    WHERE matches.teamId = teams.id
       AND matches.approved = 1
-  ) AS total_approved_matches,
+  ) AS totalApprovedMatches,
   (
     SELECT SUM(rating) / COUNT(rating) -- needs to be altered
-    FROM wing_attacks
-    WHERE wing_attacks.team_id = teams.id
+    FROM wingAttacks
+    WHERE wingAttacks.teamId = teams.id
       AND matches.approved = 1
-  ) AS wing_hitting_avg,
+  ) AS wingHittingAvg,
   (
     SELECT SUM(rating) / COUNT(rating) -- needs to be altered
-    FROM middle_attacks
-    WHERE middle_attacks.team_id = teams.id
+    FROM middleAttacks
+    WHERE middleAttacks.teamId = teams.id
       AND matches.approved = 1
-  ) AS middle_hitting_avg -- losses INTEGER NOT NULL DEFAULT 0,
+  ) AS middleHittingAvg -- losses INTEGER NOT NULL DEFAULT 0,
   -- set_ratio REAL NOT NULL DEFAULT 0,
   -- kill_rate REAL NOT NULL DEFAULT 0,
   -- pass_efficiency REAL NOT NULL DEFAULT 0,
@@ -284,7 +282,7 @@ FROM teams;
 
 -- Data
 INSERT
-  OR IGNORE INTO players (id, first_name, last_name, grad_year)
+  OR IGNORE INTO players (id, firstName, lastName, gradYear)
 VALUES (440805299, 'Neel', 'Sharma', 2024),
   (447507684, 'Arnav', 'Gupta', 2024),
   (442097500, 'Andrew', 'Wang', 2024),
@@ -295,7 +293,7 @@ INSERT
 VALUES ('Test', 2024);
 
 INSERT
-  OR IGNORE INTO team_players (team_id, player_id)
+  OR IGNORE INTO teamPlayers (teamId, playerId)
 VALUES (1, 440805299),
   (1, 447507684),
   (1, 442097500),
@@ -303,8 +301,8 @@ VALUES (1, 440805299),
 
 INSERT
   OR IGNORE INTO matches (
-    team_id,
-    opponent_name,
+    teamId,
+    oppName,
     time,
     location,
     points,
@@ -323,14 +321,14 @@ VALUES (
 
 INSERT
   OR IGNORE INTO stats (
-    player_id,
-    match_id,
+    playerId,
+    matchId,
     action,
     rating,
     position,
-    x_pos_in,
-    y_pos_in,
-    x_pos_out,
-    y_pos_out
+    xPosIn,
+    yPosIn,
+    xPosOut,
+    yPosOut
   )
 VALUES (440805299, 1, 'set', 3, 'outside', 3, 1, 1, 3);

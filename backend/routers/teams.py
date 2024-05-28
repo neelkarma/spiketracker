@@ -8,7 +8,11 @@ teams = Blueprint("/teams", __name__)
 
 
 @teams.get("/<id>")
-def get_team_data(id: int):
+def get_team(id: int):
+    session = get_session()
+    if session is None:
+        return "Unauthorized", 401
+
     cur = get_db()
     data = cur.execute("SELECT * FROM teams WHERE id = ?", (id,)).fetchone()
     player_ids = cur.execute(
@@ -62,9 +66,9 @@ def delete_team(id: int):
         return "Unauthorized", 401
 
     if not session["admin"]:
-        return "You a student", 401
+        return "Forbidden", 403
 
     con = get_db()
     con.execute("DELETE FROM teams WHERE id = ?", (id,))
 
-    return "Success", 200
+    return jsonify({"success": True}), 200

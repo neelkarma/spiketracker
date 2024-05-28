@@ -7,7 +7,7 @@ stats = Blueprint("/stats", __name__)
 
 
 @stats.get("/")
-def get_player_data():
+def query_stats_bulk():
     match_id = request.args.get("match_id")
     team_id = request.args.get("team_id")
     player_id = request.args.get("player_id")
@@ -44,4 +44,11 @@ def get_player_data():
         ),
     ).fetchall()
 
-    return jsonify([dict(row) for row in data])
+    return jsonify([dict(row) for row in data]), 200
+
+
+@stats.post("/<match_id>")
+def edit_match_stats(match_id: int):
+    data = request.get_json()
+
+    # TODO: complete this

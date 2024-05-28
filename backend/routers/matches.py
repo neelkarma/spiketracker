@@ -5,25 +5,44 @@ from session import get_session
 matches = Blueprint("/matches", __name__)
 
 
-@matches.delete("/<id>")
-def delete_match(id: int):
+@matches.put("/")
+def create_match():
     session = get_session()
     if session is None:
         return "Unauthorized", 401
 
     if not session["admin"]:
-        return "You a student", 401
+        return "Forbidden", 403
+
+    data = request.get_json()
 
     con = get_db()
-    con.execute("DELETE FROM matches WHERE id = ?", (id,))
+    con.execute(
+        "INSERT INTO matches (teamId, oppName, time, location, points, visible, scoring) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (
+            data["teamId"],
+            data["oppName"],
+            data["time"],
+            data["location"],
+            data["points"],
+            data["visible"],
+            data["scoring"],
+        ),
+    )
+    con.commit()
+    con.close()
 
-    return "Success", 200
+    return jsonify({"success": True}), 200
 
 
 @matches.get("/<id>")
-def get_match_data(id: int):
-    cur = get_db()
-    data = cur.execute("SELECT * FROM matches WHERE id = ?", (id,)).fetchone()
+def get_match(id: int):
+    session = get_session()
+    if session is None:
+        return "Unauthorized", 401
+
+    con = get_db()
+    data = con.execute("SELECT * FROM matches WHERE id = ?", (id,)).fetchone()
     if data is None:
         return "Not Found", 404
 
@@ -44,26 +63,48 @@ def get_match_data(id: int):
         }
     )
 
-    @matches.post("/<id>")
-    def get_attribute_to_edit(value: str):
-        pass
-
-    def get_new_value(value: int):
-        pass
-
 
 @matches.post("/<id>")
-def update_matches(id: int):
+def edit_match(id: int):
     session = get_session()
     if session is None:
         return "Unauthorized", 401
 
     if not session["admin"]:
-        return "You are a student", 401
+        return "Forbidden", 403
 
     data = request.get_json()
 
-    con = get_db()
-    con.execute("UPDATE matches SET ? = ? WHERE id = ?", (attribute, new_value, id))
+    cur = get_db()
+    cur.execute(
+        "UPDATE matches SET teamId = ?, oppName = ?, time = ?, location = ?, points = ?, visible = ?, scoring = ? WHERE id = ?",
+        (
+            data["ourTeamId"],
+            data["oppTeamName"],
+            data["date"],
+            data["location"],
+            data["points"],
+            data["visible"],
+            data["scoring"],
+        ),
+    )
+    cur.commit()
+    cur.close()
 
-    return "Success", 200
+    return jsonify({"success": True}), 200
+
+
+@matches.delete("/<id>")
+def delete_match(id: int):
+    session = get_session()
+
+    if session is None:
+        return "Unauthorized", 401
+
+    if not session["admin"]:
+        return "Forbidden", 403
+
+    con = get_db()
+    con.execute("DELETE FROM matches WHERE id = ?", (id,))
+
+    return jsonify({"success": True}), 200

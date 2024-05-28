@@ -4,13 +4,17 @@ import sys
 from dotenv import load_dotenv
 from flask import Flask
 from routers.auth import auth
+from routers.matches import matches
 from routers.players import players
 from routers.stats import stats
+from routers.teams import teams
 
 app = Flask(__name__)
 app.register_blueprint(auth, url_prefix="/auth")
 app.register_blueprint(players, url_prefix="/players")
 app.register_blueprint(stats, url_prefix="/stats")
+app.register_blueprint(matches, url_prefix="/matches")
+app.register_blueprint(teams, url_prefix="/teams")
 
 if os.environ.get("FLASK_ENV") == "production":
     load_dotenv(".env.prod")
@@ -31,7 +35,7 @@ def after_request(response):
 
 @app.get("/ping")
 def ping():
-    return "pong"
+    return "pong", 200
 
 
 if __name__ == "__main__":
