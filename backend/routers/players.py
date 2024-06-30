@@ -37,7 +37,7 @@ def transform_row(player: dict, cur: Cursor):
 
 
 @players.get("/")
-def get_teams():
+def get_players():
     session = get_session()
     if session is None:
         return "Unauthorized", 401
@@ -55,20 +55,18 @@ def get_teams():
             WHERE
                 concat(firstName, ' ', surname) LIKE ?
                 OR id = ?
-            ORDER BY ? ?
         """
 
         players = cur.execute(
             sql,
             (
                 "%" + query + "%",
-                int(query) if query.isdecimal() else -1,
-                sort_by,
-                "DESC" if reverse else "ASC",
+                int(query) if query.isdecimal() else -1
             ),
         ).fetchall()
 
         players = [transform_row(row, cur) for row in players]
+        players.sort(key=lambda row: row[sort_by], reverse=reverse)
 
         return jsonify(players), 200
     except (DatabaseError, KeyError):

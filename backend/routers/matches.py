@@ -39,7 +39,6 @@ def get_teams():
                 OR matches.oppName LIKE ?
                 OR matches.id = ?
                 OR teams.id = ?
-            ORDER BY ? ?
         """
 
         matches = cur.execute(
@@ -48,13 +47,12 @@ def get_teams():
                 "%" + query + "%",
                 "%" + query + "%",
                 int(query) if query.isdecimal() else -1,
-                int(query) if query.isdecimal() else -1,
-                sort_by,
-                "DESC" if reverse else "ASC",
+                int(query) if query.isdecimal() else -1
             ),
         ).fetchall()
 
         matches = [{**row, "points": json.loads(row["points"])} for row in matches]
+        matches.sort(key=lambda row: row[sort_by], reverse=reverse)
 
         return jsonify(matches), 200
     except (DatabaseError, KeyError):

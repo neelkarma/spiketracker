@@ -51,20 +51,18 @@ def get_teams():
             SELECT *
             FROM teams
             WHERE name LIKE ? OR id = ?
-            ORDER BY ? ?
         """
 
         teams = cur.execute(
             sql,
             (
                 "%" + query + "%",
-                int(query) if query.isdecimal() else -1,
-                sort_by,
-                "DESC" if reverse else "ASC",
+                int(query) if query.isdecimal() else -1
             ),
         ).fetchall()
 
         teams = [transform_row(row, cur) for row in teams]
+        teams.sort(key=lambda row: row[sort_by], reverse=reverse)
 
         return jsonify(teams), 200
     except (DatabaseError, KeyError):
