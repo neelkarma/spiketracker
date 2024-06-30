@@ -1,104 +1,75 @@
+from sqlite3 import Cursor, DatabaseError
+
 from db import get_db
 from flask import Blueprint, jsonify, request
 from session import get_session
+from routers.player import (
+    calculate_player_stat_success_rate,
+    calculate_player_total_points,
+    get_player_match_ids,
+    get_player_teams,
+)
 
-players = Blueprint("players", __name__)
-
-
-@players.put("/")
-def create_player(id: int):
-    session = get_session()
-    if session is None:
-        return "Unauthorized", 401
-    if not session["admin"]:
-        return "Forbidden", 403
-
-    data = request.get_json()  # get data from user inputs
-
-    first_name = data["firstNameInput"]
-    last_name = data["surnameInput"]
-    grad_year = data["gradYear"]
-    visible = data["visible"]
-
-    cur = get_db()
-    cur.execute(
-        "INSERT INTO players (firstName, lastName, gradYear, visible) VALUES (?, ?, ?, ?, ?)",
-        (first_name, last_name, grad_year, visible),
-    )
-    cur.commit()
-    cur.close()
-
-    return jsonify({"success": True}), 200
+players = Blueprint("/players", __name__)
 
 
-@players.get("/<id>")
-def get_player(id: int):
-    cur = get_db()
-    data = cur.execute("SELECT * FROM players WHERE id = ?", (id,)).fetchone()
-    stats = cur.execute("SELECT * FROM playerStats WHERE id = ?", (id,)).fetchone()
-    team_ids = cur.execute(
-        "SELECT teamId FROM playerTeams WHERE playerId = ?", (id,)
-    ).fetchall()
+def transform_row(player: dict, cur: Cursor):
+    matchIds = get_player_match_ids(player["id"], cur)
+    teams = get_player_teams(player["id"], cur)
+    totalPoints = calculate_player_total_points(player["id"], cur)
+    ppg = totalPoints / len(matchIds)
+    kr = calculate_player_stat_success_rate(player["id"], "attack", cur)
+    pef = calculate_player_stat_success_rate(player["id"], "set", cur)
 
-    teams = []
-    for team_id in team_ids:
-        team_id = team_id["teamId"]
-        team = cur.execute("SELECT name FROM teams WHERE id = ?", team_id).fetchone()
-        teams.append({"id": team_id, "name": team["name"]})
-
-    cur.close()
-
-    return jsonify(
-        {
-            "id": id,
-            "firstName": data["firstName"],
-            "surname": data["surname"],
-            "gradYear": data["gradYear"],
-            "teams": data["teams"],
-            # "ppg": data["ppg"],
-            # "kr": data["kr"],
-            # "pef": data["pef"],
-            "totalPoints": data["totalPoints"],
-            "visible": data["visible"],
-        }
-    )
+    return {
+        "id": player["id"],
+        "firstName": player["firstName"],
+        "surname": player["surname"],
+        "gradYear": player["gradYear"],
+        "teams": teams,
+        "matchIds": matchIds,
+        "ppg": ppg,
+        "kr": kr,
+        "pef": pef,
+        "totalPoints": totalPoints,
+        "visible": player["visible"],
+    }
 
 
-@players.post("/<id>")
-def edit_player(id: int):
-    session = get_session()
-
-    if session is None:
-        return "Unauthorized", 401
-
-    if not session["admin"]:
-        return "Forbidden", 403
-
-    data = request.get_json()
-
-    cur = get_db()
-    cur.execute(
-        "UPDATE players SET firstName = ?, lastName = ?, gradYear = ?, visible = ? WHERE id = ?",
-        (data["firstName"], data["surname"], data["gradYear"], data["visible"]),
-    )
-    cur.commit()
-    cur.close()
-
-    return jsonify({"success": True}), 200
-
-
-@players.delete("/<id>")
-def delete_player(id: int):
+@players.get("/")
+def get_teams():
     session = get_session()
     if session is None:
         return "Unauthorized", 401
 
-    if not session["admin"]:
-        return "Forbidden", 403
+    query = request.args.get("q", "")
+    sort_by = request.args.get("sort", "name")
+    reverse = request.args.get("reverse", "0") == "1"
 
-    cur = get_db()
-    cur.execute("DELETE FROM players WHERE id = ?", (id,))
-    cur.commit()
-    cur.close()
+    try:
+        cur = get_db()
 
-    return jsonify({"success": True}), 200
+        sql = """
+            SELECT *
+            FROM players
+            WHERE
+                concat(firstName, ' ', surname) LIKE ?
+                OR id = ?
+            ORDER BY ? ?
+        """
+
+        players = cur.execute(
+            sql,
+            (
+                "%" + query + "%",
+                int(query) if query.isdecimal() else -1,
+                sort_by,
+                "DESC" if reverse else "ASC",
+            ),
+        ).fetchall()
+
+        players = [transform_row(row, cur) for row in players]
+
+        return jsonify(players), 200
+    except (DatabaseError, KeyError):
+        return "Invalid Input", 400

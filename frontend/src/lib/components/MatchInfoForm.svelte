@@ -54,7 +54,7 @@
   };
 
   const handleSubmit: EventHandler<SubmitEvent, HTMLFormElement> = async (
-    e
+    e,
   ) => {
     const teams = await teamsPromise;
 
@@ -188,17 +188,27 @@
   {#if data.points}
     <div class="block">
       <h2 class="subtitle">Points</h2>
-      <div class="field">
-        <div class="control">
-          <label class="checkbox">
-            <input
-              type="checkbox"
-              name="pointsOverridden"
-              bind:checked={pointsOverridden}
-            />
-            Override Points
-          </label>
-        </div>
+      <div class="buttons">
+        <button
+          class="button"
+          disabled={data.points.length === 5}
+          on:click={() => {
+            if (!data.points) return;
+            if (data.points.length === 5) return;
+            data.points.push({ our: 0, opp: 0 });
+            data.points = data.points;
+          }}>Add Set</button
+        >
+        <button
+          class="button"
+          disabled={data.points.length === 1}
+          on:click={() => {
+            if (!data.points) return;
+            if (data.points.length === 1) return;
+            data.points.pop();
+            data.points = data.points;
+          }}>Remove Set</button
+        >
       </div>
       <table class="table">
         <tbody>
@@ -212,7 +222,6 @@
                   class="input"
                   bind:value={our}
                   name="our-{i}"
-                  disabled={!pointsOverridden}
                 />
               </td>
             {/each}
@@ -227,7 +236,6 @@
                   class="input"
                   value={opp}
                   name="opp-{i}"
-                  disabled={!pointsOverridden}
                 />
               </td>
             {/each}

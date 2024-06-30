@@ -135,48 +135,45 @@
         </button>
       </div>
     </div>
-    <div class="box">
-      <div class="title is-4">Upcoming Matches</div>
-      {#if filteredUpcomingMatches}
-        {#each filteredUpcomingMatches as { id, date, oppTeamName, ourTeamName, location }}
-          <MatchCardBody>
-            <MatchCardDetailsPart {date} {location} />
-            <MatchCardTeamsPart {ourTeamName} {oppTeamName} />
-            {#if $page.data.admin}
-              <div class="level-item">
-                <a href="/app/matches/edit/{id}" class="button">Edit</a>
-              </div>
-            {/if}
-          </MatchCardBody>
-          <!-- <TeamCard {...match} /> -->
-        {/each}
-      {:else}
-        {#each { length: 5 } as _}
-          <div class="skeleton-block"></div>
-        {/each}
-      {/if}
-    </div>
-    <div class="box">
-      <div class="title is-4">Past Matches</div>
+    <div class="my-5"></div>
+    <div class="title is-4">Upcoming Matches</div>
+    {#if filteredUpcomingMatches}
+      {#each filteredUpcomingMatches as { id, date, oppTeamName, ourTeamName, location }}
+        <MatchCardBody>
+          <MatchCardDetailsPart {date} {location} />
+          <MatchCardTeamsPart {ourTeamName} {oppTeamName} />
+          {#if $page.data.admin}
+            <div class="level-item">
+              <a href="/app/matches/edit/{id}" class="button">Edit</a>
+            </div>
+          {/if}
+        </MatchCardBody>
+        <!-- <TeamCard {...match} /> -->
+      {/each}
+    {:else}
+      {#each { length: 5 } as _}
+        <div class="skeleton-block"></div>
+      {/each}
+    {/if}
+    <div class="title is-4">Past Matches</div>
 
-      {#if filteredPastMatches}
-        {#each filteredUpcomingMatches as { id, date, oppTeamName, ourTeamName, location }}
-          <MatchCardBody href="/app/matches/{id}">
-            <MatchCardDetailsPart {date} {location} />
-            <MatchCardTeamsPart {ourTeamName} {oppTeamName} />
-            {#if $page.data.admin}
-              <div class="level-item">
-                <a href="/app/matches/edit/{id}" class="button">Edit</a>
-              </div>
-            {/if}
-          </MatchCardBody>
-        {/each}
-      {:else}
-        {#each { length: 5 } as _}
-          <div class="skeleton-block"></div>
-        {/each}
-      {/if}
-    </div>
+    {#if filteredPastMatches}
+      {#each filteredUpcomingMatches as { id, date, oppTeamName, ourTeamName, location }}
+        <MatchCardBody href="/app/matches/{id}">
+          <MatchCardDetailsPart {date} {location} />
+          <MatchCardTeamsPart {ourTeamName} {oppTeamName} />
+          {#if $page.data.admin}
+            <div class="level-item">
+              <a href="/app/matches/edit/{id}" class="button">Edit</a>
+            </div>
+          {/if}
+        </MatchCardBody>
+      {/each}
+    {:else}
+      {#each { length: 5 } as _}
+        <div class="skeleton-block"></div>
+      {/each}
+    {/if}
   </div>
 </section>
 

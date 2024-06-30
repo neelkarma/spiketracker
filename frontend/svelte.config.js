@@ -13,6 +13,10 @@ const config = {
 
   experimental: {
     inspector: false
+  },
+
+  alias: {
+    "$assets": "src/assets"
   }
 };
 

@@ -4,9 +4,8 @@ export interface MatchInfo {
   ourTeamName: string;
   oppTeamName: string;
   location: string;
-  date: Date;
-  pointsOverridden: boolean;
-  points?: { our: number; opp: number }[];
+  time: string;
+  points: { our: number; opp: number }[];
   visible: boolean;
   scoring: boolean;
 }
@@ -17,8 +16,7 @@ export const SAMPLE_MATCH_INFO: MatchInfo = {
   ourTeamName: "SBHS 1sts",
   oppTeamName: "Newington 2nds",
   location: "SBHS Gymnasium",
-  date: new Date(2024, 3, 18, 9, 0),
-  pointsOverridden: false,
+  time: new Date(2024, 3, 18, 9, 0).toISOString(),
   points: [
     { our: 25, opp: 20 },
     { our: 26, opp: 14 },
@@ -34,9 +32,8 @@ export const EMPTY_MATCH_INFO: MatchInfo = {
   ourTeamName: "",
   oppTeamName: "",
   location: "",
-  date: new Date(),
-  pointsOverridden: false,
-  points: undefined,
+  time: new Date().toISOString(),
+  points: [],
   visible: true,
   scoring: false,
 };
@@ -124,3 +121,11 @@ export const EMPTY_TEAM_INFO: TeamInfo = {
   playerIds: [],
   visible: true,
 };
+
+export interface Stat {
+  playerId: number;
+  action: string;
+  rating: number;
+  from: [number, number];
+  to: [number, number]
+}

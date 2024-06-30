@@ -14,26 +14,33 @@
 
     status = "loading";
 
-    // simulate network
-    await wait(1000);
-
-    const res = await fetch(`/api/players/${player.id}`, {
-      method: "POST",
+    const res = await fetch(`/api/player/${player.id}`, {
+      method: "PUT",
       body: JSON.stringify(player),
     });
 
     window.scrollTo({ top: 0 });
-    status = "success";
+    if (res.status === 200) {
+      status = "success";
+    } else {
+      status = "error";
+      console.log(await res.text());
+    }
   };
 
   const handleDelete = async (e: CustomEvent) => {
     status = "loading";
 
-    // simulate network
-    await wait(1000);
+    const res = await fetch(`/api/player/${data.id}`, {
+      method: "DELETE",
+    });
 
-    // TODO: how to give user feedback of success?
-    await goto("/app/players");
+    if (res.status === 200) {
+      await goto("/app/players?success=1");
+    } else {
+      status = "error";
+      console.log(await res.text());
+    }
   };
 </script>
 

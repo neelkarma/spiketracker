@@ -1,40 +1,22 @@
 <script lang="ts">
   import Stat from "$lib/components/Stat.svelte";
-  import { SAMPLE_MATCH_INFO, type MatchInfo } from "$lib/types";
+  import { page } from "$app/stores";
   import type { PageData } from "./$types";
+  import type { MatchInfo } from "$lib/types";
 
   export let data: PageData;
 
   const getMatchHistory = async (): Promise<
     {
       match: MatchInfo;
-      points: number;
       kr: number;
       pef: number;
+      points: number;
     }[]
   > => {
-    // const res = await fetch(`/api/players/${$page.params.id}/matches`);
-    // const matches = await res.json();
-    // return matches
-
-    // dummy data
-    return [
-      {
-        match: SAMPLE_MATCH_INFO,
-        points: 12,
-        kr: 0.5,
-        pef: 0.7,
-      },
-      {
-        match: {
-          ...SAMPLE_MATCH_INFO,
-          id: 1,
-        },
-        points: 14,
-        kr: 0.4,
-        pef: 0.2,
-      },
-    ];
+    const res = await fetch(`/api/player/${$page.params.id}/matches`);
+    const matches = await res.json();
+    return matches;
   };
 </script>
 
@@ -117,7 +99,7 @@
                   </a>
                 </td>
                 <td
-                  >{match.date.toLocaleDateString("en-AU", {
+                  >{new Date(match.time).toLocaleDateString("en-AU", {
                     hour: "numeric",
                     hour12: true,
                     minute: "2-digit",

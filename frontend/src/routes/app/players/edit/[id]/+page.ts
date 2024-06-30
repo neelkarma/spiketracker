@@ -1,13 +1,15 @@
-import { browser } from "$app/environment";
-import { SAMPLE_PLAYER_INFO, type PlayerInfo } from "$lib/types";
-import { wait } from "$lib/utils";
+import { type PlayerInfo } from "$lib/types";
+import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 
-export const load = (async ({ params }): Promise<PlayerInfo> => {
-  const id = Number.parseInt(params.id);
+export const load = (async ({ params, fetch }): Promise<PlayerInfo> => {
+  const res = await fetch(`/api/player/${params.id}`)
 
-  // Simulate network latency
-  if (browser) await wait(1000);
+  if (res.status === 404) {
+    error(404, "Not found")
+  }
 
-  return SAMPLE_PLAYER_INFO;
+  const data = await res.json();
+
+  return data;
 }) satisfies PageLoad;

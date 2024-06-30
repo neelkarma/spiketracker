@@ -1,6 +1,7 @@
+from sqlite3 import DatabaseError
 from db import get_db
+from session import get_session
 
-# from flask import Blueprint, jsonify
 from flask import Blueprint, jsonify, request
 
 stats = Blueprint("/stats", __name__)
@@ -32,8 +33,16 @@ def query_stats_bulk():
             return "player_id must be an integer", 400
 
     cur = get_db()
+    sql = """
+        SELECT * FROM stats
+        INNER JOIN matches ON stats.match_id = matches.id
+        INNER JOIN players ON stats.player_id = players.id
+        WHERE (? = 1 OR stats.match_id = ?)
+            AND (? = 1 OR matches.team_id = ?)
+            AND (? = 1 OR stats.player_id = ?)
+        """
     data = cur.execute(
-        "SELECT * FROM stats INNER JOIN matches ON stats.match_id = matches.id INNER JOIN players ON stats.player_id = players.id WHERE (? = 1 OR stats.match_id = ?) AND (? = 1 OR matches.team_id = ?) AND (? = 1 OR stats.player_id = ?)",
+        sql,
         (
             int(match_id is None),
             match_id,
@@ -47,8 +56,50 @@ def query_stats_bulk():
     return jsonify([dict(row) for row in data]), 200
 
 
-@stats.post("/<match_id>")
+@stats.put("/<match_id>")
 def edit_match_stats(match_id: int):
+    session = get_session()
+    if session is None:
+        return "Unauthorized", 401
+
+    cur = get_db()
+    match_data = cur.execute(
+        "SELECT scoring FROM matches WHERE id = ?", (match_id,)
+    ).fetchone()
+
+    if match_data is None:
+        return "Not Found", 404
+
+    if not (match_data["scoring"] or session["admin"]):
+        return "Forbidden", 403
+
     data = request.get_json()
 
-    # TODO: complete this
+    try:
+        cur.execute("DELETE FROM stats WHERE matchId = ?", (match_id,))
+
+        sql = """
+            INSERT INTO stats (playerId, matchId, action, rating, fromX, fromY, toX, toY)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """
+
+        cur.executemany(
+            sql,
+            [
+                (
+                    stat["playerId"],
+                    match_id,
+                    stat["action"],
+                    stat["rating"],
+                    stat["from"][0],
+                    stat["from"][1],
+                    stat["to"][0],
+                    stat["to"][1],
+                )
+                for stat in data
+            ],
+        )
+
+        return jsonify({"success": True}), 200
+    except (DatabaseError, KeyError):
+        return jsonify({"success": False}), 400

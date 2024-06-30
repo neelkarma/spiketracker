@@ -2,18 +2,23 @@
   import { goto } from "$app/navigation";
   import PlayerInfoForm from "$lib/components/PlayerInfoForm.svelte";
   import { EMPTY_PLAYER_INFO, type PlayerInfo } from "$lib/types";
-  import { wait } from "$lib/utils";
 
   let status: "loading" | "error" | null = null;
 
   const handleSubmit = async (e: CustomEvent<PlayerInfo>) => {
     status = "loading";
 
-    // simulate network delay
-    await wait(1000);
+    const res = await fetch("/api/player", {
+      method: "POST",
+      body: JSON.stringify(e.detail),
+    });
 
-    // TODO: again, how to give user feedback that it was successful?
-    await goto("/app/players");
+    if (res.status === 200) {
+      await goto("/app/players?success=1");
+    } else {
+      console.log(await res.text());
+      await goto("/app/players?success=0");
+    }
   };
 </script>
 

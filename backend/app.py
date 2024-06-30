@@ -4,17 +4,23 @@ import sys
 from dotenv import load_dotenv
 from flask import Flask
 from routers.auth import auth
-from routers.matches import matches
-from routers.players import players
+from routers.match import match
+from routers.player import player
 from routers.stats import stats
+from routers.team import team
 from routers.teams import teams
+from routers.players import players
+from routers.matches import matches
 
 app = Flask(__name__)
-app.register_blueprint(auth, url_prefix="/auth")
-app.register_blueprint(players, url_prefix="/players")
-app.register_blueprint(stats, url_prefix="/stats")
-app.register_blueprint(matches, url_prefix="/matches")
-app.register_blueprint(teams, url_prefix="/teams")
+app.register_blueprint(auth)
+app.register_blueprint(team)
+app.register_blueprint(player)
+app.register_blueprint(match)
+app.register_blueprint(stats)
+app.register_blueprint(teams)
+app.register_blueprint(players)
+app.register_blueprint(matches)
 
 if os.environ.get("FLASK_ENV") == "production":
     load_dotenv(".env.prod")

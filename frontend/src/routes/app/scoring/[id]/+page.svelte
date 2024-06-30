@@ -1,65 +1,107 @@
 <script lang="ts">
+  import FieldPosSelect from "$lib/components/FieldPosSelect.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  import PlayerPicker from "$lib/components/PlayerPicker.svelte";
+  import QuickPicker from "$lib/components/QuickPicker.svelte";
   import ScoringNavBar from "$lib/components/ScoringNavBar.svelte";
-  import type { TeamInfo } from "$lib/types";
-  import svg from "../../../../assets/Volleyball-Court-1.svg?raw";
 
-  export let data: TeamInfo;
+  export let data;
 
-  const handleClick = (e: MouseEvent) => {
-    const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+  let playerScoring: { name: string; id: number } | null = null;
+  let scoringData: {
+    name: string;
+    id: number;
+    pos1: [number, number];
+    pos2: [number, number];
+    actionType: string;
+    rating: number;
+  }[] = [];
 
-    const gridX = Math.floor((x / rect.width) * 20);
-    const gridY = Math.floor((y / rect.height) * 20);
+  $: playerItems = data.players.map(({ id, name }) => ({
+    label: name,
+    value: id,
+  }));
 
-    console.log(gridX, gridY);
+  const handlePlayerSelect = ({
+    label: name,
+    value: id,
+  }: {
+    label: string;
+    value: number;
+  }) => {
+    playerScoring = { name, id };
+  };
+
+  const handleScoringSubmit = (data: {
+    pos1: [number, number];
+    pos2: [number, number];
+    actionType: string;
+    rating: number;
+  }) => {
+    if (!playerScoring) return;
+    scoringData.unshift({
+      ...playerScoring,
+      ...data,
+    });
+    scoringData = scoringData;
+    playerScoring = null;
   };
 </script>
 
-<ScoringNavBar />
-<div class="columns is-fullheight">
-  <div class="column is-narrow p-5">
-    <div class="field">
-      <label for="set-input" class="label">Current Set</label>
-      <div class="control">
-        <div class="select">
-          <select id="set-input">
-            <option value="1">Set 1</option>
-            <option value="2">Set 2</option>
-            <option value="3">Set 3</option>
-          </select>
-        </div>
-      </div>
-    </div>
+<Modal isOpen={playerScoring !== null}>
+  <div class="box">
+    <FieldPosSelect on:submit={(e) => handleScoringSubmit(e.detail)} />
   </div>
-  <div class="column">
-    <div on:click={handleClick}>
-      <div class="absolute-wrapper">
-        <div class="first-pos" />
-      </div>
-      {@html svg}
-    </div>
+</Modal>
+
+<ScoringNavBar
+  title="Scoring {data.match.ourTeamName} vs {data.match.oppTeamName} @ {data
+    .match.location}"
+/>
+<section class="section">
+  <div class="container">
+    <!-- TODO: Integrate QuickPicker component -->
+    <QuickPicker
+      title="Add action for player..."
+      items={playerItems}
+      on:click={(e) => handlePlayerSelect(e.detail)}
+    />
+    {#if scoringData.length === 0}
+      <p class="has-text-centered">
+        No scoring data to display. Use the above search box to add scoring data
+        for a player first.
+      </p>
+    {:else}
+      <table class="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>Player Name</th>
+            <th>Action Type</th>
+            <th>Rating</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each scoringData as { name, actionType, rating }, i}
+            <tr>
+              <td>{name}</td>
+              <td>{actionType}</td>
+              <td>{rating}</td>
+              <td>
+                <button
+                  class="button is-danger"
+                  on:click={() => {
+                    scoringData.splice(i, 1);
+                    scoringData = scoringData;
+                  }}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    {/if}
   </div>
-  <div class="column is-narrow"></div>
-</div>
-
-<style>
-  .absolute-wrapper {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-  }
-
-  .first-pos {
-    --x: 1;
-    --y: 0;
-
-    position: relative;
-    top: calc(5% * var(--y));
-    left: calc(5% * var(--x));
-    width: 5%;
-    height: 5%;
-    background-color: #00000055;
-  }
-</style>
+</section>

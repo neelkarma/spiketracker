@@ -1,110 +1,61 @@
+from sqlite3 import DatabaseError
+
 from db import get_db
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, json, jsonify, request
+
 from session import get_session
 
 matches = Blueprint("/matches", __name__)
 
 
-@matches.put("/")
-def create_match():
+@matches.get("/")
+def get_teams():
     session = get_session()
     if session is None:
         return "Unauthorized", 401
 
-    if not session["admin"]:
-        return "Forbidden", 403
+    query = request.args.get("q", "")
+    sort_by = request.args.get("sort", "name")
+    reverse = request.args.get("reverse", "0") == "1"
 
-    data = request.get_json()
+    try:
+        cur = get_db()
 
-    con = get_db()
-    con.execute(
-        "INSERT INTO matches (teamId, oppName, time, location, points, visible, scoring) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        (
-            data["teamId"],
-            data["oppName"],
-            data["time"],
-            data["location"],
-            data["points"],
-            data["visible"],
-            data["scoring"],
-        ),
-    )
-    con.commit()
-    con.close()
+        sql = """
+            SELECT
+                matches.id,
+                matches.teamId as ourTeamId, 
+                teams.name as ourTeamName,
+                matches.oppName as oppTeamName,
+                matches.location,
+                matches.time,
+                matches.points,
+                matches.visible,
+                matches.scoring
+            FROM matches
+            INNER JOIN teams ON team.id = matches.teamId
+            WHERE
+                teams.name LIKE ?
+                OR matches.oppName LIKE ?
+                OR matches.id = ?
+                OR teams.id = ?
+            ORDER BY ? ?
+        """
 
-    return jsonify({"success": True}), 200
+        matches = cur.execute(
+            sql,
+            (
+                "%" + query + "%",
+                "%" + query + "%",
+                int(query) if query.isdecimal() else -1,
+                int(query) if query.isdecimal() else -1,
+                sort_by,
+                "DESC" if reverse else "ASC",
+            ),
+        ).fetchall()
 
+        matches = [{**row, "points": json.loads(row["points"])} for row in matches]
 
-@matches.get("/<id>")
-def get_match(id: int):
-    session = get_session()
-    if session is None:
-        return "Unauthorized", 401
-
-    con = get_db()
-    data = con.execute("SELECT * FROM matches WHERE id = ?", (id,)).fetchone()
-    if data is None:
-        return "Not Found", 404
-
-    # TODO: incomplete
-
-    jsonify(
-        {
-            "id": data["id"],
-            "ourTeamId": data["ourTeamId"],
-            "ourTeamName": data["ourTeamName"],
-            "oppTeamName:": data["oppTeamName"],
-            "location": data["location"],
-            "date": data["date"],
-            "pointsOverriden": data["pointsOverriden"],
-            "points": data["points"],
-            "visible": data["visible"],
-            "scoring": data["scoring"],
-        }
-    )
-
-
-@matches.post("/<id>")
-def edit_match(id: int):
-    session = get_session()
-    if session is None:
-        return "Unauthorized", 401
-
-    if not session["admin"]:
-        return "Forbidden", 403
-
-    data = request.get_json()
-
-    cur = get_db()
-    cur.execute(
-        "UPDATE matches SET teamId = ?, oppName = ?, time = ?, location = ?, points = ?, visible = ?, scoring = ? WHERE id = ?",
-        (
-            data["ourTeamId"],
-            data["oppTeamName"],
-            data["date"],
-            data["location"],
-            data["points"],
-            data["visible"],
-            data["scoring"],
-        ),
-    )
-    cur.commit()
-    cur.close()
-
-    return jsonify({"success": True}), 200
-
-
-@matches.delete("/<id>")
-def delete_match(id: int):
-    session = get_session()
-
-    if session is None:
-        return "Unauthorized", 401
-
-    if not session["admin"]:
-        return "Forbidden", 403
-
-    con = get_db()
-    con.execute("DELETE FROM matches WHERE id = ?", (id,))
-
-    return jsonify({"success": True}), 200
+        return jsonify(matches), 200
+    except (DatabaseError, KeyError):
+        return "Invalid Input", 400

@@ -1,74 +1,71 @@
-import json
+from sqlite3 import Cursor, DatabaseError
 
 from db import get_db
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from session import get_session
+from routers.team import (
+    calculate_team_stat_success_rate,
+    calculate_team_wins_losses_set_ratio,
+)
 
 teams = Blueprint("/teams", __name__)
 
 
-@teams.get("/<id>")
-def get_team(id: int):
-    session = get_session()
-    if session is None:
-        return "Unauthorized", 401
+def transform_row(team: dict, cur: Cursor):
+    kr = calculate_team_stat_success_rate(team["id"], "attack", cur)
+    pef = calculate_team_stat_success_rate(team["id"], "set", cur)
+    wins, losses, set_ratio = calculate_team_wins_losses_set_ratio(team["id"], cur)
 
-    cur = get_db()
-    data = cur.execute("SELECT * FROM teams WHERE id = ?", (id,)).fetchone()
     player_ids = cur.execute(
-        "SELECT player_id FROM team_players WHERE team_id = ?", (id,)
+        "SELECT playerId FROM teamPlayers WHERE teamId = ?", (id,)
     ).fetchall()
+    player_ids = [row["playerId"] for row in player_ids]
 
-    match_points = cur.execute(
-        "SELECT points FROM matches WHERE team_id = ?", (id,)
-    ).fetchall()
-    wins = 0
-    losses = 0
-    set_wins = 0
-    set_losses = 0
-    for points in match_points:
-        points = json.loads(points)
-        set_wins = 0
-        set_losses = 0
-        for set_points in points:
-            if set_points["our"] > set_points["opp"] and set_points["our"] >= 15:
-                set_wins += 1
-            elif set_points["our"] < set_points["opp"] and set_points["opp"] >= 15:
-                set_losses += 1
-        if set_wins > set_losses:
-            wins += 1
-        else:
-            losses += 1
-    set_ratio = str(set_wins) + ":" + str(set_losses)
-    if data is None:
-        return "Not Found", 404
-
-    return jsonify(
-        {
-            "id": id,
-            "name": data["name"],
-            "wins": wins,
-            "losses": losses,
-            "set_ratio": set_ratio,
-            "kr": data["kr"],
-            "pef": data["pef"],
-            "player_ids": player_ids,
-            "visible": data["visible"],
-        }
-    )
-    # TODO: incomplete
+    return {
+        "id": team["id"],
+        "name": team["name"],
+        "wins": wins,
+        "losses": losses,
+        "setRatio": set_ratio,
+        "kr": kr,
+        "pef": pef,
+        "playerIds": player_ids,
+        "visible": team["visible"],
+    }
 
 
-@teams.delete("/<id>")
-def delete_team(id: int):
+@teams.get("/")
+def get_teams():
     session = get_session()
     if session is None:
         return "Unauthorized", 401
 
-    if not session["admin"]:
-        return "Forbidden", 403
+    query = request.args.get("q", "")
+    sort_by = request.args.get("sort", "name")
+    reverse = request.args.get("reverse", "0") == "1"
 
-    con = get_db()
-    con.execute("DELETE FROM teams WHERE id = ?", (id,))
+    try:
+        cur = get_db()
 
-    return jsonify({"success": True}), 200
+        sql = """
+            SELECT *
+            FROM teams
+            WHERE name LIKE ? OR id = ?
+            ORDER BY ? ?
+        """
+
+        teams = cur.execute(
+            sql,
+            (
+                "%" + query + "%",
+                int(query) if query.isdecimal() else -1,
+                sort_by,
+                "DESC" if reverse else "ASC",
+            ),
+        ).fetchall()
+
+        teams = [transform_row(row, cur) for row in teams]
+
+        return jsonify(teams), 200
+    except (DatabaseError, KeyError):
+        return "Invalid Input", 400
