@@ -16,8 +16,8 @@
     if (res.status === 200) {
       await goto("/app/players?success=1");
     } else {
+      status = "error";
       console.log(await res.text());
-      await goto("/app/players?success=0");
     }
   };
 </script>

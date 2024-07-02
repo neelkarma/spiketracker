@@ -14,9 +14,8 @@ export const load = (async ({ params }): Promise<MatchInfo> => {
     ourTeamId: 1,
     ourTeamName: "SBHS 1sts",
     oppTeamName: "Newington 2nds",
-    time: new Date(2024, 3, 17, 9, 0),
+    time: new Date(2024, 3, 17, 9, 0).toISOString(),
     location: "SBHS Gymnasium",
-    pointsOverridden: false,
     points: [
       { our: 25, opp: 20 },
       { our: 26, opp: 14 },

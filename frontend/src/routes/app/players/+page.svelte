@@ -1,8 +1,8 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import Modal from "$lib/components/Modal.svelte";
-  import { SAMPLE_PLAYER_INFO, type PlayerInfo } from "$lib/types";
-  import { debounce, wait } from "$lib/utils";
+  import { type PlayerInfo } from "$lib/types";
+  import { debounce } from "$lib/utils";
   import type { PageData } from "./$types";
 
   interface SortOptions {
@@ -29,11 +29,21 @@
   let filteredPlayers: PlayerInfo[];
 
   const handleChange = async (query: string, sortOptions: SortOptions) => {
-    // const data = await fetch("/api/teams", { ... }).then((res) => res.json());
+    const searchParams = new URLSearchParams({
+      q: query,
+      sort: sortOptions.sortBy,
+      reverse: sortOptions.reverse ? "1" : "0",
+    }).toString();
 
-    // again, network simuation
-    await wait(1000);
-    filteredPlayers = [SAMPLE_PLAYER_INFO];
+    const res = await fetch(`/api/players?${searchParams}`);
+
+    if (res.status !== 200) {
+      alert("Something went wrong, sorry.");
+      console.log(await res.text());
+      return;
+    }
+
+    filteredPlayers = await res.json();
   };
 
   const handleChangeDebounced = debounce(handleChange);

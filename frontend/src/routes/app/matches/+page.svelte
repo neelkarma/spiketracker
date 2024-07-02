@@ -138,9 +138,9 @@
     <div class="my-5"></div>
     <div class="title is-4">Upcoming Matches</div>
     {#if filteredUpcomingMatches}
-      {#each filteredUpcomingMatches as { id, date, oppTeamName, ourTeamName, location }}
+      {#each filteredUpcomingMatches as { id, time, oppTeamName, ourTeamName, location }}
         <MatchCardBody>
-          <MatchCardDetailsPart {date} {location} />
+          <MatchCardDetailsPart date={new Date(time)} {location} />
           <MatchCardTeamsPart {ourTeamName} {oppTeamName} />
           {#if $page.data.admin}
             <div class="level-item">
@@ -158,9 +158,9 @@
     <div class="title is-4">Past Matches</div>
 
     {#if filteredPastMatches}
-      {#each filteredUpcomingMatches as { id, date, oppTeamName, ourTeamName, location }}
+      {#each filteredUpcomingMatches as { id, time, oppTeamName, ourTeamName, location }}
         <MatchCardBody href="/app/matches/{id}">
-          <MatchCardDetailsPart {date} {location} />
+          <MatchCardDetailsPart date={new Date(time)} {location} />
           <MatchCardTeamsPart {ourTeamName} {oppTeamName} />
           {#if $page.data.admin}
             <div class="level-item">

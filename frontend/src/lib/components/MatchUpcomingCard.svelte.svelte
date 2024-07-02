@@ -9,7 +9,7 @@
 </script>
 
 <MatchCardBody>
-  <MatchCardDetailsPart date={data.date} location={data.location} />
+  <MatchCardDetailsPart date={new Date(data.time)} location={data.location} />
   <MatchCardTeamsPart
     ourTeamName={data.ourTeamName}
     oppTeamName={data.oppTeamName}

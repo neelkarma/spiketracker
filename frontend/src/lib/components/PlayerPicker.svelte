@@ -12,11 +12,13 @@
 
   $: if (inputEl && required) {
     inputEl.setCustomValidity(
-      value.length === 0 ? "You must specify at least one player." : ""
+      value.length === 0 ? "You must specify at least one player." : "",
     );
   }
 
-  const fetchFilteredPlayers = async (e: InputEvent) => {
+  const fetchFilteredPlayers = async (
+    e: Event & { currentTarget: HTMLInputElement },
+  ) => {
     // const response = await fetch(
     //   "/api/players/search?q=" + (e.currentTarget as HTMLInputElement).value
     // );

@@ -16,7 +16,6 @@
     delete: null;
   }>();
 
-  let pointsOverridden = data.pointsOverridden;
   let visible = data.visible;
   let scoring = data.scoring;
   $: if (!visible) scoring = false;
@@ -42,7 +41,6 @@
   onMount(() => (teamsPromise = fetchTeams()));
 
   const pointsArrayFromFormData = (formData: FormData) => {
-    if (!formData.has("our-0")) return;
     const out = [];
     for (let i = 0; formData.has(`our-${i}`); i++) {
       out.push({
@@ -68,9 +66,8 @@
       ourTeamName: teams.find(({ id }) => ourTeamId === id)!.name,
       oppTeamName: formData.get("oppTeamName")!.toString(),
       location: formData.get("location")!.toString(),
-      date: new Date(formData.get("date")!.toString()),
-      pointsOverridden,
-      points: pointsOverridden ? pointsArrayFromFormData(formData) : undefined,
+      time: formData.get("date")!.toString(),
+      points: pointsArrayFromFormData(formData),
       visible: !!formData.get("visible")?.toString(),
       scoring: !!formData.get("scoring")?.toString(),
     });
@@ -79,7 +76,7 @@
 
 <DeleteConfirmModal
   bind:isOpen={deleteModalOpen}
-  name="{data.date.toLocaleDateString('en-AU', {
+  name="{new Date(data.time).toLocaleDateString('en-AU', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -153,7 +150,7 @@
           class="input"
           id="dateInput"
           name="date"
-          value={dateToDateTimeLocalInputString(data.date)}
+          value={dateToDateTimeLocalInputString(new Date(data.time))}
           required
         />
       </div>
