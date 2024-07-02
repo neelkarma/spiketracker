@@ -20,13 +20,14 @@
   let teams = data.teams;
 
   const handleSubmit: EventHandler<SubmitEvent, HTMLFormElement> = async (
-    e
+    e,
   ) => {
     const formData = new FormData(e.currentTarget);
     dispatch("submit", {
       ...data,
       firstName: formData.get("firstName")!.toString(),
       surname: formData.get("surname")!.toString(),
+      id: parseInt(formData.get("id")!.toString()),
       teams,
       visible: !!formData.get("visible")?.toString(),
     });

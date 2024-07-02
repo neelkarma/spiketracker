@@ -3,6 +3,7 @@
   import Modal from "$lib/components/Modal.svelte";
   import { type PlayerInfo } from "$lib/types";
   import { debounce } from "$lib/utils";
+  import { onMount } from "svelte";
   import type { PageData } from "./$types";
 
   interface SortOptions {
@@ -29,13 +30,14 @@
   let filteredPlayers: PlayerInfo[];
 
   const handleChange = async (query: string, sortOptions: SortOptions) => {
+    console.log("potato");
     const searchParams = new URLSearchParams({
       q: query,
       sort: sortOptions.sortBy,
       reverse: sortOptions.reverse ? "1" : "0",
     }).toString();
 
-    const res = await fetch(`/api/players?${searchParams}`);
+    const res = await fetch("/api/players/?" + searchParams);
 
     if (res.status !== 200) {
       alert("Something went wrong, sorry.");
@@ -48,7 +50,9 @@
 
   const handleChangeDebounced = debounce(handleChange);
 
-  $: handleChangeDebounced(query, sortOptions);
+  onMount(async () => {
+    await handleChange(query, sortOptions);
+  });
 </script>
 
 <Modal bind:isOpen={filterModalIsOpen}>
@@ -62,6 +66,8 @@
         sortBy: formData.get("sortby"),
         reverse: formData.has("reverse"),
       };
+
+      handleChange(query, sortOptions);
 
       filterModalIsOpen = false;
     }}
@@ -126,6 +132,7 @@
           type="email"
           placeholder="Search players..."
           bind:value={query}
+          on:input={() => handleChangeDebounced(query, sortOptions)}
         />
         <span class="icon is-left">
           <i class="fas fa-search"></i>

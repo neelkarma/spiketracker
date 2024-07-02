@@ -8,16 +8,20 @@
   const handleSubmit = async (e: CustomEvent<PlayerInfo>) => {
     status = "loading";
 
-    const res = await fetch("/api/player", {
+    const res = await fetch("/api/player/", {
       method: "POST",
       body: JSON.stringify(e.detail),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     if (res.status === 200) {
       await goto("/app/players?success=1");
     } else {
-      status = "error";
       console.log(await res.text());
+      status = "error";
+      window.scrollTo({ top: 0 });
     }
   };
 </script>
@@ -25,6 +29,11 @@
 <section class="section">
   <div class="container">
     <h1 class="title">New Player</h1>
+    {#if status === "error"}
+      <div class="notification is-danger">
+        Sorry, something went wrong. Please try again in a moment.
+      </div>
+    {/if}
     <PlayerInfoForm
       submitLabel="Add"
       data={EMPTY_PLAYER_INFO}
