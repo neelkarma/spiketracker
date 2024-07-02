@@ -2,15 +2,15 @@ from sqlite3 import Cursor, DatabaseError
 
 from db import get_db
 from flask import Blueprint, jsonify, request
-from session import get_session
 from routers.player import (
     calculate_player_stat_success_rate,
     calculate_player_total_points,
     get_player_match_ids,
     get_player_teams,
 )
+from session import get_session
 
-players = Blueprint("/players", __name__)
+players = Blueprint("players", __name__, url_prefix="/players")
 
 
 def transform_row(player: dict, cur: Cursor):
@@ -59,10 +59,7 @@ def get_players():
 
         players = cur.execute(
             sql,
-            (
-                "%" + query + "%",
-                int(query) if query.isdecimal() else -1
-            ),
+            ("%" + query + "%", int(query) if query.isdecimal() else -1),
         ).fetchall()
 
         players = [transform_row(row, cur) for row in players]

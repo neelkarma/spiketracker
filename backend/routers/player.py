@@ -1,10 +1,11 @@
 from sqlite3 import Cursor, DatabaseError
+
 from db import get_db
 from flask import Blueprint, jsonify, request
 from routers.teams import calculate_team_stat_success_rate
 from session import get_session
 
-player = Blueprint("/player", __name__)
+player = Blueprint("player", __name__, url_prefix="/player")
 
 
 def calculate_player_stat_success_rate(id: int, action: str, cur: Cursor):
@@ -102,6 +103,7 @@ def get_player(id: int):
         }
     )
 
+
 @player.get("/<id>/matches")
 def get_player_matches(id: int):
     def transform_row(row: dict, cur: Cursor):
@@ -135,17 +137,12 @@ def get_player_matches(id: int):
 
         pef = successful_passes / total_passes
 
-        return {
-            "match": row,
-            "kr": kr,
-            "pef": pef,
-            "points": successful_attacks
-        }
+        return {"match": row, "kr": kr, "pef": pef, "points": successful_attacks}
 
     session = get_session()
     if session is None:
         return "Unauthorized", 401
-    
+
     cur = get_db()
 
     sql = """
@@ -156,7 +153,7 @@ def get_player_matches(id: int):
 
     matches = cur.execute(sql, (id,)).fetchall()
     matches = [transform_row(row, cur) for row in matches]
-    
+
     return jsonify(matches), 200
 
 

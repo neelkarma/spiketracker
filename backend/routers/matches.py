@@ -2,10 +2,9 @@ from sqlite3 import DatabaseError
 
 from db import get_db
 from flask import Blueprint, json, jsonify, request
-
 from session import get_session
 
-matches = Blueprint("/matches", __name__)
+matches = Blueprint("matches", __name__, url_prefix="/matches")
 
 
 @matches.get("/")
@@ -47,7 +46,7 @@ def get_teams():
                 "%" + query + "%",
                 "%" + query + "%",
                 int(query) if query.isdecimal() else -1,
-                int(query) if query.isdecimal() else -1
+                int(query) if query.isdecimal() else -1,
             ),
         ).fetchall()
 

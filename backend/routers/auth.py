@@ -10,7 +10,7 @@ from session import (
     sign_session_token,
 )
 
-auth = Blueprint("auth", __name__)
+auth = Blueprint("auth", __name__, url_prefix="/auth")
 
 STATE_COOKIE = "SBHS-State"
 

@@ -1,10 +1,10 @@
 from sqlite3 import DatabaseError
+
 from db import get_db
+from flask import Blueprint, jsonify, request
 from session import get_session
 
-from flask import Blueprint, jsonify, request
-
-stats = Blueprint("/stats", __name__)
+stats = Blueprint("stats", __name__, url_prefix="/stats")
 
 
 @stats.get("/")

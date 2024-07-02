@@ -5,7 +5,7 @@ from db import get_db
 from flask import Blueprint, jsonify, request
 from session import get_session
 
-team = Blueprint("/team", __name__)
+team = Blueprint("team", __name__, url_prefix="/team")
 
 
 def calculate_team_stat_success_rate(id: int, action: str, cur: Cursor):

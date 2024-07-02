@@ -1,10 +1,11 @@
-from sqlite3 import DatabaseError
-from db import get_db
 import json
+from sqlite3 import DatabaseError
+
+from db import get_db
 from flask import Blueprint, jsonify, request
 from session import get_session
 
-match = Blueprint("/match", __name__)
+match = Blueprint("match", __name__, url_prefix="/match")
 
 
 @match.get("/<id>")
