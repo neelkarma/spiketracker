@@ -5,6 +5,7 @@
   import { debounce } from "$lib/utils";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
+  import ActionFeedbackNotification from "$lib/components/ActionFeedbackNotification.svelte";
 
   interface SortOptions {
     sortBy:
@@ -114,6 +115,7 @@
 
 <section class="section">
   <div class="container">
+    <ActionFeedbackNotification />
     <h1 class="title">Players</h1>
     <div class="field is-grouped">
       {#if data.admin}
