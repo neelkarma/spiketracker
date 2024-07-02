@@ -149,7 +149,18 @@ def get_player_matches(id: int):
     con = get_db()
 
     sql = """
-        SELECT * FROM matches
+        SELECT 
+            matches.id,
+            matches.teamId as ourTeamId, 
+            teams.name as ourTeamName,
+            matches.oppName as oppTeamName,
+            matches.location,
+            matches.time,
+            matches.points,
+            matches.visible,
+            matches.scoring
+        FROM matches
+        INNER JOIN teams ON teams.id = matches.teamId
         INNER JOIN teamPlayers ON teamPlayers.teamId = matches.teamId
         WHERE teamPlayers.playerId = ?;
     """
