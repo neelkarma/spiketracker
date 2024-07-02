@@ -16,8 +16,14 @@ def get_match(id: int):
 
     con = get_db()
     match_data = con.execute("SELECT * FROM matches WHERE id = ?", (id,)).fetchone()
+
     if match_data is None:
+        con.close()
         return "Not Found", 404
+
+    if match_data["visible"] != 1 and not session["admin"]:
+        con.close()
+        return "Forbidden", 403
 
     sql = """
         SELECT name
@@ -26,6 +32,8 @@ def get_match(id: int):
         WHERE matches.id = ?;
     """
     teamName = con.execute(sql, (id,)).fetchone()["name"]
+
+    con.close()
 
     return jsonify(
         {
@@ -36,8 +44,8 @@ def get_match(id: int):
             "location": match_data["location"],
             "time": match_data["time"],
             "points": json.loads(match_data["points"]),
-            "visible": match_data["visible"],
-            "scoring": match_data["scoring"],
+            "visible": bool(match_data["visible"]),
+            "scoring": bool(match_data["scoring"]),
         }
     ), 200
 
@@ -51,10 +59,9 @@ def create_match():
         return "Forbidden", 403
 
     data = request.get_json()
+    con = get_db()
 
     try:
-        con = get_db()
-
         sql = """
             INSERT INTO matches (teamId, oppName, time, location, points, visible, scoring)
             VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -72,9 +79,14 @@ def create_match():
                 data["scoring"],
             ),
         )
+        con.commit()
+        con.close()
 
         return jsonify({"success": True}), 200
     except (DatabaseError, KeyError):
+        con.rollback()
+        con.close()
+
         return jsonify({"success": False}), 400
 
 
@@ -88,16 +100,16 @@ def edit_match(id: int):
 
     data = request.get_json()
 
-    try:
-        cur = get_db()
+    con = get_db()
 
+    try:
         sql = """
             UPDATE matches
             SET teamId = ?, oppName = ?, time = ?, location = ?, points = ?, visible = ?, scoring = ?
             WHERE id = ?
         """
 
-        cur.execute(
+        con.execute(
             sql,
             (
                 data["ourTeamId"],
@@ -110,8 +122,15 @@ def edit_match(id: int):
                 id,
             ),
         )
+
+        con.commit()
+        con.close()
+
         return jsonify({"success": True}), 200
     except (DatabaseError, KeyError):
+        con.rollback()
+        con.close()
+
         return jsonify({"success": False}), 400
 
 
@@ -125,5 +144,7 @@ def delete_match(id: int):
 
     con = get_db()
     con.execute("DELETE FROM matches WHERE id = ?", (id,))
+    con.commit()
+    con.close()
 
     return jsonify({"success": True}), 200

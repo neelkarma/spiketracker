@@ -1,4 +1,4 @@
-from sqlite3 import Cursor, DatabaseError
+from sqlite3 import Connection, DatabaseError
 
 from db import get_db
 from flask import Blueprint, jsonify, request
@@ -8,7 +8,7 @@ from session import get_session
 player = Blueprint("player", __name__, url_prefix="/player")
 
 
-def calculate_player_stat_success_rate(id: int, action: str, cur: Cursor):
+def calculate_player_stat_success_rate(id: int, action: str, con: Connection):
     sql = """
         SELECT rating, count(*) AS count
         FROM stats
@@ -16,7 +16,7 @@ def calculate_player_stat_success_rate(id: int, action: str, cur: Cursor):
         GROUP BY rating;
     """
 
-    ratings = cur.execute(sql, (action, id)).fetchall()
+    ratings = con.execute(sql, (action, id)).fetchall()
     num_total = 0
     num_successful = 0
 
@@ -25,21 +25,21 @@ def calculate_player_stat_success_rate(id: int, action: str, cur: Cursor):
         if row["rating"] == 3:
             num_successful += row["count"]
 
-    return num_successful / num_total
+    return num_successful / num_total if num_total > 0 else 0
 
 
-def get_player_teams(id: int, cur: Cursor):
+def get_player_teams(id: int, con: Connection):
     sql = """
         SELECT teams.id, teams.name
         FROM teams
         INNER JOIN teamPlayers ON teams.id = teamPlayers.teamId
         WHERE teamPlayers.playerId = ?;
     """
-    teams = cur.execute(sql, (id,)).fetchall()
-    return teams
+    teams = con.execute(sql, (id,)).fetchall()
+    return [dict(team) for team in teams]
 
 
-def calculate_player_total_points(id: int, cur: Cursor):
+def calculate_player_total_points(id: int, con: Connection):
     sql = """
         SELECT count(*) AS count
         FROM stats
@@ -48,18 +48,18 @@ def calculate_player_total_points(id: int, cur: Cursor):
             AND rating = 3
             AND playerId = ?;
     """
-    totalPoints = cur.execute(sql, (id,)).fetchone()["count"]
+    totalPoints = con.execute(sql, (id,)).fetchone()["count"]
     return totalPoints
 
 
-def get_player_match_ids(id: int, cur: Cursor):
+def get_player_match_ids(id: int, con: Connection):
     sql = """
         SELECT matches.id
         FROM matches
         INNER JOIN teamPlayers ON matches.teamId = teamPlayers.teamId
         WHERE teamPlayers.playerId = ?;
     """
-    matchIds = cur.execute(sql, (id,)).fetchall()
+    matchIds = con.execute(sql, (id,)).fetchall()
     matchIds = [row["id"] for row in matchIds]
     return matchIds
 
@@ -70,22 +70,25 @@ def get_player(id: int):
     if session is None:
         return "Unauthorized", 401
 
-    cur = get_db()
-    player_data = cur.execute("SELECT * FROM players WHERE id = ?", (id,)).fetchone()
+    con = get_db()
+    player_data = con.execute("SELECT * FROM players WHERE id = ?", (id,)).fetchone()
 
     if player_data is None:
+        con.close()
         return "Not Found", 404
 
-    teams = get_player_teams(id, cur)
-    totalPoints = calculate_player_total_points(id, cur)
-    matchIds = get_player_match_ids(id, cur)
+    if player_data["visible"] != 1 and not session["admin"]:
+        con.close()
+        return "Forbidden", 403
 
-    ppg = totalPoints / len(matchIds)
+    teams = get_player_teams(id, con)
+    totalPoints = calculate_player_total_points(id, con)
+    matchIds = get_player_match_ids(id, con)
+    ppg = totalPoints / len(matchIds) if len(matchIds) > 0 else 0
+    kr = calculate_team_stat_success_rate(id, "attack", con)
+    pef = calculate_team_stat_success_rate(id, "set", con)
 
-    kr = calculate_team_stat_success_rate(id, "attack", cur)
-    pef = calculate_team_stat_success_rate(id, "set", cur)
-
-    cur.close()
+    con.close()
 
     return jsonify(
         {
@@ -99,14 +102,14 @@ def get_player(id: int):
             "pef": pef,
             "matchIds": matchIds,
             "totalPoints": totalPoints,
-            "visible": player_data["visible"],
+            "visible": bool(player_data["visible"]),
         }
     )
 
 
 @player.get("/<id>/matches")
 def get_player_matches(id: int):
-    def transform_row(row: dict, cur: Cursor):
+    def transform_row(row: dict, con: Connection):
         sql = """
             SELECT rating, count(*) AS count
             FROM stats
@@ -117,7 +120,7 @@ def get_player_matches(id: int):
             GROUP BY rating
         """
 
-        attack_ratings = cur.execute(sql, (id, row["id"], "attack")).fetchall()
+        attack_ratings = con.execute(sql, (id, row["id"], "attack")).fetchall()
         total_attacks = 0
         successful_attacks = 0
         for atkrow in attack_ratings:
@@ -125,9 +128,9 @@ def get_player_matches(id: int):
             if atkrow["rating"] == 3:
                 successful_attacks += atkrow["count"]
 
-        kr = successful_attacks / total_attacks
+        kr = successful_attacks / total_attacks if total_attacks > 0 else 0
 
-        pass_ratings = cur.execute(sql, (id, row["id"], "set")).fetchall()
+        pass_ratings = con.execute(sql, (id, row["id"], "set")).fetchall()
         total_passes = 0
         successful_passes = 0
         for passrow in pass_ratings:
@@ -135,7 +138,7 @@ def get_player_matches(id: int):
             if passrow["rating"] == 3:
                 successful_attacks += passrow["count"]
 
-        pef = successful_passes / total_passes
+        pef = successful_passes / total_passes if total_passes > 0 else 0
 
         return {"match": row, "kr": kr, "pef": pef, "points": successful_attacks}
 
@@ -143,7 +146,7 @@ def get_player_matches(id: int):
     if session is None:
         return "Unauthorized", 401
 
-    cur = get_db()
+    con = get_db()
 
     sql = """
         SELECT * FROM matches
@@ -151,8 +154,8 @@ def get_player_matches(id: int):
         WHERE teamPlayers.playerId = ?;
     """
 
-    matches = cur.execute(sql, (id,)).fetchall()
-    matches = [transform_row(row, cur) for row in matches]
+    matches = con.execute(sql, (id,)).fetchall()
+    matches = [transform_row(dict(row), con) for row in matches]
 
     return jsonify(matches), 200
 
@@ -166,20 +169,38 @@ def create_player():
         return "Forbidden", 403
 
     body = request.get_json()
+    con = get_db()
 
     try:
-        cur = get_db()
         sql = """
-            INSERT INTO players (firstName, surname, gradYear, visible)
+            INSERT INTO players (id, firstName, surname, gradYear, visible)
             VALUES (?, ?, ?, ?, ?)
         """
-
-        cur.execute(
-            sql, (body["firstName"], body["surname"], body["gradYear"], body["visible"])
+        con.execute(
+            sql,
+            (
+                body["id"],
+                body["firstName"],
+                body["surname"],
+                body["gradYear"],
+                body["visible"],
+            ),
         )
+
+        sql = """
+            INSERT INTO teamPlayers (playerId, teamId)
+            VALUES (?, ?)
+        """
+        con.executemany(sql, [(body["id"], team["id"]) for team in body["teams"]])
+
+        con.commit()
+        con.close()
 
         return jsonify({"success": True}), 200
     except (DatabaseError, KeyError):
+        con.rollback()
+        con.close()
+
         return jsonify({"success": False}), 400
 
 
@@ -192,21 +213,26 @@ def edit_player(id: int):
         return "Forbidden", 403
 
     body = request.get_json()
+    con = get_db()
 
     try:
-        cur = get_db()
-
         sql = """
             UPDATE players
             SET firstName = ?, surname = ?, gradYear = ?, visible = ?
             WHERE id = ?
         """
-        cur.execute(
-            sql, (body["firstName"], body["surname"], body["gradYear"], body["visible"])
+        con.execute(
+            sql,
+            (body["firstName"], body["surname"], body["gradYear"], body["visible"], id),
         )
+        con.commit()
+        con.close()
 
         return jsonify({"success": True}), 200
     except (DatabaseError, KeyError):
+        con.rollback()
+        con.close()
+
         return jsonify({"success": False}), 400
 
 
@@ -219,7 +245,10 @@ def delete_player(id: int):
     if not session["admin"]:
         return "Forbidden", 403
 
-    cur = get_db()
-    cur.execute("DELETE FROM players WHERE id = ?", (id,))
+    con = get_db()
+    con.execute("DELETE FROM players WHERE id = ?", (id,))
+    con.execute("DELETE FROM teamPlayers WHERE playerId = ?", (id,))
+    con.commit()
+    con.close()
 
     return jsonify({"success": True}), 200

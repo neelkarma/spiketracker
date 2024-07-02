@@ -1,5 +1,5 @@
 import json
-from sqlite3 import Cursor, DatabaseError
+from sqlite3 import Connection, DatabaseError
 
 from db import get_db
 from flask import Blueprint, jsonify, request
@@ -8,7 +8,7 @@ from session import get_session
 team = Blueprint("team", __name__, url_prefix="/team")
 
 
-def calculate_team_stat_success_rate(id: int, action: str, cur: Cursor):
+def calculate_team_stat_success_rate(id: int, action: str, con: Connection):
     sql = """
         SELECT stats.rating, count(*) AS count
         FROM stats
@@ -17,7 +17,7 @@ def calculate_team_stat_success_rate(id: int, action: str, cur: Cursor):
         GROUP BY stats.rating;
     """
 
-    ratings = cur.execute(sql, (action, id)).fetchall()
+    ratings = con.execute(sql, (action, id)).fetchall()
     num_total = 0
     num_successful = 0
 
@@ -26,12 +26,12 @@ def calculate_team_stat_success_rate(id: int, action: str, cur: Cursor):
         if row["rating"] == 3:
             num_successful += row["count"]
 
-    return num_successful / num_total
+    return num_successful / num_total if num_total > 0 else 0
 
 
-def calculate_team_wins_losses_set_ratio(id: int, cur: Cursor):
-    match_points = cur.execute(
-        "SELECT points FROM matches WHERE team_id = ?", (id,)
+def calculate_team_wins_losses_set_ratio(id: int, con: Connection):
+    match_points = con.execute(
+        "SELECT points FROM matches WHERE teamId = ?", (id,)
     ).fetchall()
 
     wins = 0
@@ -40,7 +40,7 @@ def calculate_team_wins_losses_set_ratio(id: int, cur: Cursor):
     set_losses = 0
 
     for points in match_points:
-        points = json.loads(points)
+        points = json.loads(points["points"])
 
         match_set_wins = 0
         match_set_losses = 0
@@ -73,21 +73,28 @@ def get_team(id: int):
     if session is None:
         return "Unauthorized", 401
 
-    cur = get_db()
+    con = get_db()
 
-    team_data = cur.execute("SELECT * FROM teams WHERE id = ?", (id,)).fetchone()
+    team_data = con.execute("SELECT * FROM teams WHERE id = ?", (id,)).fetchone()
 
     if team_data is None:
+        con.close()
         return "Not Found", 404
 
-    player_ids = cur.execute(
+    if team_data["visible"] != 1 and not session["admin"]:
+        con.close()
+        return "Forbidden", 404
+
+    player_ids = con.execute(
         "SELECT playerId FROM teamPlayers WHERE teamId = ?", (id,)
     ).fetchall()
     player_ids = [row["playerId"] for row in player_ids]
 
-    wins, losses, set_ratio = calculate_team_wins_losses_set_ratio(id, cur)
-    kr = calculate_team_stat_success_rate(id, "attack", cur)
-    pef = calculate_team_stat_success_rate(id, "set", cur)
+    wins, losses, set_ratio = calculate_team_wins_losses_set_ratio(id, con)
+    kr = calculate_team_stat_success_rate(id, "attack", con)
+    pef = calculate_team_stat_success_rate(id, "set", con)
+
+    con.close()
 
     return jsonify(
         {
@@ -99,13 +106,13 @@ def get_team(id: int):
             "kr": kr,
             "pef": pef,
             "playerIds": player_ids,
-            "visible": team_data["visible"],
+            "visible": bool(team_data["visible"]),
         }
     )
 
 
-@team.post("/<id>")
-def create_team(id: int):
+@team.post("/")
+def create_team():
     session = get_session()
     if session is None:
         return "Unauthorized", 401
@@ -114,19 +121,23 @@ def create_team(id: int):
         return "Forbidden", 403
 
     body = request.get_json()
+    con = get_db()
 
     try:
-        cur = get_db()
-
         sql = """
             INSERT INTO teams (name, year, visible)
             VALUES (?, ?, ?)
         """
 
-        cur.execute(sql, (body["name"], body["year"], body["visible"]))
+        con.execute(sql, (body["name"], body["year"], body["visible"]))
+        con.commit()
+        con.close()
 
         return jsonify({"success": True}), 200
     except (DatabaseError, KeyError):
+        con.rollback()
+        con.close()
+
         return jsonify({"success": False}), 400
 
 
@@ -141,6 +152,9 @@ def delete_team(id: int):
 
     con = get_db()
     con.execute("DELETE FROM teams WHERE id = ?", (id,))
+    con.execute("DELETE FROM teamPlayers WHERE teamId = ?", (id,))
+    con.commit()
+    con.close()
 
     return jsonify({"success": True}), 200
 
@@ -155,18 +169,23 @@ def edit_team(id: int):
         return "Forbidden", 403
 
     body = request.get_json()
+    con = get_db()
 
     try:
-        cur = get_db()
-
         sql = """
             UPDATE teams
             SET name = ?, year = ?, visible = ?
             WHERE id = ?
         """
 
-        cur.execute(sql, (body["name"], body["year"], body["visible"], id))
+        con.execute(sql, (body["name"], body["year"], body["visible"], id))
+
+        con.commit()
+        con.close()
 
         return jsonify({"success": True}), 200
     except (DatabaseError, KeyError):
+        con.rollback()
+        con.close()
+
         return jsonify({"success": False}), 400

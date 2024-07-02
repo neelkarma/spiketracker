@@ -14,4 +14,4 @@ def get_db():
             con.executescript(f.read())
         _is_cold = False
 
-    return con.cursor()
+    return con

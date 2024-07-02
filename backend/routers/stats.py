@@ -32,7 +32,7 @@ def query_stats_bulk():
         else:
             return "player_id must be an integer", 400
 
-    cur = get_db()
+    con = get_db()
     sql = """
         SELECT * FROM stats
         INNER JOIN matches ON stats.match_id = matches.id
@@ -41,7 +41,7 @@ def query_stats_bulk():
             AND (? = 1 OR matches.team_id = ?)
             AND (? = 1 OR stats.player_id = ?)
         """
-    data = cur.execute(
+    data = con.execute(
         sql,
         (
             int(match_id is None),
@@ -52,6 +52,7 @@ def query_stats_bulk():
             player_id,
         ),
     ).fetchall()
+    con.close()
 
     return jsonify([dict(row) for row in data]), 200
 
@@ -62,8 +63,8 @@ def edit_match_stats(match_id: int):
     if session is None:
         return "Unauthorized", 401
 
-    cur = get_db()
-    match_data = cur.execute(
+    con = get_db()
+    match_data = con.execute(
         "SELECT scoring FROM matches WHERE id = ?", (match_id,)
     ).fetchone()
 
@@ -76,14 +77,14 @@ def edit_match_stats(match_id: int):
     data = request.get_json()
 
     try:
-        cur.execute("DELETE FROM stats WHERE matchId = ?", (match_id,))
+        con.execute("DELETE FROM stats WHERE matchId = ?", (match_id,))
 
         sql = """
             INSERT INTO stats (playerId, matchId, action, rating, fromX, fromY, toX, toY)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """
 
-        cur.executemany(
+        con.executemany(
             sql,
             [
                 (
@@ -100,6 +101,12 @@ def edit_match_stats(match_id: int):
             ],
         )
 
+        con.commit()
+        con.close()
+
         return jsonify({"success": True}), 200
     except (DatabaseError, KeyError):
+        con.rollback()
+        con.close()
+
         return jsonify({"success": False}), 400

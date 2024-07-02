@@ -5,12 +5,13 @@ from dotenv import load_dotenv
 from flask import Flask
 from routers.auth import auth
 from routers.match import match
+from routers.matches import matches
 from routers.player import player
+from routers.players import players
 from routers.stats import stats
 from routers.team import team
 from routers.teams import teams
-from routers.players import players
-from routers.matches import matches
+from session import get_session
 
 app = Flask(__name__)
 app.register_blueprint(auth)
@@ -41,6 +42,7 @@ def after_request(response):
 
 @app.get("/ping")
 def ping():
+    print(get_session())
     return "pong", 200
 
 

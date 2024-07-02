@@ -50,7 +50,7 @@ def login_sbhs_callback():
     code = request.args.get("code")
     if code is None:
         # no code returned from the sbhs api
-        print("auth: no code returned from sbhs api. query args: " + request.args)
+        print("auth: no code returned from sbhs api. query args:", request.args)
         return redirect(current_app.config["FRONTEND_BASE"] + "/?error=sbhs")
 
     # exchange code for id token
@@ -64,9 +64,10 @@ def login_sbhs_callback():
     student = con.execute(
         "SELECT id FROM players WHERE id = ?", (student_id,)
     ).fetchone()
+    con.close()
     if student is None:
         # student not registered
-        print("auth: student not registered")
+        print("auth: student not registered", flush=True)
         return redirect(current_app.config["FRONTEND_BASE"] + "/?error=forbidden")
 
     # generate session token
@@ -90,7 +91,7 @@ def login_sbhs_callback():
 def login_admin():
     """Login endpoint for admins (i.e. coaches/volleyball prefect)"""
 
-    password = request.json.get("password")
+    password = request.get_json().get("password")
 
     # check password
     if password is None:
@@ -138,6 +139,7 @@ def status():
     data = con.execute(
         "SELECT id FROM players WHERE id = ?", (session["id"],)
     ).fetchone()
+    con.close()
 
     if data is None:
         return jsonify({"authorized": False})

@@ -1,4 +1,4 @@
-from sqlite3 import Cursor, DatabaseError
+from sqlite3 import Connection
 
 from db import get_db
 from flask import Blueprint, jsonify, request
@@ -13,13 +13,13 @@ from session import get_session
 players = Blueprint("players", __name__, url_prefix="/players")
 
 
-def transform_row(player: dict, cur: Cursor):
-    matchIds = get_player_match_ids(player["id"], cur)
-    teams = get_player_teams(player["id"], cur)
-    totalPoints = calculate_player_total_points(player["id"], cur)
-    ppg = totalPoints / len(matchIds)
-    kr = calculate_player_stat_success_rate(player["id"], "attack", cur)
-    pef = calculate_player_stat_success_rate(player["id"], "set", cur)
+def transform_row(player: dict, con: Connection):
+    matchIds = get_player_match_ids(player["id"], con)
+    teams = get_player_teams(player["id"], con)
+    totalPoints = calculate_player_total_points(player["id"], con)
+    ppg = totalPoints / len(matchIds) if len(matchIds) > 0 else 0
+    kr = calculate_player_stat_success_rate(player["id"], "attack", con)
+    pef = calculate_player_stat_success_rate(player["id"], "set", con)
 
     return {
         "id": player["id"],
@@ -32,7 +32,7 @@ def transform_row(player: dict, cur: Cursor):
         "kr": kr,
         "pef": pef,
         "totalPoints": totalPoints,
-        "visible": player["visible"],
+        "visible": bool(player["visible"]),
     }
 
 
@@ -46,25 +46,27 @@ def get_players():
     sort_by = request.args.get("sort", "name")
     reverse = request.args.get("reverse", "0") == "1"
 
-    try:
-        cur = get_db()
+    con = get_db()
 
-        sql = """
-            SELECT *
-            FROM players
-            WHERE
-                concat(firstName, ' ', surname) LIKE ?
-                OR id = ?
-        """
+    sql = """
+        SELECT *
+        FROM players
+        WHERE
+            concat(firstName, ' ', surname) LIKE ?
+            OR id = ?
+    """
 
-        players = cur.execute(
-            sql,
-            ("%" + query + "%", int(query) if query.isdecimal() else -1),
-        ).fetchall()
+    players = con.execute(
+        sql,
+        ("%" + query + "%", int(query) if query.isdecimal() else -1),
+    ).fetchall()
 
-        players = [transform_row(row, cur) for row in players]
-        players.sort(key=lambda row: row[sort_by], reverse=reverse)
+    if not session["admin"]:
+        players = filter(lambda row: row["visible"] == 1, players)
 
-        return jsonify(players), 200
-    except (DatabaseError, KeyError):
-        return "Invalid Input", 400
+    players = [transform_row(row, con) for row in players]
+    players.sort(key=lambda row: row[sort_by], reverse=reverse)
+
+    con.close()
+
+    return jsonify(players), 200
