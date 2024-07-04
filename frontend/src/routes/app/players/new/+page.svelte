@@ -31,7 +31,7 @@
     <h1 class="title">New Player</h1>
     {#if status === "error"}
       <div class="notification is-danger">
-        Sorry, something went wrong. Please try again in a moment.
+        Sorry, something went wrong. Is the student's ID correct?
       </div>
     {/if}
     <PlayerInfoForm
