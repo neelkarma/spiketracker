@@ -52,7 +52,7 @@ def get_players():
         SELECT *
         FROM players
         WHERE
-            concat(firstName, ' ', surname) LIKE ?
+            firstName || ' ' || surname LIKE ?
             OR id = ?
     """
 
