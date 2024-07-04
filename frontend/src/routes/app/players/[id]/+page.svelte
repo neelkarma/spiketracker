@@ -1,23 +1,9 @@
 <script lang="ts">
   import Stat from "$lib/components/Stat.svelte";
-  import { page } from "$app/stores";
+  import { onMount } from "svelte";
   import type { PageData } from "./$types";
-  import type { MatchInfo } from "$lib/types";
 
   export let data: PageData;
-
-  const getMatchHistory = async (): Promise<
-    {
-      match: MatchInfo;
-      kr: number;
-      pef: number;
-      points: number;
-    }[]
-  > => {
-    const res = await fetch(`/api/player/${$page.params.id}/matches`);
-    const matches = await res.json();
-    return matches;
-  };
 </script>
 
 <div class="hero is-primary has-background-primary-dark">
@@ -33,11 +19,11 @@
               </span></a
             >
             <h1 class="title is-1 has-text-white">
-              {data.firstName}
-              {data.surname}
+              {data.player.firstName}
+              {data.player.surname}
             </h1>
             <h2 class="is-flex has-text-white">
-              {#each data.teams as team}
+              {#each data.player.teams as team}
                 <!-- ik using mr instead of flex gap is kinda sus but i cant find bulma docs for that so too bad -->
                 <a
                   class="mr-2 subtitle is-underlined"
@@ -49,16 +35,19 @@
         </div>
         <div class="level-right has-text-white">
           <div class="level-item">
-            <Stat label="Avg PPG" value={data.ppg} />
+            <Stat label="Avg PPG" value={data.player.ppg} />
           </div>
           <div class="level-item">
-            <Stat label="Kill Rate" value={data.kr.toFixed(3)} />
+            <Stat label="Kill Rate" value={data.player.kr.toFixed(3)} />
           </div>
           <div class="level-item">
-            <Stat label="Passing Efficiency" value={data.pef.toFixed(3)} />
+            <Stat
+              label="Passing Efficiency"
+              value={data.player.pef.toFixed(3)}
+            />
           </div>
           <div class="level-item">
-            <Stat label="Total Points" value={data.totalPoints} />
+            <Stat label="Total Points" value={data.player.totalPoints} />
           </div>
         </div>
       </div>
@@ -68,60 +57,55 @@
 <div class="section">
   <div class="container">
     <h1 class="title">Match History</h1>
-    {#await getMatchHistory()}
-      <!-- TODO: Have a better loading thing - maybe componentize it -->
-      Loading...
-    {:then matches}
-      {#if matches.length === 0}
-        <!-- TODO: Make this look nicer -->
-        <p>No matches found.</p>
-      {:else}
-        <table class="table is-fullwidth">
-          <thead>
+    {#if data.matches.length === 0}
+      <!-- TODO: Make this look nicer -->
+      <p>No matches found.</p>
+    {:else}
+      <table class="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>Open</th>
+            <th>Date</th>
+            <th>Opponent</th>
+            <th>Team</th>
+            <th>Points Scored</th>
+            <th>Kill Rate</th>
+            <th>Passing Efficiency</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each data.matches as { match, points, kr, pef }}
             <tr>
-              <th>Open</th>
-              <th>Date</th>
-              <th>Opponent</th>
-              <th>Team</th>
-              <th>Points Scored</th>
-              <th>Kill Rate</th>
-              <th>Passing Efficiency</th>
+              <td>
+                <a class="button" href="/app/matches/{match.id}">
+                  <span class="icon">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </span>
+                </a>
+              </td>
+              <td
+                >{new Date(match.time).toLocaleDateString("en-AU", {
+                  hour: "numeric",
+                  hour12: true,
+                  minute: "2-digit",
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                  weekday: "short",
+                })}</td
+              >
+              <td>{match.oppTeamName}</td>
+              <td
+                ><a href="/app/teams/{match.ourTeamId}">{match.ourTeamName}</a
+                ></td
+              >
+              <td>{points}</td>
+              <td>{kr.toFixed(3)}</td>
+              <td>{pef.toFixed(3)}</td>
             </tr>
-          </thead>
-          <tbody>
-            {#each matches as { match, points, kr, pef }}
-              <tr>
-                <td>
-                  <a class="button" href="/app/matches/{match.id}">
-                    <span class="icon">
-                      <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </span>
-                  </a>
-                </td>
-                <td
-                  >{new Date(match.time).toLocaleDateString("en-AU", {
-                    hour: "numeric",
-                    hour12: true,
-                    minute: "2-digit",
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                    weekday: "short",
-                  })}</td
-                >
-                <td>{match.oppTeamName}</td>
-                <td
-                  ><a href="/app/teams/{match.ourTeamId}">{match.ourTeamName}</a
-                  ></td
-                >
-                <td>{points}</td>
-                <td>{kr.toFixed(3)}</td>
-                <td>{pef.toFixed(3)}</td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      {/if}
-    {/await}
+          {/each}
+        </tbody>
+      </table>
+    {/if}
   </div>
 </div>
