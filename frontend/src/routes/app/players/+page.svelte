@@ -31,7 +31,6 @@
   let filteredPlayers: PlayerInfo[];
 
   const handleChange = async (query: string, sortOptions: SortOptions) => {
-    console.log("potato");
     const searchParams = new URLSearchParams({
       q: query,
       sort: sortOptions.sortBy,
