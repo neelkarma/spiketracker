@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { wait } from "$lib/utils";
   import { onMount } from "svelte";
 
   export let value: { name: string; id: number }[] = [];
@@ -12,29 +11,25 @@
   $: valueIds = value.map(({ id }) => id);
   $: if (selectEl && required) {
     selectEl.setCustomValidity(
-      value.length === 0 ? "You must select at least one team." : ""
+      value.length === 0 ? "You must select at least one team." : "",
     );
   }
 
   const fetchTeams = async () => {
-    // simualte network lag
-    await wait(1000);
+    const res = await fetch("/api/teams/");
 
-    return [
-      {
-        name: "SBHS 1sts",
-        id: 0,
-      },
-      {
-        name: "SBHS 2nds",
-        id: 1,
-      },
-    ];
+    if (res.status !== 200) {
+      alert("Sorry, something went wrong");
+      return;
+    }
+
+    const data = await res.json();
+    return data;
   };
 
   const handleSelect = (
     e: Event & { currentTarget: HTMLSelectElement & EventTarget },
-    teams: { name: string; id: number }[]
+    teams: { name: string; id: number }[],
   ) => {
     const id = e.currentTarget.selectedOptions[0].value;
     //@ts-ignore
