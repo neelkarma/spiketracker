@@ -17,7 +17,7 @@ def transform_row(team: dict, con: Connection):
     wins, losses, set_ratio = calculate_team_wins_losses_set_ratio(team["id"], con)
 
     player_ids = con.execute(
-        "SELECT playerId FROM teamPlayers WHERE teamId = ?", (id,)
+        "SELECT playerId FROM teamPlayers WHERE teamId = ?", (team["id"],)
     ).fetchall()
     player_ids = [row["playerId"] for row in player_ids]
 
@@ -67,7 +67,8 @@ def get_teams():
         con.close()
 
         return jsonify(teams), 200
-    except (DatabaseError, KeyError):
+    except (DatabaseError, KeyError) as e:
+        print(e, flush=True)
         con.close()
 
         return "Invalid Input", 400
