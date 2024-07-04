@@ -7,7 +7,7 @@
 <div class="hero is-primary has-background-primary-dark">
   <div class="hero-body has-text-centered">
     <div class="container">
-      <h2 class="title has-text-white">{data.date.toDateString()}</h2>
+      <h2 class="title has-text-white">{new Date(data.time).toDateString()}</h2>
       <h3 class="subtitle has-text-white">{data.location}</h3>
       <div class="columns is-centered is-vcentered">
         <div class="column is-5">
