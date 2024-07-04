@@ -78,7 +78,8 @@ VALUES (440805299, 'Neel', 'Sharma', 2024),
 
 INSERT
   OR IGNORE INTO teams (name, year)
-VALUES ('Test', 2024);
+VALUES ('SBHS 1sts', 2024),
+  ('SBHS 2nds', 2024);
 
 INSERT
   OR IGNORE INTO teamPlayers (teamId, playerId)
@@ -100,7 +101,7 @@ INSERT
 VALUES (
     1,
     'Newington 2nds',
-    '0:00',
+    '2024-07-04T00:59:40.405Z',
     'SBHS Gymnasium',
     '[]',
     true,
