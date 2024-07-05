@@ -65,7 +65,12 @@ def get_players():
         players = filter(lambda row: row["visible"] == 1, players)
 
     players = [transform_row(row, con) for row in players]
-    players.sort(key=lambda row: row[sort_by], reverse=reverse)
+    players.sort(
+        key=lambda row: row[sort_by].lower()
+        if isinstance(row[sort_by], str)
+        else row[sort_by],
+        reverse=reverse,
+    )
 
     con.close()
 

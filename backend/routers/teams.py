@@ -62,7 +62,12 @@ def get_teams():
             teams = filter(lambda row: row["visible"] == 1, teams)
 
         teams = [transform_row(row, con) for row in teams]
-        teams.sort(key=lambda row: row[sort_by], reverse=reverse)
+        teams.sort(
+            key=lambda row: row[sort_by].lower()
+            if isinstance(row[sort_by], str)
+            else row[sort_by],
+            reverse=reverse,
+        )
 
         con.close()
 
