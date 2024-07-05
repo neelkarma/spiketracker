@@ -7,6 +7,16 @@
 <div class="hero is-primary has-background-primary-dark">
   <div class="hero-body has-text-centered">
     <div class="container">
+      <div class="level-left">
+        <div>
+          <a href="/app/matches" class="has-text-link-light is-underlined">
+            <span>
+              <i class="fas fa-arrow-left"></i>
+              Back to All Matches
+            </span></a
+          >
+        </div>
+      </div>
       <h2 class="title has-text-white">{new Date(data.time).toDateString()}</h2>
       <h3 class="subtitle has-text-white">{data.location}</h3>
       <div class="columns is-centered is-vcentered">
