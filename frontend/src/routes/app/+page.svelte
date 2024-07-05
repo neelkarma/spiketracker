@@ -13,8 +13,11 @@
     <div class="columns is-desktop is-align-self-center">
       {#if data.admin}
         <div class="column is-narrow">
-          <div class="box">
-            <h1 class="title is-4">Matches to Approve</h1>
+          <div class="box" style="background-color: #094369">
+            <h1 class="title is-4" style="color: white">Matches to Approve</h1>
+          </div>
+          <div class="box" style="background-color: #91a3b0">
+            <!-- #90b5ce-->
             {#each { length: 5 } as _}
               <div class="is-align-self-center mb-3">
                 <MatchApproveCard data={SAMPLE_MATCH_INFO} />
@@ -34,8 +37,10 @@
         </div>
       {/if}
       <div class="column is-narrow">
-        <div class="box">
-          <h1 class="title is-4">Upcoming Matches</h1>
+        <div class="box" style="background-color: #094369">
+          <h1 class="title is-4" style="color: white">Upcoming Matches</h1>
+        </div>
+        <div class="box" style="background-color: #91a3b0">
           <div class="is-flex is-flex-direction-column">
             {#each { length: 5 } as _}
               <div class="is-align-self-center mb-3">
