@@ -77,9 +77,9 @@ VALUES (440805299, 'Neel', 'Sharma', 2024),
   (442031151, 'Nathanael', 'Thie', 2024);
 
 INSERT
-  OR IGNORE INTO teams (name, year)
-VALUES ('SBHS 1sts', 2024),
-  ('SBHS 2nds', 2024);
+  OR IGNORE INTO teams (id, name, year)
+VALUES (1, 'SBHS 1sts', 2024),
+  (2, 'SBHS 2nds', 2024);
 
 INSERT
   OR IGNORE INTO teamPlayers (teamId, playerId)
@@ -90,6 +90,7 @@ VALUES (1, 440805299),
 
 INSERT
   OR IGNORE INTO matches (
+    id,
     teamId,
     oppName,
     time,
@@ -99,6 +100,7 @@ INSERT
     scoring
   )
 VALUES (
+    1,
     1,
     'Newington 2nds',
     '2024-07-04T00:59:40.405Z',
@@ -110,6 +112,7 @@ VALUES (
 
 INSERT
   OR IGNORE INTO stats (
+    id,
     playerId,
     matchId,
     action,
@@ -119,4 +122,4 @@ INSERT
     toX,
     toY
   )
-VALUES (440805299, 1, 'set', 3, 3, 1, 1, 3);
+VALUES (1, 440805299, 1, 'set', 3, 3, 1, 1, 3);
