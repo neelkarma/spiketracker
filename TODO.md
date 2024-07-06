@@ -2,8 +2,6 @@
 
 in order of priority:
 
-- link matches to backend
-- link scoring to backend
 - dashboard redesign
 - link dashboard to backend
 - implement heatmaps
