@@ -95,6 +95,7 @@ export interface TeamInfo {
   kr: number;
   pef: number;
   playerIds: number[];
+  year: number;
   visible: boolean;
 }
 
@@ -108,6 +109,7 @@ export const SAMPLE_TEAM_INFO: TeamInfo = {
   pef: 0.5,
   playerIds: [0],
   visible: true,
+  year: new Date().getFullYear(),
 };
 
 export const EMPTY_TEAM_INFO: TeamInfo = {
@@ -120,6 +122,7 @@ export const EMPTY_TEAM_INFO: TeamInfo = {
   pef: 0,
   playerIds: [],
   visible: true,
+  year: new Date().getFullYear(),
 };
 
 export interface Stat {
@@ -127,5 +130,5 @@ export interface Stat {
   action: string;
   rating: number;
   from: [number, number];
-  to: [number, number]
+  to: [number, number];
 }
