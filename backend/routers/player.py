@@ -64,7 +64,7 @@ def get_player_match_ids(id: int, con: Connection):
     return matchIds
 
 
-@player.get("/<id>")
+@player.get("/<id_str>")
 def get_player(id_str: str):
     session = get_session()
     if session is None:
@@ -113,7 +113,7 @@ def get_player(id_str: str):
     )
 
 
-@player.get("/<id>/matches")
+@player.get("/<id_str>/matches")
 def get_player_matches(id_str: str):
     session = get_session()
     if session is None:
@@ -229,7 +229,7 @@ def create_player():
         return jsonify({"success": False}), 400
 
 
-@player.put("/<id>")
+@player.put("/<id_str>")
 def edit_player(id_str: str):
     session = get_session()
     if session is None:
@@ -267,7 +267,7 @@ def edit_player(id_str: str):
         return jsonify({"success": False}), 400
 
 
-@player.delete("/<id>")
+@player.delete("/<id_str>")
 def delete_player(id_str: str):
     session = get_session()
     if session is None:
