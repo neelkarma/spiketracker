@@ -173,25 +173,15 @@ def get_team_players(id_str: str):
         pef = successful_passes / total_passes if total_passes > 0 else 0
 
         sql = """
-            SELECT count(*) AS count FROM stats
-            INNER JOIN matches ON stats.matchId = matches.id
-            WHERE
-                stats.rating = 3
-                AND stats.action = 'attack'
-                AND matches.teamId = ?
-        """
-        total_points = con.execute(sql, (id,)).fetchone()["count"]
-
-        sql = """
             SELECT count(*) AS count FROM matches
             WHERE matches.teamId = ?
         """
         total_matches = con.execute(sql, (id,)).fetchone()["count"]
 
-        ppg = total_points / total_matches if total_matches > 0 else 0
+        ppg = successful_attacks / total_matches if total_matches > 0 else 0
 
         processed_players.append(
-            {**player, "kr": kr, "pef": pef, "ppg": ppg, "points": total_points}
+            {**player, "kr": kr, "pef": pef, "ppg": ppg, "points": successful_attacks}
         )
 
     return jsonify(processed_players), 200
