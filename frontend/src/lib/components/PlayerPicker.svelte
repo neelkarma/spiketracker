@@ -9,6 +9,7 @@
   let isLoading = false;
   let filteredPlayers: PlayerInfo[] = [];
   let inputEl: HTMLInputElement;
+  let searchQuery = "";
 
   $: if (inputEl && required) {
     inputEl.setCustomValidity(
@@ -16,24 +17,18 @@
     );
   }
 
-  const fetchFilteredPlayers = async (
-    e: Event & { currentTarget: HTMLInputElement },
-  ) => {
-    // const response = await fetch(
-    //   "/api/players/search?q=" + (e.currentTarget as HTMLInputElement).value
-    // );
-    // return response.json();
+  const fetchFilteredPlayers = async () => {
+    if (searchQuery.length === 0) {
+      isLoading = false;
+      filteredPlayers = [];
+      return;
+    }
 
-    // TODO: Fill this with fake shit
-    filteredPlayers = [
-      SAMPLE_PLAYER_INFO,
-      {
-        ...SAMPLE_PLAYER_INFO,
-        id: 1,
-        firstName: "Andrew",
-        surname: "Wang",
-      },
-    ];
+    const searchParams = new URLSearchParams({
+      q: searchQuery,
+    }).toString();
+    const res = await fetch("/api/players/?" + searchParams);
+    filteredPlayers = await res.json();
     isLoading = false;
   };
 
@@ -69,9 +64,10 @@
         type="text"
         placeholder="Search players..."
         id={inputId}
-        on:input={(e) => {
+        bind:value={searchQuery}
+        on:input={() => {
           isLoading = true;
-          debouncedMakeRequest(e);
+          debouncedMakeRequest();
         }}
         bind:this={inputEl}
       />
@@ -83,7 +79,7 @@
   {#if isLoading}
     <p class="panel-block">Loading...</p>
   {:else}
-    {#each filteredPlayers as player}
+    {#each filteredPlayers.filter((player) => !value.some((other) => player.id === other.id)) as player}
       <button
         class="panel-block button is-fullwidth"
         type="button"
@@ -93,7 +89,7 @@
             return;
           }
           value = [...value, player];
-        }}>{player.firstName} {player.surname}</button
+        }}>{player.firstName} {player.surname} ({player.id})</button
       >
     {/each}
   {/if}
