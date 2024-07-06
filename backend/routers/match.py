@@ -91,7 +91,7 @@ def get_match_players(id_str: str):
             GROUP BY rating
         """
 
-        attack_ratings = con.execute(sql, (id, player["id"], "attack")).fetchall()
+        attack_ratings = con.execute(sql, (id, player["id"], "atk")).fetchall()
         total_attacks = 0
         successful_attacks = 0
         for atkrow in attack_ratings:

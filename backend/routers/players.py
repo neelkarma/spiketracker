@@ -45,7 +45,7 @@ def get_players():
         teams = get_player_teams(player["id"], con)
         totalPoints = calculate_player_total_points(player["id"], con)
         ppg = totalPoints / len(matchIds) if len(matchIds) > 0 else 0
-        kr = calculate_player_stat_success_rate(player["id"], "attack", con)
+        kr = calculate_player_stat_success_rate(player["id"], "atk", con)
         pef = calculate_player_stat_success_rate(player["id"], "set", con)
 
         processed_players.append(

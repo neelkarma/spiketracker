@@ -97,7 +97,7 @@ def get_team(id_str: str):
     player_ids = [row["playerId"] for row in player_ids]
 
     wins, losses, set_ratio = calculate_team_wins_losses_set_ratio(id, con)
-    kr = calculate_team_stat_success_rate(id, "attack", con)
+    kr = calculate_team_stat_success_rate(id, "atk", con)
     pef = calculate_team_stat_success_rate(id, "set", con)
 
     con.close()
@@ -152,7 +152,7 @@ def get_team_players(id_str: str):
             GROUP BY rating
         """
 
-        attack_ratings = con.execute(sql, (id, player["id"], "attack")).fetchall()
+        attack_ratings = con.execute(sql, (id, player["id"], "atk")).fetchall()
         total_attacks = 0
         successful_attacks = 0
         for atkrow in attack_ratings:

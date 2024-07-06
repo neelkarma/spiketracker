@@ -35,12 +35,12 @@ CREATE TABLE IF NOT EXISTS stats (
   matchId INTEGER NOT NULL REFERENCES matches (id),
   action TEXT CHECK (
     action in (
-      'attack',
-      'block',
-      'serve',
-      'serve_receive',
-      'freeball_recieve',
-      'set'
+      'set',
+      'atk',
+      'blk',
+      'srv',
+      'src',
+      'frc'
     )
   ) NOT NULL,
   rating INTEGER CHECK (rating IN (0, 1, 2, 3)) NOT NULL,

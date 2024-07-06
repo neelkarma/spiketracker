@@ -40,7 +40,7 @@ def get_teams():
 
         processed_teams = []
         for team in teams:
-            kr = calculate_team_stat_success_rate(team["id"], "attack", con)
+            kr = calculate_team_stat_success_rate(team["id"], "atk", con)
             pef = calculate_team_stat_success_rate(team["id"], "set", con)
             wins, losses, set_ratio = calculate_team_wins_losses_set_ratio(
                 team["id"], con

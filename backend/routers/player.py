@@ -44,7 +44,7 @@ def calculate_player_total_points(id: int, con: Connection):
         SELECT count(*) AS count
         FROM stats
         WHERE
-            action = 'attack'
+            action = 'atk'
             AND rating = 3
             AND playerId = ?;
     """
@@ -91,7 +91,7 @@ def get_player(id_str: str):
     totalPoints = calculate_player_total_points(id, con)
     matchIds = get_player_match_ids(id, con)
     ppg = totalPoints / len(matchIds) if len(matchIds) > 0 else 0
-    kr = calculate_team_stat_success_rate(id, "attack", con)
+    kr = calculate_team_stat_success_rate(id, "atk", con)
     pef = calculate_team_stat_success_rate(id, "set", con)
 
     con.close()
@@ -158,7 +158,7 @@ def get_player_matches(id_str: str):
             GROUP BY rating
         """
 
-        attack_ratings = con.execute(sql, (id, row["id"], "attack")).fetchall()
+        attack_ratings = con.execute(sql, (id, row["id"], "atk")).fetchall()
         total_attacks = 0
         successful_attacks = 0
         for atkrow in attack_ratings:
