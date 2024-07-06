@@ -142,7 +142,7 @@
   <div class="container">
     <ActionFeedbackNotification />
     <h1 class="title">Teams</h1>
-    <div class="field is-grouped">
+    <div class="field is-grouped is-grouped-multiline">
       {#if data.admin}
         <div class="control">
           <a href="/app/teams/new" class="button is-primary">

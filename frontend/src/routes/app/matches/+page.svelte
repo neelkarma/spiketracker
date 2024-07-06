@@ -118,7 +118,7 @@
 <section class="section">
   <div class="container">
     <h1 class="title">Matches</h1>
-    <div class="field is-grouped">
+    <div class="field is-grouped is-grouped-multiline">
       {#if data.admin}
         <div class="control">
           <a href="/app/matches/new" class="button is-primary">

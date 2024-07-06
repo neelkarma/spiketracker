@@ -8,14 +8,7 @@
   import ActionFeedbackNotification from "$lib/components/ActionFeedbackNotification.svelte";
 
   interface SortOptions {
-    sortBy:
-      | "firstName"
-      | "surname"
-      | "ppg"
-      | "kr"
-      | "pef"
-      | "totalPoints"
-      | "gradYear";
+    sortBy: string;
     reverse: boolean;
   }
 
@@ -116,7 +109,7 @@
   <div class="container">
     <ActionFeedbackNotification />
     <h1 class="title">Players</h1>
-    <div class="field is-grouped">
+    <div class="field is-grouped is-grouped-multiline">
       {#if data.admin}
         <div class="control">
           <a href="/app/players/new" class="button is-primary">
@@ -130,7 +123,7 @@
       <div class="control has-icons-left is-expanded">
         <input
           class="input"
-          type="email"
+          type="text"
           placeholder="Search players..."
           bind:value={query}
           on:input={() => handleChangeDebounced(query, sortOptions)}
@@ -162,12 +155,13 @@
               <th>Passing Efficiency</th>
               <th>Total Points</th>
               {#if $page.data.admin}
+                <th>Visibility</th>
                 <th>Edit</th>
               {/if}
             </tr>
           </thead>
           <tbody>
-            {#each filteredPlayers as { id, firstName, surname, teams, ppg, kr, pef, totalPoints }}
+            {#each filteredPlayers as { id, firstName, surname, teams, ppg, kr, pef, totalPoints, visible }}
               <tr>
                 <td
                   ><a href="/app/players/{id}" class="button"
@@ -190,6 +184,21 @@
                 <td>{pef.toFixed(3)}</td>
                 <td>{totalPoints}</td>
                 {#if $page.data.admin}
+                  <td>
+                    <span class="icon">
+                      {#if visible}
+                        <i
+                          class="fa-solid fa-eye"
+                          title="All players can see this players."
+                        ></i>
+                      {:else}
+                        <i
+                          class="fa-solid fa-eye-slash"
+                          title="Only you can see this player."
+                        ></i>
+                      {/if}
+                    </span>
+                  </td>
                   <td
                     ><a href="/app/players/edit/{id}" class="button"
                       ><span class="icon"
