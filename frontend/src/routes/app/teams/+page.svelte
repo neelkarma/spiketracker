@@ -1,12 +1,14 @@
 <script lang="ts">
   import Modal from "$lib/components/Modal.svelte";
   import TeamCard from "$lib/components/TeamCard.svelte";
-  import { SAMPLE_TEAM_INFO, type TeamInfo } from "$lib/types";
-  import { debounce, wait } from "$lib/utils";
+  import { type TeamInfo } from "$lib/types";
+  import { debounce } from "$lib/utils";
+  import { onMount } from "svelte";
   import type { PageData } from "./$types";
+  import ActionFeedbackNotification from "$lib/components/ActionFeedbackNotification.svelte";
 
   interface SortOptions {
-    sortBy: "name" | "year";
+    sortBy: string;
     reverse: boolean;
   }
 
@@ -22,16 +24,27 @@
   let filteredTeams: TeamInfo[];
 
   const handleChange = async (query: string, sortOptions: SortOptions) => {
-    // const data = await fetch("/api/teams", { ... }).then((res) => res.json());
+    const searchParams = new URLSearchParams({
+      q: query,
+      sort: sortOptions.sortBy,
+      reverse: sortOptions.reverse ? "1" : "0",
+    }).toString();
 
-    // again, network simuation
-    await wait(1000);
-    filteredTeams = [SAMPLE_TEAM_INFO];
+    const res = await fetch("/api/teams/?" + searchParams);
+
+    if (res.status !== 200) {
+      alert("Sorry, something went wrong.");
+      return;
+    }
+
+    filteredTeams = await res.json();
   };
 
   const handleChangeDebounced = debounce(handleChange);
 
-  $: handleChangeDebounced(query, sortOptions);
+  onMount(async () => {
+    await handleChange(query, sortOptions);
+  });
 </script>
 
 <Modal bind:isOpen={filterModalIsOpen}>
@@ -45,6 +58,8 @@
         sortBy: formData.get("sortby"),
         reverse: formData.has("reverse"),
       };
+
+      handleChange(query, sortOptions);
 
       filterModalIsOpen = false;
     }}
@@ -70,6 +85,33 @@
             checked={sortOptions.sortBy === "year"}
           />
           Year
+        </label>
+        <label class="radio">
+          <input
+            type="radio"
+            name="sortby"
+            value="setRatio"
+            checked={sortOptions.sortBy === "setRatio"}
+          />
+          Set Ratio
+        </label>
+        <label class="radio">
+          <input
+            type="radio"
+            name="sortby"
+            value="kr"
+            checked={sortOptions.sortBy === "kr"}
+          />
+          Kill Rate
+        </label>
+        <label class="radio">
+          <input
+            type="radio"
+            name="sortby"
+            value="pef"
+            checked={sortOptions.sortBy === "pef"}
+          />
+          Passing Efficiency
         </label>
       </div>
     </div>
@@ -98,6 +140,7 @@
 
 <section class="section">
   <div class="container">
+    <ActionFeedbackNotification />
     <h1 class="title">Teams</h1>
     <div class="field is-grouped">
       {#if data.admin}
@@ -113,9 +156,10 @@
       <div class="control has-icons-left is-expanded">
         <input
           class="input"
-          type="email"
+          type="text"
           placeholder="Search teams..."
           bind:value={query}
+          on:input={() => handleChangeDebounced(query, sortOptions)}
         />
         <span class="icon is-left">
           <i class="fas fa-search"></i>

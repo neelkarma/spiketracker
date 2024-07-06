@@ -2,7 +2,6 @@
   import { goto } from "$app/navigation";
   import TeamInfoForm from "$lib/components/TeamInfoForm.svelte";
   import type { TeamInfo } from "$lib/types";
-  import { wait } from "$lib/utils";
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -14,21 +13,37 @@
 
     status = "loading";
 
-    // simulate network
-    await wait(1000);
+    const res = await fetch(`/api/team/${team.id}`, {
+      method: "PUT",
+      body: JSON.stringify(team),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     window.scrollTo({ top: 0 });
-    status = "success";
+
+    if (res.status === 200) {
+      status = "success";
+    } else {
+      status = "error";
+      console.log(await res.text());
+    }
   };
 
-  const handleDelete = async (e: CustomEvent) => {
+  const handleDelete = async () => {
     status = "loading";
 
-    // simulate network
-    await wait(1000);
+    const res = await fetch(`/api/team/${data.team.id}`, {
+      method: "DELETE",
+    });
 
-    // TODO: how to give user feedback of success?
-    await goto("/app/teams");
+    if (res.status === 200) {
+      await goto("/app/teams?success=1");
+    } else {
+      status = "error";
+      console.log(await res.text());
+    }
   };
 </script>
 
@@ -36,11 +51,15 @@
   <div class="container">
     {#if status === "success"}
       <div class="notification is-success">Successfully updated.</div>
+    {:else if status === "error"}
+      <div class="notification is-danger">
+        Sorry, something went wrong. Please try again after a few minutes.
+      </div>
     {/if}
 
-    <h1 class="title block">Edit Match</h1>
+    <h1 class="title block">Edit Team</h1>
     <TeamInfoForm
-      data={data.data}
+      data={data.team}
       players={data.players}
       showDelete
       isLoading={status === "loading"}

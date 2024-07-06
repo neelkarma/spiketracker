@@ -1,26 +1,31 @@
-import { browser } from "$app/environment";
-import {
-  SAMPLE_PLAYER_INFO,
-  SAMPLE_TEAM_INFO,
-  type PlayerInfo,
-  type TeamInfo,
-} from "$lib/types";
-import { wait } from "$lib/utils";
+import { type PlayerInfo, type TeamInfo } from "$lib/types";
+import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 
 export const load = (async ({
+  fetch,
   params,
-}): Promise<{ data: TeamInfo; players: PlayerInfo[] }> => {
-  const id = Number.parseInt(params.id);
+}): Promise<{ team: TeamInfo; players: PlayerInfo[] }> => {
+  const [teamDataRes, playersRes] = await Promise.all([
+    fetch(`/api/team/${params.id}`),
+    fetch(`/api/team/${params.id}/players`),
+  ]);
 
-  // Simulate network latency
-  if (browser) await wait(1000);
+  if (teamDataRes.status === 404) {
+    error(404, "Not Found");
+  }
+
+  if (teamDataRes.status !== 200 || playersRes.status !== 200) {
+    error(500, "Something went wrong");
+  }
+
+  const [teamData, players] = await Promise.all([
+    teamDataRes.json(),
+    playersRes.json(),
+  ]);
 
   return {
-    data: {
-      ...SAMPLE_TEAM_INFO,
-      id,
-    },
-    players: [SAMPLE_PLAYER_INFO],
+    team: teamData,
+    players,
   };
 }) satisfies PageLoad;

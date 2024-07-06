@@ -9,17 +9,27 @@
   const handleSubmit = async (e: CustomEvent<TeamInfo>) => {
     status = "loading";
 
-    // simulate network delay
-    await wait(1000);
+    const res = await fetch("/api/team/", {
+      method: "POST",
+      body: JSON.stringify(e.detail),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-    // TODO: again, how to give user feedback that it was successful?
-    await goto("/app/teams");
+    if (res.status === 200) {
+      await goto("/app/teams?success=1");
+    } else {
+      console.log(await res.text());
+      status = "error";
+      window.scrollTo({ top: 0 });
+    }
   };
 </script>
 
 <section class="section">
   <div class="container">
-    <h1 class="title">New Match</h1>
+    <h1 class="title">New Team</h1>
     <TeamInfoForm
       submitLabel="Create"
       data={EMPTY_TEAM_INFO}
