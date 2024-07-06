@@ -53,7 +53,7 @@
       <div class="notification is-success">Successfully updated.</div>
     {:else if status === "error"}
       <div class="notification is-danger">
-        Sorry something went wrong. Is the student's ID correct?
+        Sorry, something went wrong. Is the student's ID correct?
       </div>
     {/if}
 
