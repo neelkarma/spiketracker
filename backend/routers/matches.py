@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from db import get_db
 from flask import Blueprint, json, jsonify, request
 from session import get_session
@@ -12,7 +14,7 @@ def get_matches():
         return "Unauthorized", 401
 
     query = request.args.get("q", "")
-    sort_by = request.args.get("sort", "name")
+    sort_by = request.args.get("sort", "time")
     reverse = request.args.get("reverse", "0") == "1"
 
     con = get_db()
@@ -33,6 +35,7 @@ def get_matches():
         WHERE
             teams.name LIKE ?
             OR matches.oppName LIKE ?
+            OR matches.location LIKE ?
             OR matches.id = ?
             OR teams.id = ?
     """
@@ -40,6 +43,7 @@ def get_matches():
     matches = con.execute(
         sql,
         (
+            "%" + query + "%",
             "%" + query + "%",
             "%" + query + "%",
             int(query) if query.isdecimal() else -1,
@@ -59,7 +63,13 @@ def get_matches():
         }
         for row in matches
     ]
-    matches.sort(key=lambda row: row[sort_by], reverse=reverse)
+
+    matches.sort(
+        key=lambda row: datetime.fromisoformat(row[sort_by]).timestamp()
+        if sort_by == "time"
+        else row[sort_by],
+        reverse=reverse,
+    )
 
     con.close()
 

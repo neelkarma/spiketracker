@@ -142,7 +142,7 @@ def create_match():
                 data["oppTeamName"],
                 data["time"],
                 data["location"],
-                data["points"],
+                json.dumps(data["points"]),
                 data["visible"],
                 data["scoring"],
             ),
@@ -151,7 +151,9 @@ def create_match():
         con.close()
 
         return jsonify({"success": True}), 200
-    except (DatabaseError, KeyError):
+    except (DatabaseError, KeyError) as e:
+        print(e, flush=True)
+
         con.rollback()
         con.close()
 
@@ -188,7 +190,7 @@ def edit_match(id_str: str):
             (
                 data["ourTeamId"],
                 data["oppTeamName"],
-                data["date"],
+                data["time"],
                 data["location"],
                 json.dumps(data["points"]),
                 data["visible"],
@@ -201,7 +203,9 @@ def edit_match(id_str: str):
         con.close()
 
         return jsonify({"success": True}), 200
-    except (DatabaseError, KeyError):
+    except (DatabaseError, KeyError) as e:
+        print(e, flush=True)
+
         con.rollback()
         con.close()
 
