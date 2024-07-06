@@ -179,7 +179,7 @@ def get_player_matches(id_str: str):
         pef = successful_passes / total_passes if total_passes > 0 else 0
 
         processed_matches.append(
-            {"match": row, "kr": kr, "pef": pef, "points": successful_attacks}
+            {"match": dict(row), "kr": kr, "pef": pef, "points": successful_attacks}
         )
 
     return jsonify(processed_matches), 200

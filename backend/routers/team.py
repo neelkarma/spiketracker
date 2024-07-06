@@ -67,7 +67,7 @@ def calculate_team_wins_losses_set_ratio(id: int, con: Connection):
     return wins, losses, set_ratio
 
 
-@team.get("/<id>")
+@team.get("/<id_str>")
 def get_team(id_str: str):
     session = get_session()
     if session is None:
@@ -118,7 +118,7 @@ def get_team(id_str: str):
     ), 200
 
 
-@team.get("/<id>/players")
+@team.get("/<id_str>/players")
 def get_team_players(id_str: str):
     session = get_session()
     if session is None:
@@ -227,7 +227,7 @@ def create_team():
         return jsonify({"success": False}), 400
 
 
-@team.delete("/<id>")
+@team.delete("/<id_str>")
 def delete_team(id_str: str):
     session = get_session()
     if session is None:
@@ -251,7 +251,7 @@ def delete_team(id_str: str):
     return jsonify({"success": True}), 200
 
 
-@team.put("/<id>")
+@team.put("/<id_str>")
 def edit_team(id_str: int):
     session = get_session()
     if session is None:
