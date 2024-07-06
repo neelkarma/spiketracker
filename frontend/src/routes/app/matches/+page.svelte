@@ -5,8 +5,11 @@
   import MatchCardTeamsPart from "$lib/components/MatchCardTeamsPart.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import { SAMPLE_MATCH_INFO, type MatchInfo } from "$lib/types";
-  import { debounce, wait } from "$lib/utils";
+  import { debounce } from "$lib/utils";
+  import { onMount } from "svelte";
   import type { PageData } from "./$types";
+  import UnscoredMatchCard from "./UnscoredMatchCard.svelte";
+  import ScoredMatchCard from "./ScoredMatchCard.svelte";
 
   interface SortOptions {
     sortBy: "time" | "team";
@@ -26,17 +29,26 @@
   let filteredPastMatches: MatchInfo[];
 
   const handleChange = async (query: string, sortOptions: SortOptions) => {
-    // const data = await fetch("/api/teams", { ... }).then((res) => res.json());
+    const searchParams = new URLSearchParams({
+      q: query,
+      sort: sortOptions.sortBy,
+      reverse: sortOptions.reverse ? "1" : "0",
+    }).toString();
 
-    // simulate network delay
-    await wait(1000);
-    filteredUpcomingMatches = [SAMPLE_MATCH_INFO];
+    //const res = await fetch("/api/matches/?" + searchParams);
+
+    filteredUpcomingMatches = [
+      { ...SAMPLE_MATCH_INFO, scoring: true },
+      SAMPLE_MATCH_INFO,
+    ];
     filteredPastMatches = [SAMPLE_MATCH_INFO];
   };
 
   const handleChangeDebounced = debounce(handleChange);
 
-  $: handleChangeDebounced(query, sortOptions);
+  onMount(async () => {
+    await handleChange(query, sortOptions);
+  });
 </script>
 
 <Modal bind:isOpen={filterModalIsOpen}>
@@ -50,6 +62,8 @@
         sortBy: formData.get("sortby"),
         reverse: formData.has("reverse"),
       };
+
+      handleChange(query, sortOptions);
 
       filterModalIsOpen = false;
     }}
@@ -118,9 +132,10 @@
       <div class="control has-icons-left is-expanded">
         <input
           class="input"
-          type="email"
+          type="text"
           placeholder="Search matches..."
           bind:value={query}
+          on:input={() => handleChangeDebounced(query, sortOptions)}
         />
         <span class="icon is-left">
           <i class="fas fa-search"></i>
@@ -136,41 +151,37 @@
       </div>
     </div>
     <div class="my-5"></div>
-    <div class="title is-4">Upcoming Matches</div>
+    <div class="title is-4">Ongoing Matches</div>
     {#if filteredUpcomingMatches}
-      {#each filteredUpcomingMatches as { id, time, oppTeamName, ourTeamName, location }}
-        <MatchCardBody>
-          <MatchCardDetailsPart date={new Date(time)} {location} />
-          <MatchCardTeamsPart {ourTeamName} {oppTeamName} />
-          {#if $page.data.admin}
-            <div class="level-item">
-              <a href="/app/matches/edit/{id}" class="button">Edit</a>
-            </div>
-          {/if}
-        </MatchCardBody>
-        <!-- <TeamCard {...match} /> -->
+      {#each filteredUpcomingMatches as match}
+        <UnscoredMatchCard data={match} />
       {/each}
     {:else}
-      {#each { length: 5 } as _}
+      {#each { length: 6 } as _}
         <div class="skeleton-block"></div>
       {/each}
     {/if}
-    <div class="title is-4">Past Matches</div>
 
-    {#if filteredPastMatches}
-      {#each filteredUpcomingMatches as { id, time, oppTeamName, ourTeamName, location }}
-        <MatchCardBody href="/app/matches/{id}">
-          <MatchCardDetailsPart date={new Date(time)} {location} />
-          <MatchCardTeamsPart {ourTeamName} {oppTeamName} />
-          {#if $page.data.admin}
-            <div class="level-item">
-              <a href="/app/matches/edit/{id}" class="button">Edit</a>
-            </div>
-          {/if}
-        </MatchCardBody>
+    <div class="my-5"></div>
+    <div class="title is-4">Upcoming Matches</div>
+    {#if filteredUpcomingMatches}
+      {#each filteredUpcomingMatches as match}
+        <UnscoredMatchCard data={match} />
       {/each}
     {:else}
-      {#each { length: 5 } as _}
+      {#each { length: 6 } as _}
+        <div class="skeleton-block"></div>
+      {/each}
+    {/if}
+
+    <div class="my-5"></div>
+    <div class="title is-4">Past Matches</div>
+    {#if filteredPastMatches}
+      {#each filteredPastMatches as match}
+        <ScoredMatchCard data={match} />
+      {/each}
+    {:else}
+      {#each { length: 6 } as _}
         <div class="skeleton-block"></div>
       {/each}
     {/if}
