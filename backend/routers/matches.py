@@ -29,7 +29,7 @@ def get_matches():
             matches.visible,
             matches.scoring
         FROM matches
-        INNER JOIN teams ON team.id = matches.teamId
+        INNER JOIN teams ON teams.id = matches.teamId
         WHERE
             teams.name LIKE ?
             OR matches.oppName LIKE ?
