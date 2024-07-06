@@ -1,24 +1,27 @@
 <script lang="ts">
-  import FieldPosSelect from "$lib/components/FieldPosSelect.svelte";
+  import FieldPosSelect from "./FieldPosSelect.svelte";
   import Modal from "$lib/components/Modal.svelte";
-  import PlayerPicker from "$lib/components/PlayerPicker.svelte";
   import QuickPicker from "$lib/components/QuickPicker.svelte";
-  import ScoringNavBar from "$lib/components/ScoringNavBar.svelte";
+  import ScoringNavBar from "./ScoringNavBar.svelte";
+  import { ACTION_TYPE_MAPPINGS } from "./mappings.js";
+  import { goto } from "$app/navigation";
 
   export let data;
 
   let playerScoring: { name: string; id: number } | null = null;
   let scoringData: {
     name: string;
-    id: number;
-    pos1: [number, number];
-    pos2: [number, number];
-    actionType: string;
+    playerId: number;
+    from: [number, number];
+    to: [number, number];
+    action: string;
     rating: number;
   }[] = [];
+  let confirmDialogOpen = false;
+  let submitStatus: "idle" | "loading" | "error" = "idle";
 
-  $: playerItems = data.players.map(({ id, name }) => ({
-    label: name,
+  $: playerItems = data.players.map(({ id, firstName, surname }) => ({
+    label: `${firstName} ${surname}`,
     value: id,
   }));
 
@@ -33,20 +36,63 @@
   };
 
   const handleScoringSubmit = (data: {
-    pos1: [number, number];
-    pos2: [number, number];
-    actionType: string;
+    from: [number, number];
+    to: [number, number];
+    action: string;
     rating: number;
   }) => {
     if (!playerScoring) return;
     scoringData.unshift({
-      ...playerScoring,
+      name: playerScoring.name,
+      playerId: playerScoring.id,
       ...data,
     });
     scoringData = scoringData;
     playerScoring = null;
   };
+
+  const handleSubmit = async () => {
+    submitStatus = "loading";
+
+    const res = await fetch(`/api/stats/${data.match.id}`, {
+      method: "PUT",
+      body: JSON.stringify(scoringData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (res.status !== 200) {
+      console.log(await res.text());
+      submitStatus = "error";
+      return;
+    }
+
+    goto("/app/matches?success=1");
+  };
 </script>
+
+<Modal bind:isOpen={confirmDialogOpen}>
+  <div class="box">
+    <p class="title is-4 mb-3">Confirm Submission</p>
+    <p class="mb-3">
+      Are you sure you want to submit the provided scoring data?
+      <strong>You will not be able to make any changes after you submit.</strong
+      >
+    </p>
+    <div class="buttons">
+      <button
+        class="button"
+        class:is-loading={submitStatus === "loading"}
+        on:click={handleSubmit}>Yes</button
+      >
+      <button
+        class="button is-primary"
+        on:click={() => (confirmDialogOpen = false)}>No</button
+      >
+    </div>
+  </div>
+</Modal>
 
 <Modal isOpen={playerScoring !== null}>
   <div class="box">
@@ -57,10 +103,10 @@
 <ScoringNavBar
   title="Scoring {data.match.ourTeamName} vs {data.match.oppTeamName} @ {data
     .match.location}"
+  on:submit={() => (confirmDialogOpen = true)}
 />
 <section class="section">
   <div class="container">
-    <!-- TODO: Integrate QuickPicker component -->
     <QuickPicker
       title="Add action for player..."
       items={playerItems}
@@ -82,10 +128,10 @@
           </tr>
         </thead>
         <tbody>
-          {#each scoringData as { name, actionType, rating }, i}
+          {#each scoringData as { name, action, rating }, i}
             <tr>
               <td>{name}</td>
-              <td>{actionType}</td>
+              <td>{ACTION_TYPE_MAPPINGS[action]}</td>
               <td>{rating}</td>
               <td>
                 <button

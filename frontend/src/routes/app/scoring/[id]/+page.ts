@@ -1,50 +1,29 @@
-import { SAMPLE_MATCH_INFO, SAMPLE_PLAYER_INFO, SAMPLE_TEAM_INFO } from "$lib/types";
+import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 
-export const load = (async ({ params }) => {
+export const load = (async ({ fetch, params }) => {
+  const matchRes = await fetch(`/api/match/${params.id}`);
+
+  if (matchRes.status === 404) {
+    error(404, "Not Found");
+  } else if (matchRes.status !== 200) {
+    console.log(await matchRes.text());
+    error(500, "Something went wrong");
+  }
+
+  const match = await matchRes.json();
+
+  const playersRes = await fetch(`/api/team/${match.teamId}/players`);
+
+  if (playersRes.status !== 200) {
+    console.log(await playersRes.text());
+    error(500, "Something went wrong");
+  }
+
+  const players = await playersRes.json();
+
   return {
-    match: SAMPLE_MATCH_INFO,
-    players: [
-      {
-        id: 1,
-        name: "Guppy"
-      },
-      {
-        id: 2,
-        name: "Guppy 2"
-      },
-      {
-        id: 3,
-        name: "Guppy 3"
-      },
-      {
-        id: 4,
-        name: "Guppy 4"
-      },
-      {
-        id: 5,
-        name: "Guppy 5"
-      },
-      {
-        id: 6,
-        name: "Guppy 6"
-      },
-      {
-        id: 7,
-        name: "Guppy 7"
-      },
-      {
-        id: 8,
-        name: "Guppy 8"
-      },
-      {
-        id: 9,
-        name: "Guppy 9"
-      },
-      {
-        id: 10,
-        name: "Guppy 10"
-      },
-    ]
+    match,
+    players,
   };
 }) satisfies PageLoad;

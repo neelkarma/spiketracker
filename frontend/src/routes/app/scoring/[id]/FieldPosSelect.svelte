@@ -1,12 +1,13 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import svg from "../../assets/Volleyball-Court-1.svg";
+  import svg from "../../../../assets/Volleyball-Court-1.svg";
+  import { ACTION_TYPE_MAPPINGS } from "./mappings";
 
   const dispatch = createEventDispatcher<{
     submit: {
-      pos1: [number, number];
-      pos2: [number, number];
-      actionType: string;
+      from: [number, number];
+      to: [number, number];
+      action: string;
       rating: number;
     };
   }>();
@@ -18,106 +19,63 @@
     "fa-face-grin",
   ];
 
-  let pos1: [number, number] | null = null;
-  let pos2: [number, number] | null = null;
-  let actionType = "set";
+  let from: [number, number] | null = null;
+  let to: [number, number] | null = null;
+  let action = "set";
 
   const handleGridClick = (x: number, y: number) => {
-    if (pos1 === null) {
-      pos1 = [x, y];
+    if (from === null) {
+      from = [x, y];
       return;
     }
 
-    if (pos2 === null) {
-      pos2 = [x, y];
+    if (to === null) {
+      to = [x, y];
       return;
     }
   };
 
   const handleReset = () => {
-    pos1 = null;
-    pos2 = null;
+    from = null;
+    to = null;
   };
 
   const handleSubmit = (rating: number) => {
-    if (pos1 === null || pos2 === null) return;
+    if (from === null || to === null) return;
     dispatch("submit", {
-      pos1,
-      pos2,
-      actionType,
+      from,
+      to,
+      action,
       rating,
     });
 
-    pos1 = null;
-    pos2 = null;
-    actionType = "set";
+    from = null;
+    to = null;
+    action = "set";
   };
 </script>
 
 <div>
-  {#if pos1 == null}
+  {#if from == null}
     <p class="pb-2">1. Select the position the player hit the ball.</p>
-  {:else if pos2 == null}
+  {:else if to == null}
     <p class="pb-2">2. Select where the ball landed.</p>
   {:else}
     <div class="box">
       <div class="field">
         <p class="label">Action Type</p>
         <div class="control">
-          <label class="radio">
-            <input
-              type="radio"
-              name="actionType"
-              value="set"
-              bind:group={actionType}
-            />
-            SET
-          </label>
-          <label class="radio">
-            <input
-              type="radio"
-              name="actionType"
-              value="atk"
-              bind:group={actionType}
-            />
-            ATK
-          </label>
-          <label class="radio">
-            <input
-              type="radio"
-              name="actionType"
-              value="blk"
-              bind:group={actionType}
-            />
-            BLK
-          </label>
-          <label class="radio">
-            <input
-              type="radio"
-              name="actionType"
-              value="srv"
-              bind:group={actionType}
-            />
-            SRV
-          </label>
-          <label class="radio">
-            <input
-              type="radio"
-              name="actionType"
-              value="src"
-              bind:group={actionType}
-            />
-            SRC
-          </label>
-          <label class="radio">
-            <input
-              type="radio"
-              name="actionType"
-              value="frc"
-              bind:group={actionType}
-            />
-            FRC
-          </label>
+          {#each Object.entries(ACTION_TYPE_MAPPINGS) as [code, name]}
+            <label class="radio" title={name}>
+              <input
+                type="radio"
+                name="actionType"
+                value={code}
+                bind:group={action}
+              />
+              {code.toUpperCase()}
+            </label>
+          {/each}
         </div>
       </div>
       <p class="label">Save with Rating:</p>
@@ -143,15 +101,15 @@
       {#each { length: 13 * 22 } as _, i}
         {@const x = i % 20}
         {@const y = Math.floor(i / 20)}
-        {@const isPos1 = pos1 && pos1[0] === x && pos1[1] === y}
-        {@const isPos2 = pos2 && pos2[0] === x && pos2[1] === y}
+        {@const isPos1 = from && from[0] === x && from[1] === y}
+        {@const isPos2 = to && to[0] === x && to[1] === y}
 
         <button
           class="grid-cell"
           class:pos1={isPos1}
           class:pos2={isPos2}
           on:click={() => handleGridClick(x, y)}
-          disabled={pos1 !== null && pos2 !== null}
+          disabled={from !== null && to !== null}
         >
           {#if isPos1}
             1
