@@ -20,13 +20,14 @@
   let deleteModalOpen = false;
 
   const handleSubmit: EventHandler<SubmitEvent, HTMLFormElement> = async (
-    e
+    e,
   ) => {
     const formData = new FormData(e.currentTarget);
     dispatch("submit", {
       ...data,
       playerIds: players.map(({ id }) => id),
       name: formData.get("name")!.toString(),
+      year: parseInt(formData.get("year")!.toString()),
       visible: !!formData.get("visible")?.toString(),
     });
   };
@@ -59,6 +60,18 @@
     <div class="field">
       <label class="label" for="playersInput">Players</label>
       <PlayerPicker bind:value={players} inputId="playersInput" required />
+    </div>
+
+    <div class="field">
+      <label for="yearInput" class="label">Year</label>
+      <input
+        type="number"
+        class="input"
+        id="yearInput"
+        value={data.year}
+        name="year"
+        required
+      />
     </div>
   </div>
 
