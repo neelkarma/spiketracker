@@ -10,24 +10,17 @@
 
   export let title: string;
   export let items: Item[];
-  let recents: Item[] = [];
   let filterString = "";
 
   const dispatch = createEventDispatcher<{ click: Item }>();
 
   const handleClick = (item: Item) => {
-    // move item to the top of recents if already present within
-    const existingIndex = recents.findIndex(
-      ({ value }) => value === item.value,
-    );
-    if (existingIndex !== -1) {
-      recents.splice(existingIndex, 1);
-    }
-    recents.unshift(item);
+    // move the selected item to the top of the list
+    const itemIndex = items.findIndex((other) => item.value === other.value);
+    items.splice(itemIndex, 1);
+    items.unshift(item);
+    items = items;
 
-    // limit to 7 items (max num of players in court)
-    recents.length = Math.min(recents.length, 7);
-    recents = recents; // trigger update
     filterString = "";
     dispatch("click", item);
   };
@@ -49,19 +42,11 @@
     </div>
   </div>
   <!-- I know this is terrible for accessibility, but bulma has forced my hand -->
-  {#if filterString.length === 0}
-    {#each recents as { label, value }}
-      <a class="panel-block" on:click={() => handleClick({ label, value })}>
-        {label}
-      </a>
-    {/each}
-  {:else}
-    {#each items.filter(({ label }) => label
-        .toLowerCase()
-        .includes(filterString.toLowerCase())) as { label, value }}
-      <a class="panel-block" on:click={() => handleClick({ label, value })}>
-        {label}
-      </a>
-    {/each}
-  {/if}
+  {#each items.filter(({ label }) => label
+      .toLowerCase()
+      .includes(filterString.toLowerCase())) as { label, value }}
+    <a class="panel-block" on:click={() => handleClick({ label, value })}>
+      {label}
+    </a>
+  {/each}
 </div>
