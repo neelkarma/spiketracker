@@ -163,13 +163,12 @@
           <tbody>
             {#each filteredPlayers as { id, firstName, surname, teams, ppg, kr, pef, totalPoints, visible }}
               <tr>
-                <td
-                  ><a href="/app/players/{id}" class="button"
-                    ><span class="icon"
-                      ><i class="fa-solid fa-arrow-up-right-from-square"
-                      ></i></span
-                    ></a
-                  >
+                <td>
+                  <a href="/app/players/{id}" class="button">
+                    <span class="icon">
+                      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </span>
+                  </a>
                 </td>
                 <td>{firstName}</td>
                 <td>{surname}</td>
