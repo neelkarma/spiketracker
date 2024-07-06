@@ -9,10 +9,16 @@ match = Blueprint("match", __name__, url_prefix="/match")
 
 
 @match.get("/<id>")
-def get_match(id: int):
+def get_match(id_str: str):
     session = get_session()
     if session is None:
         return "Unauthorized", 401
+
+    id = None
+    try:
+        id = int(id_str)
+    except ValueError:
+        return "id must be an integer", 400
 
     con = get_db()
     match_data = con.execute("SELECT * FROM matches WHERE id = ?", (id,)).fetchone()
@@ -91,12 +97,18 @@ def create_match():
 
 
 @match.put("/<id>")
-def edit_match(id: int):
+def edit_match(id_str: str):
     session = get_session()
     if session is None:
         return "Unauthorized", 401
     if not session["admin"]:
         return "Forbidden", 403
+
+    id = None
+    try:
+        id = int(id_str)
+    except ValueError:
+        return "id must be an integer", 400
 
     data = request.get_json()
 
@@ -135,12 +147,18 @@ def edit_match(id: int):
 
 
 @match.delete("/<id>")
-def delete_match(id: int):
+def delete_match(id_str: str):
     session = get_session()
     if session is None:
         return "Unauthorized", 401
     if not session["admin"]:
         return "Forbidden", 403
+
+    id = None
+    try:
+        id = int(id_str)
+    except ValueError:
+        return "id must be an integer", 400
 
     con = get_db()
     con.execute("DELETE FROM matches WHERE id = ?", (id,))

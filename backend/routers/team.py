@@ -12,8 +12,8 @@ def calculate_team_stat_success_rate(id: int, action: str, con: Connection):
     sql = """
         SELECT stats.rating, count(*) AS count
         FROM stats
-        INNER JOIN teamPlayers ON stats.playerId = teamPlayers.playerId
-        WHERE stats.action = ? AND teamPlayers.teamId = ?
+        INNER JOIN matches ON matches.id = stats.matchId
+        WHERE stats.action = ? AND matches.teamId = ?
         GROUP BY stats.rating;
     """
 
@@ -68,10 +68,16 @@ def calculate_team_wins_losses_set_ratio(id: int, con: Connection):
 
 
 @team.get("/<id>")
-def get_team(id: int):
+def get_team(id_str: str):
     session = get_session()
     if session is None:
         return "Unauthorized", 401
+
+    id = None
+    try:
+        id = int(id_str)
+    except ValueError:
+        return "id must be an integer", 400
 
     con = get_db()
 
@@ -106,9 +112,89 @@ def get_team(id: int):
             "kr": kr,
             "pef": pef,
             "playerIds": player_ids,
+            "year": team_data["year"],
             "visible": bool(team_data["visible"]),
         }
-    )
+    ), 200
+
+
+@team.get("/<id>/players")
+def get_team_players(id_str: str):
+    session = get_session()
+    if session is None:
+        return "Unauthorized", 401
+
+    id = None
+    try:
+        id = int(id_str)
+    except ValueError:
+        return "id must be an integer", 400
+
+    con = get_db()
+
+    sql = """
+        SELECT * FROM players
+        INNER JOIN teamPlayers ON teamPlayers.playerId = players.id
+        WHERE teamPlayers.teamId = ?
+    """
+
+    players = con.execute(sql, (id,))
+    processed_players = []
+
+    for player in players:
+        sql = """
+            SELECT rating, count(*) AS count FROM stats
+            INNER JOIN matches ON matches.id = stats.matchId
+            WHERE
+                matches.teamId = ?
+                AND stats.playerId = ?
+                AND stats.action = ?
+            GROUP BY rating
+        """
+
+        attack_ratings = con.execute(sql, (id, player["id"], "attack")).fetchall()
+        total_attacks = 0
+        successful_attacks = 0
+        for atkrow in attack_ratings:
+            total_attacks += atkrow["count"]
+            if atkrow["rating"] == 3:
+                successful_attacks += atkrow["count"]
+
+        kr = successful_attacks / total_attacks if total_attacks > 0 else 0
+
+        pass_ratings = con.execute(sql, (id, player["id"], "set")).fetchall()
+        total_passes = 0
+        successful_passes = 0
+        for passrow in pass_ratings:
+            total_attacks += passrow["count"]
+            if passrow["rating"] == 3:
+                successful_attacks += passrow["count"]
+
+        pef = successful_passes / total_passes if total_passes > 0 else 0
+
+        sql = """
+            SELECT count(*) AS count FROM stats
+            INNER JOIN matches ON stats.matchId = matches.id
+            WHERE
+                stats.rating = 3
+                AND stats.action = 'attack'
+                AND matches.teamId = ?
+        """
+        total_points = con.execute(sql, (id,)).fetchone()["count"]
+
+        sql = """
+            SELECT count(*) AS count FROM matches
+            WHERE matches.teamId = ?
+        """
+        total_matches = con.execute(sql, (id,)).fetchone()["count"]
+
+        ppg = total_points / total_matches if total_matches > 0 else 0
+
+        processed_players.append(
+            {**player, "kr": kr, "pef": pef, "ppg": ppg, "points": total_points}
+        )
+
+    return jsonify(processed_players), 200
 
 
 @team.post("/")
@@ -130,11 +216,21 @@ def create_team():
         """
 
         con.execute(sql, (body["name"], body["year"], body["visible"]))
+
+        team_id = con.execute("SELECT max(id) AS id FROM teams").fetchone()["id"]
+
+        sql = """
+            INSERT INTO teamPlayers (teamId, playerId)
+            VALUES (?, ?)
+        """
+        con.executemany(sql, [(team_id, player_id) for player_id in body["playerIds"]])
+
         con.commit()
         con.close()
 
         return jsonify({"success": True}), 200
-    except (DatabaseError, KeyError):
+    except (DatabaseError, KeyError) as e:
+        print(e, flush=True)
         con.rollback()
         con.close()
 
@@ -142,7 +238,7 @@ def create_team():
 
 
 @team.delete("/<id>")
-def delete_team(id: int):
+def delete_team(id_str: str):
     session = get_session()
     if session is None:
         return "Unauthorized", 401
@@ -150,9 +246,15 @@ def delete_team(id: int):
     if not session["admin"]:
         return "Forbidden", 403
 
+    id = None
+    try:
+        id = int(id_str)
+    except ValueError:
+        return "id must be an integer", 400
+
     con = get_db()
-    con.execute("DELETE FROM teams WHERE id = ?", (id,))
     con.execute("DELETE FROM teamPlayers WHERE teamId = ?", (id,))
+    con.execute("DELETE FROM teams WHERE id = ?", (id,))
     con.commit()
     con.close()
 
@@ -160,13 +262,19 @@ def delete_team(id: int):
 
 
 @team.put("/<id>")
-def edit_team(id: int):
+def edit_team(id_str: int):
     session = get_session()
     if session is None:
         return "Unauthorized", 401
 
     if not session["admin"]:
         return "Forbidden", 403
+
+    id = None
+    try:
+        id = int(id_str)
+    except ValueError:
+        return "id must be an integer", 400
 
     body = request.get_json()
     con = get_db()
@@ -179,6 +287,13 @@ def edit_team(id: int):
         """
 
         con.execute(sql, (body["name"], body["year"], body["visible"], id))
+
+        con.execute("DELETE FROM teamPlayers WHERE teamId = ?", (id,))
+        sql = """
+            INSERT INTO teamPlayers (teamId, playerId)
+            VALUES (?, ?)
+        """
+        con.executemany(sql, [(id, playerId) for playerId in body["playerIds"]])
 
         con.commit()
         con.close()

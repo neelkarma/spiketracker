@@ -1,4 +1,4 @@
-from sqlite3 import Connection, DatabaseError
+from sqlite3 import DatabaseError
 
 from db import get_db
 from flask import Blueprint, jsonify, request
@@ -9,29 +9,6 @@ from routers.team import (
 from session import get_session
 
 teams = Blueprint("teams", __name__, url_prefix="/teams")
-
-
-def transform_row(team: dict, con: Connection):
-    kr = calculate_team_stat_success_rate(team["id"], "attack", con)
-    pef = calculate_team_stat_success_rate(team["id"], "set", con)
-    wins, losses, set_ratio = calculate_team_wins_losses_set_ratio(team["id"], con)
-
-    player_ids = con.execute(
-        "SELECT playerId FROM teamPlayers WHERE teamId = ?", (team["id"],)
-    ).fetchall()
-    player_ids = [row["playerId"] for row in player_ids]
-
-    return {
-        "id": team["id"],
-        "name": team["name"],
-        "wins": wins,
-        "losses": losses,
-        "setRatio": set_ratio,
-        "kr": kr,
-        "pef": pef,
-        "playerIds": player_ids,
-        "visible": bool(team["visible"]),
-    }
 
 
 @teams.get("/")
@@ -61,8 +38,35 @@ def get_teams():
         if not session["admin"]:
             teams = filter(lambda row: row["visible"] == 1, teams)
 
-        teams = [transform_row(row, con) for row in teams]
-        teams.sort(
+        processed_teams = []
+        for team in teams:
+            kr = calculate_team_stat_success_rate(team["id"], "attack", con)
+            pef = calculate_team_stat_success_rate(team["id"], "set", con)
+            wins, losses, set_ratio = calculate_team_wins_losses_set_ratio(
+                team["id"], con
+            )
+
+            player_ids = con.execute(
+                "SELECT playerId FROM teamPlayers WHERE teamId = ?", (team["id"],)
+            ).fetchall()
+            player_ids = [row["playerId"] for row in player_ids]
+
+            processed_teams.append(
+                {
+                    "id": team["id"],
+                    "name": team["name"],
+                    "wins": wins,
+                    "losses": losses,
+                    "setRatio": set_ratio,
+                    "kr": kr,
+                    "pef": pef,
+                    "playerIds": player_ids,
+                    "year": team["year"],
+                    "visible": bool(team["visible"]),
+                }
+            )
+
+        processed_teams.sort(
             key=lambda row: row[sort_by].lower()
             if isinstance(row[sort_by], str)
             else row[sort_by],
@@ -71,7 +75,7 @@ def get_teams():
 
         con.close()
 
-        return jsonify(teams), 200
+        return jsonify(processed_teams), 200
     except (DatabaseError, KeyError) as e:
         print(e, flush=True)
         con.close()

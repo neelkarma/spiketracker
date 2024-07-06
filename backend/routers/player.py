@@ -65,10 +65,16 @@ def get_player_match_ids(id: int, con: Connection):
 
 
 @player.get("/<id>")
-def get_player(id: int):
+def get_player(id_str: str):
     session = get_session()
     if session is None:
         return "Unauthorized", 401
+
+    id = None
+    try:
+        id = int(id_str)
+    except ValueError:
+        return "id must be an integer", 400
 
     con = get_db()
     player_data = con.execute("SELECT * FROM players WHERE id = ?", (id,)).fetchone()
@@ -108,8 +114,40 @@ def get_player(id: int):
 
 
 @player.get("/<id>/matches")
-def get_player_matches(id: int):
-    def transform_row(row: dict, con: Connection):
+def get_player_matches(id_str: str):
+    session = get_session()
+    if session is None:
+        return "Unauthorized", 401
+
+    id = None
+    try:
+        id = int(id_str)
+    except ValueError:
+        return "id must be an integer", 400
+
+    con = get_db()
+
+    sql = """
+        SELECT 
+            matches.id,
+            matches.teamId as ourTeamId, 
+            teams.name as ourTeamName,
+            matches.oppName as oppTeamName,
+            matches.location,
+            matches.time,
+            matches.points,
+            matches.visible,
+            matches.scoring
+        FROM matches
+        INNER JOIN teams ON teams.id = matches.teamId
+        INNER JOIN teamPlayers ON teamPlayers.teamId = matches.teamId
+        WHERE teamPlayers.playerId = ?;
+    """
+
+    matches = con.execute(sql, (id,)).fetchall()
+
+    processed_matches = []
+    for row in matches:
         sql = """
             SELECT rating, count(*) AS count
             FROM stats
@@ -140,35 +178,11 @@ def get_player_matches(id: int):
 
         pef = successful_passes / total_passes if total_passes > 0 else 0
 
-        return {"match": row, "kr": kr, "pef": pef, "points": successful_attacks}
+        processed_matches.append(
+            {"match": row, "kr": kr, "pef": pef, "points": successful_attacks}
+        )
 
-    session = get_session()
-    if session is None:
-        return "Unauthorized", 401
-
-    con = get_db()
-
-    sql = """
-        SELECT 
-            matches.id,
-            matches.teamId as ourTeamId, 
-            teams.name as ourTeamName,
-            matches.oppName as oppTeamName,
-            matches.location,
-            matches.time,
-            matches.points,
-            matches.visible,
-            matches.scoring
-        FROM matches
-        INNER JOIN teams ON teams.id = matches.teamId
-        INNER JOIN teamPlayers ON teamPlayers.teamId = matches.teamId
-        WHERE teamPlayers.playerId = ?;
-    """
-
-    matches = con.execute(sql, (id,)).fetchall()
-    matches = [transform_row(dict(row), con) for row in matches]
-
-    return jsonify(matches), 200
+    return jsonify(processed_matches), 200
 
 
 @player.post("/")
@@ -216,12 +230,18 @@ def create_player():
 
 
 @player.put("/<id>")
-def edit_player(id: int):
+def edit_player(id_str: str):
     session = get_session()
     if session is None:
         return "Unauthorized", 401
     if not session["admin"]:
         return "Forbidden", 403
+
+    id = None
+    try:
+        id = int(id_str)
+    except ValueError:
+        return "id must be an integer", 400
 
     body = request.get_json()
     con = get_db()
@@ -248,13 +268,19 @@ def edit_player(id: int):
 
 
 @player.delete("/<id>")
-def delete_player(id: int):
+def delete_player(id_str: str):
     session = get_session()
     if session is None:
         return "Unauthorized", 401
 
     if not session["admin"]:
         return "Forbidden", 403
+
+    id = None
+    try:
+        id = int(id_str)
+    except ValueError:
+        return "id must be an integer", 400
 
     con = get_db()
     con.execute("DELETE FROM players WHERE id = ?", (id,))

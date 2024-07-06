@@ -6,7 +6,7 @@ matches = Blueprint("matches", __name__, url_prefix="/matches")
 
 
 @matches.get("/")
-def get_teams():
+def get_matches():
     session = get_session()
     if session is None:
         return "Unauthorized", 401
