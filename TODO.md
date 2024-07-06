@@ -8,6 +8,7 @@ in order of priority:
 - link dashboard to backend
 - implement heatmaps
 - implement page-specific help
+- add help content (screenshots and all)
 - make pages print-friendly
 - make login screen responsive
 - add code comments to everything
