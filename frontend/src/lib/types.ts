@@ -12,7 +12,7 @@ export interface MatchInfo {
 
 export const SAMPLE_MATCH_INFO: MatchInfo = {
   id: 0,
-  ourTeamId: 0,
+  ourTeamId: 1,
   ourTeamName: "SBHS 1sts",
   oppTeamName: "Newington 2nds",
   location: "SBHS Gymnasium",
@@ -28,7 +28,7 @@ export const SAMPLE_MATCH_INFO: MatchInfo = {
 
 export const EMPTY_MATCH_INFO: MatchInfo = {
   id: 0,
-  ourTeamId: 0,
+  ourTeamId: 1,
   ourTeamName: "",
   oppTeamName: "",
   location: "",

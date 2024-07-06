@@ -128,7 +128,10 @@
         <button
           class="button"
           class:is-primary={hasScoringPermission}
-          on:click={() => goto(`/app/scoring/${data.id}`)}
+          on:click={(e) => {
+            e.preventDefault(); // this prevents the parent anchor tag from being triggered
+            goto(`/app/scoring/${data.id}`);
+          }}
           disabled={!hasScoringPermission}
           title={hasScoringPermission
             ? undefined

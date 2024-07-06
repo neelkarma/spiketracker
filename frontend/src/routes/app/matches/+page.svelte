@@ -1,10 +1,6 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import MatchCardBody from "$lib/components/MatchCardBody.svelte";
-  import MatchCardDetailsPart from "$lib/components/MatchCardDetailsPart.svelte";
-  import MatchCardTeamsPart from "$lib/components/MatchCardTeamsPart.svelte";
   import Modal from "$lib/components/Modal.svelte";
-  import { SAMPLE_MATCH_INFO, type MatchInfo } from "$lib/types";
+  import { type MatchInfo } from "$lib/types";
   import { debounce } from "$lib/utils";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
@@ -12,7 +8,7 @@
   import ScoredMatchCard from "./ScoredMatchCard.svelte";
 
   interface SortOptions {
-    sortBy: "time" | "team";
+    sortBy: string;
     reverse: boolean;
   }
 
@@ -25,6 +21,7 @@
   };
   let filterModalIsOpen = false;
 
+  let filteredOngoingMatches: MatchInfo[];
   let filteredUpcomingMatches: MatchInfo[];
   let filteredPastMatches: MatchInfo[];
 
@@ -35,13 +32,38 @@
       reverse: sortOptions.reverse ? "1" : "0",
     }).toString();
 
-    //const res = await fetch("/api/matches/?" + searchParams);
+    const res = await fetch("/api/matches/?" + searchParams);
 
-    filteredUpcomingMatches = [
-      { ...SAMPLE_MATCH_INFO, scoring: true },
-      SAMPLE_MATCH_INFO,
-    ];
-    filteredPastMatches = [SAMPLE_MATCH_INFO];
+    if (res.status !== 200) {
+      alert("Something went wrong, sorry.");
+      console.log(await res.text());
+      return;
+    }
+
+    const matches: MatchInfo[] = await res.json();
+    const now = Date.now();
+
+    const ongoing = [];
+    const upcoming = [];
+    const past = [];
+
+    for (const match of matches) {
+      if (match.scoring) {
+        ongoing.push(match);
+        continue;
+      }
+
+      const matchTime = new Date(match.time);
+      if (matchTime.getTime() > now) {
+        upcoming.push(match);
+      } else {
+        past.push(match);
+      }
+    }
+
+    filteredOngoingMatches = ongoing;
+    filteredUpcomingMatches = upcoming;
+    filteredPastMatches = past;
   };
 
   const handleChangeDebounced = debounce(handleChange);
@@ -72,24 +94,17 @@
     <div class="field">
       <p class="label">Sort By:</p>
       <div class="control">
-        <label class="radio">
-          <input
-            type="radio"
-            name="sortby"
-            value="name"
-            checked={sortOptions.sortBy === "time"}
-          />
-          Match Time
-        </label>
-        <label class="radio">
-          <input
-            type="radio"
-            name="sortby"
-            value="year"
-            checked={sortOptions.sortBy === "team"}
-          />
-          SBHS Team Name
-        </label>
+        {#each [["time", "Match Time"], ["ourTeamName", "SBHS Team Name"], ["oppTeamName", "Opposition Team Name"]] as [value, label]}
+          <label class="radio">
+            <input
+              type="radio"
+              name="sortby"
+              {value}
+              checked={sortOptions.sortBy === value}
+            />
+            {label}
+          </label>
+        {/each}
       </div>
     </div>
     <div class="field">
@@ -152,12 +167,16 @@
     </div>
     <div class="my-5"></div>
     <div class="title is-4">Ongoing Matches</div>
-    {#if filteredUpcomingMatches}
-      {#each filteredUpcomingMatches as match}
-        <UnscoredMatchCard data={match} />
-      {/each}
+    {#if filteredOngoingMatches}
+      {#if filteredOngoingMatches.length === 0}
+        <p>No ongoing matches found.</p>
+      {:else}
+        {#each filteredOngoingMatches as match}
+          <UnscoredMatchCard data={match} />
+        {/each}
+      {/if}
     {:else}
-      {#each { length: 6 } as _}
+      {#each { length: 2 } as _}
         <div class="skeleton-block"></div>
       {/each}
     {/if}
@@ -165,11 +184,15 @@
     <div class="my-5"></div>
     <div class="title is-4">Upcoming Matches</div>
     {#if filteredUpcomingMatches}
-      {#each filteredUpcomingMatches as match}
-        <UnscoredMatchCard data={match} />
-      {/each}
+      {#if filteredUpcomingMatches.length === 0}
+        <p>No upcoming matches found.</p>
+      {:else}
+        {#each filteredUpcomingMatches as match}
+          <UnscoredMatchCard data={match} />
+        {/each}
+      {/if}
     {:else}
-      {#each { length: 6 } as _}
+      {#each { length: 2 } as _}
         <div class="skeleton-block"></div>
       {/each}
     {/if}
@@ -177,15 +200,17 @@
     <div class="my-5"></div>
     <div class="title is-4">Past Matches</div>
     {#if filteredPastMatches}
-      {#each filteredPastMatches as match}
-        <ScoredMatchCard data={match} />
-      {/each}
+      {#if filteredPastMatches.length === 0}
+        <p>No past matches found.</p>
+      {:else}
+        {#each filteredPastMatches as match}
+          <ScoredMatchCard data={match} />
+        {/each}
+      {/if}
     {:else}
-      {#each { length: 6 } as _}
+      {#each { length: 2 } as _}
         <div class="skeleton-block"></div>
       {/each}
     {/if}
   </div>
 </section>
-
-<!-- TODO: Implement the results -->

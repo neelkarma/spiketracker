@@ -18,24 +18,23 @@
 
   let visible = data.visible;
   let scoring = data.scoring;
+  let ourTeamId = data.ourTeamId;
+  let oppTeamName = data.oppTeamName;
+
   $: if (!visible) scoring = false;
   let teamsPromise: Promise<{ name: string; id: number }[]>;
   let deleteModalOpen = false;
 
   const fetchTeams = async () => {
-    // simualte network lag
-    await wait(1000);
+    const res = await fetch("/api/teams/");
 
-    return [
-      {
-        name: "SBHS 1sts",
-        id: 0,
-      },
-      {
-        name: "SBHS 2nds",
-        id: 1,
-      },
-    ];
+    if (res.status !== 200) {
+      console.log(await res.text());
+      alert("Sorry, something went wrong. Please try again later.");
+      return;
+    }
+
+    return await res.json();
   };
 
   onMount(() => (teamsPromise = fetchTeams()));
@@ -57,7 +56,6 @@
     const teams = await teamsPromise;
 
     const formData = new FormData(e.currentTarget);
-    const pointsOverridden = !!formData.get("pointsOverridden")?.toString();
     const ourTeamId = Number.parseInt(formData.get("ourTeamId")!.toString());
 
     dispatch("submit", {
@@ -66,7 +64,7 @@
       ourTeamName: teams.find(({ id }) => ourTeamId === id)!.name,
       oppTeamName: formData.get("oppTeamName")!.toString(),
       location: formData.get("location")!.toString(),
-      time: formData.get("date")!.toString(),
+      time: formData.get("time")!.toString(),
       points: pointsArrayFromFormData(formData),
       visible: !!formData.get("visible")?.toString(),
       scoring: !!formData.get("scoring")?.toString(),
@@ -98,7 +96,11 @@
                 <option>Loading...</option>
               </select>
             {:then teams}
-              <select name="ourTeamId" id="ourTeamIdInput">
+              <select
+                name="ourTeamId"
+                id="ourTeamIdInput"
+                bind:value={ourTeamId}
+              >
                 {#each teams as { name, id }}
                   <option value={id} selected={name === data.ourTeamName}
                     >{name}</option
@@ -124,7 +126,7 @@
           class="input"
           id="oppTeamNameInput"
           name="oppTeamName"
-          value={data.oppTeamName}
+          bind:value={oppTeamName}
           required
         />
       </div>
@@ -149,7 +151,7 @@
           type="datetime-local"
           class="input"
           id="dateInput"
-          name="date"
+          name="time"
           value={dateToDateTimeLocalInputString(new Date(data.time))}
           required
         />
@@ -187,6 +189,7 @@
       <h2 class="subtitle">Points</h2>
       <div class="buttons">
         <button
+          type="button"
           class="button"
           disabled={data.points.length === 5}
           on:click={() => {
@@ -197,11 +200,12 @@
           }}>Add Set</button
         >
         <button
+          type="button"
           class="button"
-          disabled={data.points.length === 1}
+          disabled={data.points.length === 0}
           on:click={() => {
             if (!data.points) return;
-            if (data.points.length === 1) return;
+            if (data.points.length === 0) return;
             data.points.pop();
             data.points = data.points;
           }}>Remove Set</button
@@ -210,7 +214,12 @@
       <table class="table">
         <tbody>
           <tr>
-            <th>{data.ourTeamName}</th>
+            <th>
+              {#await teamsPromise then teams}
+                {teams?.find((team) => team.id === ourTeamId)?.name ??
+                  data.ourTeamName}
+              {/await}
+            </th>
             {#each data.points as { our }, i}
               <td>
                 <input
@@ -224,7 +233,9 @@
             {/each}
           </tr>
           <tr>
-            <th>{data.oppTeamName}</th>
+            <th>
+              {oppTeamName.length === 0 ? "Opponent" : oppTeamName}
+            </th>
             {#each data.points as { opp }, i}
               <td>
                 <input
