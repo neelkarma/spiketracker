@@ -11,7 +11,24 @@
     <div class="level-left">
       <div class="level-item">
         <div>
-          <p class="title mb-5">{data.name}</p>
+          <p class="title mb-5">
+            {#if $page.data.admin}
+              <span class="icon" style="font-size: 1.25rem;">
+                {#if data.visible}
+                  <i
+                    class="fa-solid fa-eye"
+                    title="All players can see this team."
+                  ></i>
+                {:else}
+                  <i
+                    class="fa-solid fa-eye-slash"
+                    title="Only you can see this team."
+                  ></i>
+                {/if}
+              </span>
+            {/if}
+            <span>{data.name}</span>
+          </p>
           <p class="subtitle">{data.playerIds.length} Members</p>
         </div>
       </div>

@@ -68,7 +68,12 @@
     <div class="level-right">
       <div class="buttons">
         {#if $page.data.admin}
-          <a class="button" href="/app/matches/edit/{data.id}">Edit</a>
+          <a class="button" href="/app/matches/edit/{data.id}">
+            <span class="icon">
+              <i class="fa-solid fa-pencil"></i>
+            </span>
+            <span>Edit</span>
+          </a>
         {/if}
         <button
           class="button"
