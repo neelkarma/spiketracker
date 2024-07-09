@@ -74,3 +74,22 @@ def get_matches():
     con.close()
 
     return jsonify(matches), 200
+
+
+@matches.get("/lockdown")
+def lockdown():
+    session = get_session()
+    if session is None:
+        return "Unauthorized", 401
+    if not session["admin"]:
+        return "Forbidden", 403
+
+    con = get_db()
+    sql = """
+        UPDATE matches
+        SET scoring = 0;
+    """
+    con.execute(sql)
+    con.commit()
+
+    return jsonify({"success": True}), 200
