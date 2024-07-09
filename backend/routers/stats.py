@@ -73,11 +73,17 @@ def query_stats_bulk():
     ), 200
 
 
-@stats.put("/<match_id>")
-def edit_match_stats(match_id: int):
+@stats.put("/<match_id_str>")
+def edit_match_stats(match_id_str: str):
     session = get_session()
     if session is None:
         return "Unauthorized", 401
+
+    match_id = None
+    try:
+        match_id = int(match_id_str)
+    except ValueError:
+        return "match_id must be an integer", 400
 
     con = get_db()
     match_data = con.execute(
