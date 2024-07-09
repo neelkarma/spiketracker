@@ -114,3 +114,72 @@ def edit_match_stats(match_id: int):
         con.close()
 
         return jsonify({"success": False}), 400
+
+
+@stats.get("/overall")
+def get_overall_stats():
+    session = get_session()
+    if session is None:
+        return "Unauthorized", 401
+    if not session["admin"]:
+        return "Forbidden", 403
+
+    con = get_db()
+
+    sql = """
+        SELECT count(*) AS count
+        FROM matches
+    """
+    num_matches = con.execute(sql).fetchone()["count"]
+
+    sql = """
+        SELECT count(*) AS count
+        FROM teams
+    """
+    num_teams = con.execute(sql).fetchone()["count"]
+
+    sql = """
+        SELECT count(*) AS count
+        FROM players
+    """
+    num_players = con.execute(sql).fetchone()["count"]
+
+    sql = """
+        SELECT rating, count(*) AS count
+        FROM stats
+        WHERE
+            action = ?
+    """
+
+    ratings = con.execute(sql, ("attack",)).fetchall()
+
+    total_attacks = 0
+    successful_attacks = 0
+
+    for atkrow in ratings:
+        total_attacks += atkrow["count"]
+        if atkrow["rating"] == 3:
+            successful_attacks += atkrow["count"]
+
+    kr = successful_attacks / total_attacks if total_attacks > 0 else 0
+
+    total_passes = 0
+    successful_passes = 0
+
+    for passrow in ratings:
+        total_passes += passrow["count"]
+        if passrow["rating"] == 3:
+            successful_passes += passrow["count"]
+
+    pef = successful_passes / total_passes if total_passes > 0 else 0
+
+    return jsonify(
+        {
+            "players": num_players,
+            "teams": num_teams,
+            "matches": num_matches,
+            "kr": kr,
+            "pef": pef,
+            "points": successful_attacks,
+        }
+    ), 200
