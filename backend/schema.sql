@@ -7,14 +7,14 @@ CREATE TABLE IF NOT EXISTS players (
   firstName TEXT NOT NULL,
   surname TEXT NOT NULL,
   gradYear INTEGER NOT NULL,
-  visible BOOLEAN NOT NULL DEFAULT 0
+  visible BOOLEAN NOT NULL DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS teams (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   year INTEGER NOT NULL,
-  visible BOOLEAN NOT NULL DEFAULT 0
+  visible BOOLEAN NOT NULL DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS matches (
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS matches (
   location TEXT NOT NULL,
   points TEXT DEFAULT "[]" NOT NULL,
   -- { our: number; opp: number; }[]
-  visible BOOLEAN NOT NULL DEFAULT 0,
+  visible BOOLEAN NOT NULL DEFAULT 1,
   scoring BOOLEAN NOT NULL DEFAULT 0
 );
 
@@ -46,19 +46,19 @@ CREATE TABLE IF NOT EXISTS stats (
   rating INTEGER CHECK (rating IN (0, 1, 2, 3)) NOT NULL,
   fromX INTEGER CHECK (
     fromX >= 0
-    AND fromX <= 22
+    AND fromX <= 12
   ) NOT NULL,
   fromY INTEGER CHECK (
     fromY >= 0
-    AND fromY <= 22
+    AND fromY <= 21
   ) NOT NULL,
   toX INTEGER CHECK (
     toX >= 0
-    AND toX <= 22
+    AND toX <= 12
   ) NOT NULL,
   toY INTEGER CHECK (
     toY >= 0
-    AND toY <= 22
+    AND toY <= 21
   ) NOT NULL
 );
 
