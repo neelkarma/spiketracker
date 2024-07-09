@@ -1,6 +1,5 @@
 <script lang="ts">
   import StatHeatmap from "$lib/components/StatHeatmap.svelte";
-  import { formatAsPercentage } from "$lib/utils";
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -42,8 +41,13 @@
       <h3 class="subtitle has-text-white">{data.match.location}</h3>
       <div class="columns is-centered is-vcentered">
         <div class="column is-5">
-          <h2 class="has-text-right title has-text-white">
-            {data.match.ourTeamName}
+          <h2 class="has-text-right title">
+            <a
+              href="/app/teams/{data.match.teamId}"
+              class="has-text-white is-underlined"
+            >
+              {data.match.ourTeamName}
+            </a>
           </h2>
         </div>
         <div class="column is-2">
