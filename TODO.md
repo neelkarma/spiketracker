@@ -2,8 +2,6 @@
 
 in order of priority:
 
-- dashboard redesign
-- link dashboard to backend
 - implement heatmaps
 - implement page-specific help
 - add help content (screenshots and all)
