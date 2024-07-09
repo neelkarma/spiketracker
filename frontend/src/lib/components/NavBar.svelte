@@ -42,12 +42,6 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <a href="/app/settings" title="Settings" class="has-text-white">
-          <i class="fa-solid fa-gear"></i>
-          <span class="is-hidden-desktop">Settings</span>
-        </a>
-      </div>
-      <div class="navbar-item">
         <a href="/app/help" title="Help" class="has-text-white">
           <i class="fa-solid fa-question-circle"></i>
           <span class="is-hidden-desktop">Help</span>
