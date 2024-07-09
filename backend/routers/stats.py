@@ -39,11 +39,11 @@ def query_stats_bulk():
     con = get_db()
     sql = """
         SELECT * FROM stats
-        INNER JOIN matches ON stats.match_id = matches.id
-        INNER JOIN players ON stats.player_id = players.id
-        WHERE (? = 1 OR stats.match_id = ?)
-            AND (? = 1 OR matches.team_id = ?)
-            AND (? = 1 OR stats.player_id = ?)
+        INNER JOIN matches ON stats.matchId = matches.id
+        INNER JOIN players ON stats.playerId = players.id
+        WHERE (? = 1 OR stats.matchId = ?)
+            AND (? = 1 OR matches.teamId = ?)
+            AND (? = 1 OR stats.playerId = ?)
         """
     data = con.execute(
         sql,
