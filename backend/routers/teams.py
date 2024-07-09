@@ -20,19 +20,28 @@ def get_teams():
     query = request.args.get("q", "")
     sort_by = request.args.get("sort", "name")
     reverse = request.args.get("reverse", "0") == "1"
+    player_id = request.args.get("player_id", "-1")
 
     con = get_db()
 
     try:
         sql = """
-            SELECT *
+            SELECT DISTINCT teams.*
             FROM teams
-            WHERE name LIKE ? OR id = ?
+            INNER JOIN teamPlayers ON teamPlayers.teamId = teams.id
+            WHERE
+                teams.name LIKE ?
+                OR teams.id = ?
+                OR teamPlayers.playerId = ?
         """
 
         teams = con.execute(
             sql,
-            ("%" + query + "%", int(query) if query.isdecimal() else -1),
+            (
+                "%" + query + "%",
+                int(query) if query.isdecimal() else -1,
+                int(player_id) if player_id.isdecimal() else -1,
+            ),
         ).fetchall()
 
         if not session["admin"]:
