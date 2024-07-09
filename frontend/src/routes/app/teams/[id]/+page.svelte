@@ -47,6 +47,7 @@
     <table class="table is-fullwidth">
       <thead>
         <tr>
+          <th>Open</th>
           <th>First Name</th>
           <th>Surname</th>
           <th>Avg PPG</th>
@@ -56,8 +57,15 @@
         </tr>
       </thead>
       <tbody>
-        {#each data.players as { firstName, surname, ppg, kr, pef, points }}
+        {#each data.players as { id, firstName, surname, ppg, kr, pef, points }}
           <tr>
+            <td>
+              <a href="/app/players/{id}" class="button">
+                <span class="icon">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </span>
+              </a>
+            </td>
             <td>{firstName}</td>
             <td>{surname}</td>
             <td>{ppg}</td>
