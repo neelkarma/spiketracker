@@ -1,6 +1,7 @@
 @use "bulma/sass" with (
   $family-primary: '"Montserrat", sans-serif', 
-  $primary: #094369
+  $primary: #094369,
+  $table-background-color: #ffffff00
 );
 
 html {
