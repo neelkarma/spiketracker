@@ -9,6 +9,10 @@ stats = Blueprint("stats", __name__, url_prefix="/stats")
 
 @stats.get("/")
 def query_stats_bulk():
+    session = get_session()
+    if session is None:
+        return "Unauthorized", 401
+
     match_id = request.args.get("match_id")
     team_id = request.args.get("team_id")
     player_id = request.args.get("player_id")
