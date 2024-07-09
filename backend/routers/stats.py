@@ -58,7 +58,19 @@ def query_stats_bulk():
     ).fetchall()
     con.close()
 
-    return jsonify([dict(row) for row in data]), 200
+    return jsonify(
+        [
+            {
+                "playerId": row["playerId"],
+                "matchId": row["matchId"],
+                "action": row["action"],
+                "rating": row["rating"],
+                "from": [row["fromX"], row["fromY"]],
+                "to": [row["toX"], row["toY"]],
+            }
+            for row in data
+        ]
+    ), 200
 
 
 @stats.put("/<match_id>")
@@ -109,7 +121,8 @@ def edit_match_stats(match_id: int):
         con.close()
 
         return jsonify({"success": True}), 200
-    except (DatabaseError, KeyError):
+    except (DatabaseError, KeyError) as e:
+        print(e, flush=True)
         con.rollback()
         con.close()
 
