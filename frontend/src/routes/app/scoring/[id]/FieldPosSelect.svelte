@@ -99,8 +99,8 @@
     <img src={svg} class="court-img" alt="Volleyball Court Birds-Eye View" />
     <div class="grid-overlay">
       {#each { length: 13 * 22 } as _, i}
-        {@const x = i % 20}
-        {@const y = Math.floor(i / 20)}
+        {@const x = i % 13}
+        {@const y = 21 - Math.floor(i / 13)}
         {@const isPos1 = from && from[0] === x && from[1] === y}
         {@const isPos2 = to && to[0] === x && to[1] === y}
 
