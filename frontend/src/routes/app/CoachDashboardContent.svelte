@@ -43,7 +43,7 @@
   </div>
 </Modal>
 
-<div class="block">
+<div class="block no-print">
   <h2 class="title">Quick Actions</h2>
   <div class="fixed-grid has-1-cols-mobile">
     <div class="grid">

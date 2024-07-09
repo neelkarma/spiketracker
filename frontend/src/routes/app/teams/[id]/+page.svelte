@@ -12,7 +12,10 @@
       <div class="level is-fullwidth">
         <div class="level-left">
           <div>
-            <a href="/app/teams" class="has-text-link-light is-underlined">
+            <a
+              href="/app/teams"
+              class="has-text-link-light is-underlined no-print"
+            >
               <span>
                 <i class="fas fa-arrow-left"></i>
                 Back to All Teams
@@ -47,7 +50,7 @@
     <table class="table is-fullwidth">
       <thead>
         <tr>
-          <th>Open</th>
+          <th class="no-print">Open</th>
           <th>First Name</th>
           <th>Surname</th>
           <th>Avg PPG</th>
@@ -59,7 +62,7 @@
       <tbody>
         {#each data.players as { id, firstName, surname, ppg, kr, pef, points }}
           <tr>
-            <td>
+            <td class="no-print">
               <a href="/app/players/{id}" class="button">
                 <span class="icon">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>

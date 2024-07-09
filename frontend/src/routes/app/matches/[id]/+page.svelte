@@ -27,7 +27,10 @@
     <div class="container">
       <div class="level-left">
         <div>
-          <a href="/app/matches" class="has-text-link-light is-underlined">
+          <a
+            href="/app/matches"
+            class="has-text-link-light is-underlined no-print"
+          >
             <span>
               <i class="fas fa-arrow-left"></i>
               Back to All Matches
@@ -91,7 +94,7 @@
     <table class="table is-fullwidth">
       <thead>
         <tr>
-          <th>Open</th>
+          <th class="no-print">Open</th>
           <th>First Name</th>
           <th>Surname</th>
           <th>Points</th>
@@ -102,7 +105,7 @@
       <tbody>
         {#each data.players as { player, kr, pef, points }}
           <tr>
-            <td>
+            <td class="no-print">
               <a href="/app/players/{player.id}" class="button">
                 <span class="icon">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>

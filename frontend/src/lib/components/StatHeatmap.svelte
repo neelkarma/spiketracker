@@ -1,14 +1,6 @@
 <script lang="ts">
   import { browser } from "$app/environment";
-  import {
-    contour,
-    density,
-    dot,
-    identity,
-    plot,
-    ruleX,
-    ruleY,
-  } from "@observablehq/plot";
+  import { density, dot, plot, ruleX, ruleY } from "@observablehq/plot";
 
   export let type: "team" | "player" | "match";
   export let id: number;
@@ -127,7 +119,7 @@
 
 {#if data}
   <div class="is-flex is-flex-direction-column is-align-items-center">
-    <div class="is-flex is-flex-wrap-wrap" style="gap: 14px;">
+    <div class="is-flex is-flex-wrap-wrap no-print" style="gap: 14px;">
       <label class="label is-flex is-align-items-center">
         <span class="mr-2">Rating:</span>
         <div class="select">

@@ -149,7 +149,7 @@
           <table class="table is-fullwidth">
             <thead>
               <tr>
-                <th>Open</th>
+                <th class="no-print">Open</th>
                 <th>First Name</th>
                 <th>Surname</th>
                 <th>Team(s)</th>
@@ -159,14 +159,14 @@
                 <th>Total Points</th>
                 {#if $page.data.admin}
                   <th>Visibility</th>
-                  <th>Edit</th>
+                  <th class="no-print">Edit</th>
                 {/if}
               </tr>
             </thead>
             <tbody>
               {#each filteredPlayers as { id, firstName, surname, teams, ppg, kr, pef, totalPoints, visible }}
                 <tr>
-                  <td>
+                  <td class="no-print">
                     <a href="/app/players/{id}" class="button">
                       <span class="icon">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -201,13 +201,13 @@
                         {/if}
                       </span>
                     </td>
-                    <td
-                      ><a href="/app/players/edit/{id}" class="button"
-                        ><span class="icon"
-                          ><i class="fa-solid fa-pencil"></i></span
-                        ></a
-                      ></td
-                    >
+                    <td class="no-print">
+                      <a href="/app/players/edit/{id}" class="button">
+                        <span class="icon">
+                          <i class="fa-solid fa-pencil"></i>
+                        </span>
+                      </a>
+                    </td>
                   {/if}
                 </tr>
               {/each}
