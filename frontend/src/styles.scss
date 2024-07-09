@@ -15,6 +15,15 @@ html {
   height: 100vh;
 }
 
-.compress {
-  max-width: fit-content;
+@media print
+{    
+  .no-print, .no-print *, .navbar, .footer
+  {
+    display: none !important;
+  }
+
+  * {
+    background-color: white !important;
+    color: black !important;
+  }
 }
