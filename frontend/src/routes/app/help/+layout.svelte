@@ -2,13 +2,12 @@
   <div class="container">
     <h1 class="title">Help</h1>
 
-    <div class="columns">
-      <div class="column is-narrow">
+    <div class="columns" style="gap: 8px;">
+      <div class="column is-narrow has-background-white rounded">
         <aside class="menu">
           <p class="menu-label">Users</p>
           <ul class="menu-list">
             <li><a href="/app/help/quick-start">Quick Help</a></li>
-
             <li><a href="/app/help/dashboard">Dashboard</a></li>
             <li><a href="/app/help/search-and-sort">Search and Sort</a></li>
             <li><a href="/app/help/matches">Matches</a></li>
@@ -24,7 +23,7 @@
           </ul>
         </aside>
       </div>
-      <div class="column p-6 has-background-light" id="content">
+      <div class="column p-6 has-background-white rounded">
         <slot />
       </div>
     </div>
@@ -32,7 +31,7 @@
 </section>
 
 <style>
-  #content {
-    border-radius: 16px;
+  .rounded {
+    border-radius: 8px;
   }
 </style>
