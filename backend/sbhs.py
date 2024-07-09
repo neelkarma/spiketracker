@@ -3,6 +3,7 @@ from typing import Any, Literal, TypedDict
 import jwt
 import requests
 from flask import current_app
+from jwt.api_jwk import PyJWK
 from requests.models import PreparedRequest
 
 
@@ -18,7 +19,6 @@ sbhs_openid_config = requests.get(
     "https://auth.sbhs.net.au/.well-known/openid-configuration"
 ).json()
 signing_algos = sbhs_openid_config["id_token_signing_alg_values_supported"]
-jwks_client = jwt.PyJWKClient(sbhs_openid_config["jwks_uri"])
 
 
 def get_authorization_url(state: str) -> str:
@@ -88,6 +88,22 @@ def refresh_token_set(refresh_token: str) -> TokenEndpointResponse:
     return res.json()
 
 
+def get_signing_key(kid: str) -> PyJWK | None:
+    keys = requests.get(sbhs_openid_config["jwks_uri"]).json()["keys"]
+
+    key_obj = None
+
+    for key in keys:
+        if key["kid"] == kid:
+            key_obj = key
+            break
+
+    if key_obj is None:
+        return None
+
+    return PyJWK(key_obj)
+
+
 def verify_id_token(id_token: str) -> dict[str, Any]:
     """
     Verifies an SBHS OIDC id token and returns the payload if valid, raises an exception otherwise.
@@ -107,14 +123,23 @@ def verify_id_token(id_token: str) -> dict[str, Any]:
     jwt.InvalidTokenError
         If the token is invalid.
     """
-    signing_key = jwks_client.get_signing_key_from_jwt(id_token)
-    # signing_key = get_signing_key()
+
+    unverified = jwt.api_jwt.decode_complete(
+        id_token,
+        options={
+            "verify_signature": False,
+        },
+    )
+    kid = unverified["header"]["kid"]
+
+    key = get_signing_key(kid)
+    if key is None:
+        raise jwt.InvalidTokenError("Failed to retrieve JWT signing key")
 
     return jwt.decode(
         id_token,
-        key=signing_key.key,
-        # key=signing_key,
         algorithms=signing_algos,
+        key=key.key,
         audience=current_app.config["CLIENT_ID"],
     )
 
