@@ -83,7 +83,11 @@ def get_player(id_str: str):
         con.close()
         return "Not Found", 404
 
-    if player_data["visible"] != 1 and not session["admin"]:
+    if (
+        player_data["visible"] != 1
+        and player_data["id"] != session.get("id")
+        and not session["admin"]
+    ):
         con.close()
         return "Forbidden", 403
 
