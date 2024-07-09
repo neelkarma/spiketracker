@@ -142,75 +142,79 @@
       </div>
     </div>
     {#if filteredPlayers}
-      <div class="table-container">
-        <table class="table is-fullwidth">
-          <thead>
-            <tr>
-              <th>Open</th>
-              <th>First Name</th>
-              <th>Surname</th>
-              <th>Team(s)</th>
-              <th>Avg PPG</th>
-              <th>Kill Rate</th>
-              <th>Passing Efficiency</th>
-              <th>Total Points</th>
-              {#if $page.data.admin}
-                <th>Visibility</th>
-                <th>Edit</th>
-              {/if}
-            </tr>
-          </thead>
-          <tbody>
-            {#each filteredPlayers as { id, firstName, surname, teams, ppg, kr, pef, totalPoints, visible }}
+      {#if filteredPlayers.length === 0}
+        <div class="block has-text-centered">No players found.</div>
+      {:else}
+        <div class="table-container">
+          <table class="table is-fullwidth">
+            <thead>
               <tr>
-                <td>
-                  <a href="/app/players/{id}" class="button">
-                    <span class="icon">
-                      <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </span>
-                  </a>
-                </td>
-                <td>{firstName}</td>
-                <td>{surname}</td>
-                <td
-                  >{#each teams as { name: teamName, id: teamId }}<a
-                      href="/app/teams/{teamId}">{teamName}</a
-                    >
-                  {/each}</td
-                >
-                <td>{ppg}</td>
-                <td>{kr.toFixed(3)}</td>
-                <td>{pef.toFixed(3)}</td>
-                <td>{totalPoints}</td>
+                <th>Open</th>
+                <th>First Name</th>
+                <th>Surname</th>
+                <th>Team(s)</th>
+                <th>Avg PPG</th>
+                <th>Kill Rate</th>
+                <th>Passing Efficiency</th>
+                <th>Total Points</th>
                 {#if $page.data.admin}
-                  <td>
-                    <span class="icon">
-                      {#if visible}
-                        <i
-                          class="fa-solid fa-eye"
-                          title="All players can see this players."
-                        ></i>
-                      {:else}
-                        <i
-                          class="fa-solid fa-eye-slash"
-                          title="Only you can see this player."
-                        ></i>
-                      {/if}
-                    </span>
-                  </td>
-                  <td
-                    ><a href="/app/players/edit/{id}" class="button"
-                      ><span class="icon"
-                        ><i class="fa-solid fa-pencil"></i></span
-                      ></a
-                    ></td
-                  >
+                  <th>Visibility</th>
+                  <th>Edit</th>
                 {/if}
               </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {#each filteredPlayers as { id, firstName, surname, teams, ppg, kr, pef, totalPoints, visible }}
+                <tr>
+                  <td>
+                    <a href="/app/players/{id}" class="button">
+                      <span class="icon">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                      </span>
+                    </a>
+                  </td>
+                  <td>{firstName}</td>
+                  <td>{surname}</td>
+                  <td
+                    >{#each teams as { name: teamName, id: teamId }}<a
+                        href="/app/teams/{teamId}">{teamName}</a
+                      >
+                    {/each}</td
+                  >
+                  <td>{ppg}</td>
+                  <td>{kr.toFixed(3)}</td>
+                  <td>{pef.toFixed(3)}</td>
+                  <td>{totalPoints}</td>
+                  {#if $page.data.admin}
+                    <td>
+                      <span class="icon">
+                        {#if visible}
+                          <i
+                            class="fa-solid fa-eye"
+                            title="All players can see this players."
+                          ></i>
+                        {:else}
+                          <i
+                            class="fa-solid fa-eye-slash"
+                            title="Only you can see this player."
+                          ></i>
+                        {/if}
+                      </span>
+                    </td>
+                    <td
+                      ><a href="/app/players/edit/{id}" class="button"
+                        ><span class="icon"
+                          ><i class="fa-solid fa-pencil"></i></span
+                        ></a
+                      ></td
+                    >
+                  {/if}
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {/if}
     {:else}
       {#each { length: 10 } as _}
         <div class="skeleton-block"></div>

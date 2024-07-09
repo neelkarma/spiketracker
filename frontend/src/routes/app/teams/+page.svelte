@@ -175,9 +175,13 @@
       </div>
     </div>
     {#if filteredTeams}
-      {#each filteredTeams as team}
-        <TeamCard data={team} />
-      {/each}
+      {#if filteredTeams.length === 0}
+        <div class="block has-text-centered">No teams found.</div>
+      {:else}
+        {#each filteredTeams as team}
+          <TeamCard data={team} />
+        {/each}
+      {/if}
     {:else}
       {#each { length: 5 } as _}
         <div class="skeleton-block"></div>
