@@ -1,6 +1,6 @@
 <script lang="ts">
   import Stat from "$lib/components/Stat.svelte";
-  import { SAMPLE_PLAYER_INFO, type PlayerInfo } from "$lib/types";
+  import StatHeatmap from "$lib/components/StatHeatmap.svelte";
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -68,5 +68,9 @@
         {/each}
       </tbody>
     </table>
+    <h1 class="title">Heatmap</h1>
+    <div class="box">
+      <StatHeatmap type="team" id={data.team.id} />
+    </div>
   </div>
 </div>

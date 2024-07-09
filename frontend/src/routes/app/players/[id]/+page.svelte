@@ -2,6 +2,7 @@
   import Stat from "$lib/components/Stat.svelte";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
+  import StatHeatmap from "$lib/components/StatHeatmap.svelte";
 
   export let data: PageData;
 </script>
@@ -107,5 +108,10 @@
         </tbody>
       </table>
     {/if}
+
+    <h1 class="title">Heatmap</h1>
+    <div class="box">
+      <StatHeatmap type="player" id={data.player.id} />
+    </div>
   </div>
 </div>

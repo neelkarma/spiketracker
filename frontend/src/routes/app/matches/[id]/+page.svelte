@@ -1,4 +1,5 @@
 <script lang="ts">
+  import StatHeatmap from "$lib/components/StatHeatmap.svelte";
   import { formatAsPercentage } from "$lib/utils";
   import type { PageData } from "./$types";
 
@@ -113,5 +114,9 @@
         {/each}
       </tbody>
     </table>
+    <h1 class="title">Heatmap</h1>
+    <div class="box">
+      <StatHeatmap type="match" id={data.match.id} />
+    </div>
   </div>
 </div>
