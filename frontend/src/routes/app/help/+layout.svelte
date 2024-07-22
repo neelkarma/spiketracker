@@ -24,7 +24,9 @@
         </aside>
       </div>
       <div class="column p-6 has-background-white rounded">
-        <slot />
+        <div class="content">
+          <slot />
+        </div>
       </div>
     </div>
   </div>
