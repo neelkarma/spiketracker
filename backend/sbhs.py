@@ -142,22 +142,3 @@ def verify_id_token(id_token: str) -> dict[str, Any]:
         key=key.key,
         audience=current_app.config["CLIENT_ID"],
     )
-
-    # we *should* be verifying the at_hash in the jwt payload, but it's not working for some reason
-    # i've included the (broken) code below for reference, in case we want to try again
-
-    # data = jwt.api_jwt.decode_complete(
-    #     id_token,
-    #     key=signing_key.key,
-    #     algorithms=signing_algos,
-    #     audience=current_app.config["CLIENT_ID"],
-    # )
-
-    # payload, header = data["payload"], data["header"]
-
-    # alg_obj = jwt.get_algorithm_by_name(header["alg"])
-    # digest = alg_obj.compute_hash_digest(access_token)
-    # at_hash = base64.urlsafe_b64encode(digest[: (len(digest) // 2)]).rstrip("=")
-    # assert at_hash == payload["at_hash"]
-
-    # return payload
