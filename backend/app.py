@@ -42,9 +42,10 @@ def after_request(response):
     return response
 
 
+# this route is just for checking that the server is processing requests correctly
+# it doesn't actually have anything to do with the application
 @app.get("/ping")
 def ping():
-    print(get_session())
     return "pong", 200
 
 
