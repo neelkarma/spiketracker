@@ -35,7 +35,7 @@ app.config.from_prefixed_env()
 
 @app.after_request
 def after_request(response):
-    # fuck cors
+    # this bypasses CORS to allow requests from the frontend to actually reach the backend
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Methods"] = "*"
     response.headers["Access-Control-Allow-Headers"] = "*"
