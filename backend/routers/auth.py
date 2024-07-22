@@ -1,7 +1,7 @@
 import os
 
 from db import get_db
-from flask import Blueprint, current_app, jsonify, make_response, redirect, request
+from flask import Blueprint, current_app, jsonify, make_response, redirect, request, app
 from sbhs import get_authorization_url, refresh_token_set, verify_id_token
 from session import (
     get_session,
@@ -43,14 +43,14 @@ def login_sbhs_callback():
     state = request.args.get("state")
     if state != request.cookies.get(STATE_COOKIE):
         # invalid state param
-        print("auth: invalid state")
+        app.logger.info("auth: invalid state")
         return redirect(current_app.config["FRONTEND_BASE"] + "/?error=state")
 
     # retrieve refresh token from url search params
     code = request.args.get("code")
     if code is None:
         # no code returned from the sbhs api
-        print("auth: no code returned from sbhs api. query args:", request.args)
+        app.logger.warning("auth: no code returned from sbhs api. query args:", request.args)
         return redirect(current_app.config["FRONTEND_BASE"] + "/?error=sbhs")
 
     # exchange code for id token
