@@ -1,13 +1,19 @@
-version: "3.8"
 services:
-  back:
+  backend:
     build: backend
     restart: unless-stopped
     ports:
-      - "5000:5000"
-  front:
+      - "8000:8000"
+  frontend:
     build: frontend
     restart: unless-stopped
     ports:
-      - "3000:5000"
-
+      - "3000:3000"
+  nginx:
+    build: nginx
+    restart: unless-stopped
+    depends_on:
+      - backend
+      - frontend
+    ports:
+      - "80:80"
