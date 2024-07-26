@@ -7,7 +7,7 @@ export const load = (async ({ fetch, params }): Promise<MatchInfo> => {
 
   if (res.status === 404) {
     error(404, "Not Found");
-  } else if (res.status !== 200) {
+  } else if (!res.ok) {
     console.log(await res.text());
     error(500, "Something went wrong.");
   }

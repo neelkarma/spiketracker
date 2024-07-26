@@ -32,7 +32,7 @@
 
     const res = await fetch("/api/players/?" + searchParams);
 
-    if (res.status !== 200) {
+    if (!res.ok) {
       alert("Something went wrong, sorry.");
       console.log(await res.text());
       return;

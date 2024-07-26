@@ -22,7 +22,7 @@ export const load = (async ({
   if (playerDataRes.status === 404) {
     error(404, "Not Found");
   }
-  if (playerDataRes.status !== 200 || matchInfoRes.status !== 200) {
+  if (!playerDataRes.ok || !matchInfoRes.ok) {
     console.log(await playerDataRes.text());
     error(500, "Something went wrong");
   }

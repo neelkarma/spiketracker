@@ -15,7 +15,7 @@ export const load = (async ({
     error(404, "Not Found");
   }
 
-  if (teamDataRes.status !== 200 || playersRes.status !== 200) {
+  if (!teamDataRes.ok || !playersRes.ok) {
     error(500, "Something went wrong");
   }
 

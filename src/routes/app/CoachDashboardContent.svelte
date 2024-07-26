@@ -9,7 +9,7 @@
   const handleConfirmLockdown = async () => {
     lockdownLoading = true;
     const res = await fetch("/api/matches/lockdown");
-    if (res.status !== 200) {
+    if (!res.ok) {
       alert("Sorry, something went wrong. Please try again in a few minutes.");
       lockdownLoading = false;
       return;

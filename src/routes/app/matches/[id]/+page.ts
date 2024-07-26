@@ -11,7 +11,7 @@ export const load = (async ({ fetch, params }) => {
   if (matchRes.status === 404) {
     error(404, "Not Found");
   }
-  if (matchRes.status !== 200 || playerRes.status !== 200) {
+  if (!matchRes.ok || !playerRes.ok) {
     console.log(await matchRes.text());
     error(500, "Something went wrong");
   }

@@ -6,7 +6,7 @@ export const load = (async ({ fetch, params }) => {
 
   if (matchRes.status === 404) {
     error(404, "Not Found");
-  } else if (matchRes.status !== 200) {
+  } else if (!matchRes.ok) {
     console.log(await matchRes.text());
     error(500, "Something went wrong");
   }
@@ -15,7 +15,7 @@ export const load = (async ({ fetch, params }) => {
 
   const playersRes = await fetch(`/api/team/${match.teamId}/players`);
 
-  if (playersRes.status !== 200) {
+  if (!playersRes.ok) {
     console.log(await playersRes.text());
     error(500, "Something went wrong");
   }

@@ -62,7 +62,7 @@
       },
     });
 
-    if (res.status !== 200) {
+    if (!res.ok) {
       console.log(await res.text());
       submitStatus = "error";
       return;

@@ -28,7 +28,7 @@
   const fetchTeams = async () => {
     const res = await fetch("/api/teams/");
 
-    if (res.status !== 200) {
+    if (!res.ok) {
       console.log(await res.text());
       alert("Sorry, something went wrong. Please try again later.");
       return;
