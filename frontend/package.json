@@ -7,10 +7,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "initdb": "node scripts/initdb.js"
   },
   "devDependencies": {
-    "@sveltejs/adapter-node": "^5.2.0",
     "@sveltejs/kit": "^2.5.18",
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "sass": "^1.77.6",
@@ -24,9 +24,13 @@
   "dependencies": {
     "@fontsource/montserrat": "^5.0.18",
     "@fortawesome/fontawesome-free": "^6.5.2",
+    "@libsql/client": "^0.7.0",
     "@observablehq/plot": "^0.6.15",
+    "@sveltejs/adapter-vercel": "^5.4.1",
     "bulma": "^1.0.1",
     "dotenv": "^16.4.5",
-    "mdsvex": "^0.11.2"
+    "jose": "^5.6.3",
+    "mdsvex": "^0.11.2",
+    "nanoid": "^5.0.7"
   }
 }

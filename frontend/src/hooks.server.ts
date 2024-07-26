@@ -1,18 +1,37 @@
-import { redirect, type Handle } from "@sveltejs/kit";
+import { verifySessionToken } from "$lib/server/session";
+import { error, redirect, type Handle } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
-  const { fetch } = event;
+  const { fetch, cookies, locals, url } = event;
 
-  if (event.url.pathname.startsWith("/api")) return resolve(event);
+  // verify auth token in cookie
+  locals.auth = null;
+  const authCookie = cookies.get("Authorization");
+  if (authCookie) {
+    const splitAuthCookie = authCookie.split(" ");
+    if (splitAuthCookie.length === 2) {
+      try {
+        const token = await verifySessionToken(splitAuthCookie[1]);
+        locals.auth = token;
+      } catch (e) {
+        // ignore
+      }
+    }
+  }
 
-  const data = await fetch("/api/auth/status").then((res) => res.json());
+  // global api auth check
+  if (url.pathname.startsWith("/api")) {
+    if (url.pathname.startsWith("/api/auth") || locals.auth)
+      return resolve(event);
+    error(401, "Unauthorized");
+  }
 
-  if (data.authorized && !event.url.pathname.startsWith("/app"))
+  // auth check for all other routes
+  if (locals.auth && !event.url.pathname.startsWith("/app"))
     redirect(302, "/app");
-  if (!data.authorized && event.url.pathname.startsWith("/app"))
-    redirect(302, "/");
+  if (!locals.auth && event.url.pathname.startsWith("/app")) redirect(302, "/");
   if (
-    !data.admin &&
+    !locals.auth?.admin &&
     event.url.pathname.split("/").some((seg) => ["new", "edit"].includes(seg))
   )
     redirect(302, "/app");

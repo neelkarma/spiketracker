@@ -12,11 +12,10 @@
         "Content-Type": "application/json",
       },
     });
-    const data = await res.json();
-    if (data.success) {
+    if (res.ok) {
       window.location.href = "/";
     } else {
-      error = data.reason;
+      error = await res.text();
     }
   };
 </script>
