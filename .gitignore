@@ -68,3 +68,6 @@ venv.bak/
 
 # databases
 *.sqlite3
+
+# svelte
+build
