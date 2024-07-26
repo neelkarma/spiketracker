@@ -66,7 +66,6 @@
         isStart: false,
       },
     ]);
-    console.log(data);
   };
 
   $: if (browser) {
