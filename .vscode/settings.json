@@ -7,10 +7,6 @@
     "source.organizeImports": "always",
     "source.sortImports": "always"
   },
-  "[python]": {
-    "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.tabSize": 4
-  },
   "[svelte]": {
     "editor.defaultFormatter": "svelte.svelte-vscode"
   },
