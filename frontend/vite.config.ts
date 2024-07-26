@@ -9,7 +9,7 @@ const config: UserConfig = {
       // Sooner or later, we're going to have to figure out how to do this in production.
       // NGINX seems too overkill, but it's the only thing I think I can get working.
       "/api": {
-        target: "http://localhost:5000",
+        target: "http://localhost:5000/api",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },

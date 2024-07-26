@@ -3,7 +3,7 @@ import sys
 import logging
 
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, Blueprint
 from routers.auth import auth
 from routers.match import match
 from routers.matches import matches
@@ -16,15 +16,17 @@ from session import get_session
 
 app = Flask(__name__)
 
-app.register_blueprint(auth)
-app.register_blueprint(team)
-app.register_blueprint(player)
-app.register_blueprint(match)
-app.register_blueprint(stats)
-app.register_blueprint(teams)
-app.register_blueprint(players)
-app.register_blueprint(matches)
+api = Blueprint("api", __name__, url_prefix="/api")
+api.register_blueprint(auth)
+api.register_blueprint(team)
+api.register_blueprint(player)
+api.register_blueprint(match)
+api.register_blueprint(stats)
+api.register_blueprint(teams)
+api.register_blueprint(players)
+api.register_blueprint(matches)
 
+app.register_blueprint(api)
 if os.environ.get("FLASK_ENV") == "production":
     load_dotenv(".env.prod")
 else:

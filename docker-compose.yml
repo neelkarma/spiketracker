@@ -9,11 +9,3 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
-  nginx:
-    build: nginx
-    restart: unless-stopped
-    depends_on:
-      - backend
-      - frontend
-    ports:
-      - "80:80"
