@@ -10,18 +10,22 @@ match = Blueprint("match", __name__, url_prefix="/match")
 
 @match.get("/<id_str>")
 def get_match(id_str: str):
+    """Gets details on a specific match."""
+
+    # auth check
     session = get_session()
     if session is None:
         return "Unauthorized", 401
 
+    # parse id into an int
     id = None
     try:
         id = int(id_str)
     except ValueError:
         return "id must be an integer", 400
 
+    # query the database
     con = get_db()
-
     sql = """
         SELECT
             matches.id,
@@ -61,16 +65,21 @@ def get_match(id_str: str):
 
 @match.get("/<id_str>/players")
 def get_match_players(id_str: str):
+    """Gets player statistics for a match."""
+
+    # auth check
     session = get_session()
     if session is None:
         return "Unauthorized", 401
 
+    # parse id to an int
     id = None
     try:
         id = int(id_str)
     except ValueError:
         return "id must be an integer", 400
 
+    # query the database
     con = get_db()
     sql = """
         SELECT * FROM players

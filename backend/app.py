@@ -27,25 +27,29 @@ api.register_blueprint(players)
 api.register_blueprint(matches)
 
 app.register_blueprint(api)
+
+# load environment variables
 if os.environ.get("FLASK_ENV") == "production":
     load_dotenv(".env.prod")
 else:
     load_dotenv(".env.dev")
-
 app.config.from_prefixed_env()
 
 
 @app.after_request
 def after_request(response):
-    # this bypasses CORS to allow requests from the frontend to actually reach the backend
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "*"
+    # this bypasses CORS to allow requests from the frontend to actually reach the backend while in dev
+    # since in dev mode the backend and frontend are served from different ports
+    if os.environ.get("FLASK_ENV") != "production":
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
     return response
 
 
 # this route is just for checking that the server is processing requests correctly
 # it doesn't actually have anything to do with the application
+# also every web service should have a ping route :)
 @app.get("/ping")
 def ping():
     return "pong", 200

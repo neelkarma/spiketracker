@@ -89,6 +89,19 @@ def refresh_token_set(refresh_token: str) -> TokenEndpointResponse:
 
 
 def get_signing_key(kid: str) -> PyJWK | None:
+    """
+    Gets the SBHS JWT signing key.
+
+    Params
+    ------
+    kid: str
+        The kid (key id) of the signing key.
+
+    Returns
+    -------
+    PyJWK | None
+        The signing key if found.
+    """
     keys = requests.get(sbhs_openid_config["jwks_uri"]).json()["keys"]
 
     key_obj = None

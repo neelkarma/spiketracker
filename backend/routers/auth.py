@@ -28,10 +28,13 @@ def logout():
 def login_sbhs():
     """Login endpoint for players. Redirects to SBHS OAuth."""
 
+    # we randomly generate a state variable to protect against XSRF (cross-site request forgery) attacks
+    # it's sent to both the SBHS api and the browser's cookies for later comparison
     state = os.urandom(16).hex()
-    # print(get_authorization_url(state))
+
     res = make_response(redirect(get_authorization_url(state)))
     res.set_cookie(STATE_COOKIE, state, max_age=60 * 60, httponly=True)
+
     return res
 
 
@@ -43,14 +46,13 @@ def login_sbhs_callback():
     state = request.args.get("state")
     if state != request.cookies.get(STATE_COOKIE):
         # invalid state param
-        app.logger.info("auth: invalid state")
         return redirect(current_app.config["FRONTEND_BASE"] + "/?error=state")
 
     # retrieve refresh token from url search params
     code = request.args.get("code")
     if code is None:
         # no code returned from the sbhs api
-        app.logger.warning("auth: no code returned from sbhs api. query args:", request.args)
+        print("auth: no code returned from sbhs api. query args:", request.args, flush=True)
         return redirect(current_app.config["FRONTEND_BASE"] + "/?error=sbhs")
 
     # exchange code for id token
@@ -65,6 +67,7 @@ def login_sbhs_callback():
         "SELECT id FROM players WHERE id = ?", (student_id,)
     ).fetchone()
     con.close()
+
     if student is None:
         # student not registered
         print("auth: student not registered", flush=True)
