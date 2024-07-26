@@ -2,9 +2,6 @@
   "recommendations": [
     "aaron-bond.better-comments",
     "esbenp.prettier-vscode",
-    "ms-python.python",
-    "ms-python.vscode-pylance",
-    "charliermarsh.ruff",
     "svelte.svelte-vscode"
   ]
 }

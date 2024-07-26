@@ -1,16 +1,37 @@
 {
   "name": "spiketracker",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "private": true,
   "scripts": {
-    "start": "concurrently -n frontend,backend, \"cd frontend && pnpm dev\" \"cd backend && python app.py --debug\""
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "initdb": "node scripts/initdb.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@sveltejs/kit": "^2.5.18",
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "sass": "^1.77.6",
+    "svelte": "^4.2.18",
+    "svelte-check": "^3.8.4",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.3",
+    "vite": "^5.3.2"
   },
-  "packageManager": "pnpm@9.1.4+sha512.9df9cf27c91715646c7d675d1c9c8e41f6fce88246f1318c1aa6a1ed1aeb3c4f032fcdf4ba63cc69c4fe6d634279176b5358727d8f2cc1e65b65f43ce2f8bfb0"
+  "type": "module",
+  "dependencies": {
+    "@fontsource/montserrat": "^5.0.18",
+    "@fortawesome/fontawesome-free": "^6.5.2",
+    "@libsql/client": "^0.7.0",
+    "@observablehq/plot": "^0.6.15",
+    "@sveltejs/adapter-vercel": "^5.4.1",
+    "bulma": "^1.0.1",
+    "dotenv": "^16.4.5",
+    "jose": "^5.6.3",
+    "mdsvex": "^0.11.2",
+    "nanoid": "^5.0.7"
+  },
+  "packageManager": "pnpm@9.5.0+sha512.140036830124618d624a2187b50d04289d5a087f326c9edfc0ccd733d76c4f52c3a313d4fc148794a2a9d81553016004e6742e8cf850670268a7387fc220c903"
 }
