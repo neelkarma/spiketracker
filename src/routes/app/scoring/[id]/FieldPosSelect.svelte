@@ -66,7 +66,7 @@
         <p class="label">Action Type</p>
         <div class="control">
           {#each Object.entries(ACTION_TYPE_MAPPINGS) as [code, name]}
-            <label class="radio" title={name}>
+            <label class="radio pr-2" title={name}>
               <input
                 type="radio"
                 name="actionType"
