@@ -15,7 +15,8 @@
     if (res.ok) {
       window.location.href = "/";
     } else {
-      error = await res.text();
+      const data = await res.json();
+      error = data.message;
     }
   };
 </script>
