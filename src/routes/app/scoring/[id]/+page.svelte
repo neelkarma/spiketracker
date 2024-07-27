@@ -3,7 +3,7 @@
   import Modal from "$lib/components/Modal.svelte";
   import QuickPicker from "$lib/components/QuickPicker.svelte";
   import { ACTION_TYPE_MAPPINGS } from "./mappings.js";
-  import { goto } from "$app/navigation";
+  import { beforeNavigate, goto } from "$app/navigation";
 
   export let data;
 
@@ -69,6 +69,19 @@
 
     goto("/app/matches?success=1");
   };
+
+  beforeNavigate(({ type, cancel }) => {
+    if (scoringData.length === 0 || submitStatus === "loading") return;
+    if (type === "leave") {
+      cancel();
+    } else if (
+      !confirm(
+        "Warning: Your scoring data is unsaved, and will be lost if you leave now. Press 'Ok' if you still want to leave.",
+      )
+    ) {
+      cancel();
+    }
+  });
 </script>
 
 <Modal bind:isOpen={confirmDialogOpen}>
