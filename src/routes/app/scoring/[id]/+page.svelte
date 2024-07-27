@@ -2,7 +2,6 @@
   import FieldPosSelect from "./FieldPosSelect.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import QuickPicker from "$lib/components/QuickPicker.svelte";
-  import ScoringNavBar from "./ScoringNavBar.svelte";
   import { ACTION_TYPE_MAPPINGS } from "./mappings.js";
   import { goto } from "$app/navigation";
 
@@ -100,13 +99,29 @@
   </div>
 </Modal>
 
-<ScoringNavBar
-  title="Scoring {data.match.ourTeamName} vs {data.match.oppTeamName} @ {data
-    .match.location}"
-  on:submit={() => (confirmDialogOpen = true)}
-/>
 <section class="section">
   <div class="container">
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <h1 class="title is-5">
+            Scoring {data.match.ourTeamName} vs {data.match.oppTeamName} @ {data
+              .match.location}
+          </h1>
+        </div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">
+          <div class="buttons">
+            <a href="/app" class="button">Exit</a>
+            <button
+              on:click={() => (confirmDialogOpen = true)}
+              class="button is-primary">Submit</button
+            >
+          </div>
+        </div>
+      </div>
+    </div>
     <QuickPicker
       title="Add action for player..."
       items={playerItems}
