@@ -1,5 +1,5 @@
 <script lang="ts">
-  import FieldPosSelect from "./FieldPosSelect.svelte";
+  import FieldPosSelectModal from "./FieldPosSelectModal.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import QuickPicker from "$lib/components/QuickPicker.svelte";
   import { ACTION_TYPE_MAPPINGS } from "./mappings.js";
@@ -106,11 +106,10 @@
   </div>
 </Modal>
 
-<Modal isOpen={playerScoring !== null}>
-  <div class="box">
-    <FieldPosSelect on:submit={(e) => handleScoringSubmit(e.detail)} />
-  </div>
-</Modal>
+<FieldPosSelectModal
+  isOpen={playerScoring !== null}
+  on:submit={(e) => handleScoringSubmit(e.detail)}
+/>
 
 <section class="section">
   <div class="container">
