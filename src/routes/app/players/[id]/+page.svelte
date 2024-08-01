@@ -59,54 +59,55 @@
   <div class="container">
     <h1 class="title">Match History</h1>
     {#if data.matches.length === 0}
-      <!-- TODO: Make this look nicer -->
       <p>No matches found.</p>
     {:else}
-      <table class="table is-fullwidth">
-        <thead>
-          <tr>
-            <th>Open</th>
-            <th>Date</th>
-            <th>Opponent</th>
-            <th>Team</th>
-            <th>Points Scored</th>
-            <th>Kill Rate</th>
-            <th>Passing Efficiency</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each data.matches as { match, points, kr, pef }}
+      <div class="table-container">
+        <table class="table is-fullwidth">
+          <thead>
             <tr>
-              <td>
-                <a class="button" href="/app/matches/{match.id}">
-                  <span class="icon">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                  </span>
-                </a>
-              </td>
-              <td
-                >{new Date(match.time).toLocaleDateString("en-AU", {
-                  hour: "numeric",
-                  hour12: true,
-                  minute: "2-digit",
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                  weekday: "short",
-                })}</td
-              >
-              <td>{match.oppTeamName}</td>
-              <td
-                ><a href="/app/teams/{match.ourTeamId}">{match.ourTeamName}</a
-                ></td
-              >
-              <td>{points}</td>
-              <td>{kr.toFixed(3)}</td>
-              <td>{pef.toFixed(3)}</td>
+              <th>Open</th>
+              <th>Date</th>
+              <th>Opponent</th>
+              <th>Team</th>
+              <th>Points Scored</th>
+              <th>Kill Rate</th>
+              <th>Passing Efficiency</th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {#each data.matches as { match, points, kr, pef }}
+              <tr>
+                <td>
+                  <a class="button" href="/app/matches/{match.id}">
+                    <span class="icon">
+                      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </span>
+                  </a>
+                </td>
+                <td
+                  >{new Date(match.time).toLocaleDateString("en-AU", {
+                    hour: "numeric",
+                    hour12: true,
+                    minute: "2-digit",
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    weekday: "short",
+                  })}</td
+                >
+                <td>{match.oppTeamName}</td>
+                <td
+                  ><a href="/app/teams/{match.ourTeamId}">{match.ourTeamName}</a
+                  ></td
+                >
+                <td>{points}</td>
+                <td>{kr.toFixed(3)}</td>
+                <td>{pef.toFixed(3)}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
     {/if}
 
     <h1 class="title">Heatmap</h1>
