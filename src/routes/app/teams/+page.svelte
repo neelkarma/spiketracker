@@ -60,6 +60,7 @@
   value={sortOptions}
   on:submit={(e) => {
     sortOptions = e.detail;
+    handleChange(query, sortOptions);
     filterModalIsOpen = false;
   }}
 />
