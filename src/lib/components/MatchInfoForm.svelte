@@ -211,45 +211,47 @@
           }}>Remove Set</button
         >
       </div>
-      <table class="table">
-        <tbody>
-          <tr>
-            <th>
-              {#await teamsPromise then teams}
-                {teams?.find((team) => team.id === ourTeamId)?.name ??
-                  data.ourTeamName}
-              {/await}
-            </th>
-            {#each data.points as { our }, i}
-              <td>
-                <input
-                  type="number"
-                  min={0}
-                  class="input"
-                  bind:value={our}
-                  name="our-{i}"
-                />
-              </td>
-            {/each}
-          </tr>
-          <tr>
-            <th>
-              {oppTeamName.length === 0 ? "Opponent" : oppTeamName}
-            </th>
-            {#each data.points as { opp }, i}
-              <td>
-                <input
-                  type="number"
-                  min={0}
-                  class="input"
-                  value={opp}
-                  name="opp-{i}"
-                />
-              </td>
-            {/each}
-          </tr>
-        </tbody>
-      </table>
+      {#if data.points.length}
+        <table class="table">
+          <tbody>
+            <tr>
+              <th>
+                {#await teamsPromise then teams}
+                  {teams?.find((team) => team.id === ourTeamId)?.name ??
+                    data.ourTeamName}
+                {/await}
+              </th>
+              {#each data.points as { our }, i}
+                <td>
+                  <input
+                    type="number"
+                    min={0}
+                    class="input"
+                    bind:value={our}
+                    name="our-{i}"
+                  />
+                </td>
+              {/each}
+            </tr>
+            <tr>
+              <th>
+                {oppTeamName.length === 0 ? "Opponent" : oppTeamName}
+              </th>
+              {#each data.points as { opp }, i}
+                <td>
+                  <input
+                    type="number"
+                    min={0}
+                    class="input"
+                    value={opp}
+                    name="opp-{i}"
+                  />
+                </td>
+              {/each}
+            </tr>
+          </tbody>
+        </table>
+      {/if}
     </div>
   {/if}
 
