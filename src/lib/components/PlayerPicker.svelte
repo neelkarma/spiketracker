@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SAMPLE_PLAYER_INFO, type PlayerInfo } from "$lib/types";
+  import type { PlayerInfo } from "$lib/types";
   import { debounce } from "$lib/utils";
 
   export let value: PlayerInfo[] = [];
@@ -35,7 +35,7 @@
   const debouncedMakeRequest = debounce(fetchFilteredPlayers);
 </script>
 
-<div class="panel">
+<div class="panel has-background-white">
   <div class="panel-block">
     {#if value.length}
       <div class="tags are-medium">
