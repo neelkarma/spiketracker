@@ -6,6 +6,7 @@
   import type { PageData } from "./$types";
   import UnscoredMatchCard from "./UnscoredMatchCard.svelte";
   import ScoredMatchCard from "./ScoredMatchCard.svelte";
+  import SortOptionsModal from "$lib/components/SortOptionsModal.svelte";
 
   interface SortOptions {
     sortBy: string;
@@ -73,62 +74,20 @@
   });
 </script>
 
-<Modal bind:isOpen={filterModalIsOpen}>
-  <form
-    class="box"
-    on:submit|preventDefault={(e) => {
-      const formData = new FormData(e.currentTarget);
-
-      sortOptions = {
-        //@ts-ignore
-        sortBy: formData.get("sortby"),
-        reverse: formData.has("reverse"),
-      };
-
-      handleChange(query, sortOptions);
-
-      filterModalIsOpen = false;
-    }}
-  >
-    <div class="title">Sorting Options</div>
-    <div class="field">
-      <p class="label">Sort By:</p>
-      <div class="control">
-        {#each [["time", "Match Time"], ["ourTeamName", "SBHS Team Name"], ["oppTeamName", "Opposition Team Name"]] as [value, label]}
-          <label class="radio">
-            <input
-              type="radio"
-              name="sortby"
-              {value}
-              checked={sortOptions.sortBy === value}
-            />
-            {label}
-          </label>
-        {/each}
-      </div>
-    </div>
-    <div class="field">
-      <div class="control">
-        <label class="checkbox">
-          <input type="checkbox" name="reverse" checked={sortOptions.reverse} />
-          Reverse Order
-        </label>
-      </div>
-    </div>
-    <div class="field">
-      <div class="control is-grouped">
-        <button class="button is-primary">Apply</button>
-        <button
-          class="button"
-          type="button"
-          on:click={() => (filterModalIsOpen = false)}
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  </form>
-</Modal>
+<SortOptionsModal
+  bind:isOpen={filterModalIsOpen}
+  options={[
+    ["time", "Match Time"],
+    ["ourTeamName", "SBHS Team Name"],
+    ["oppTeamName", "Opposition Team Name"],
+  ]}
+  value={sortOptions}
+  on:submit={(e) => {
+    sortOptions = e.detail;
+    handleChange(query, sortOptions);
+    filterModalIsOpen = false;
+  }}
+/>
 
 <section class="section">
   <div class="container">

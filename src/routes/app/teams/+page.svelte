@@ -6,6 +6,7 @@
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
   import ActionFeedbackNotification from "$lib/components/ActionFeedbackNotification.svelte";
+  import SortOptionsModal from "$lib/components/SortOptionsModal.svelte";
 
   interface SortOptions {
     sortBy: string;
@@ -47,96 +48,21 @@
   });
 </script>
 
-<Modal bind:isOpen={filterModalIsOpen}>
-  <form
-    class="box"
-    on:submit|preventDefault={(e) => {
-      const formData = new FormData(e.currentTarget);
-
-      sortOptions = {
-        //@ts-ignore
-        sortBy: formData.get("sortby"),
-        reverse: formData.has("reverse"),
-      };
-
-      handleChange(query, sortOptions);
-
-      filterModalIsOpen = false;
-    }}
-  >
-    <div class="title">Sorting Options</div>
-    <div class="field">
-      <p class="label">Sort By:</p>
-      <div class="control">
-        <label class="radio">
-          <input
-            type="radio"
-            name="sortby"
-            value="name"
-            checked={sortOptions.sortBy === "name"}
-          />
-          Team Name (A-Z)
-        </label>
-        <label class="radio">
-          <input
-            type="radio"
-            name="sortby"
-            value="year"
-            checked={sortOptions.sortBy === "year"}
-          />
-          Year
-        </label>
-        <label class="radio">
-          <input
-            type="radio"
-            name="sortby"
-            value="setRatio"
-            checked={sortOptions.sortBy === "setRatio"}
-          />
-          Set Ratio
-        </label>
-        <label class="radio">
-          <input
-            type="radio"
-            name="sortby"
-            value="kr"
-            checked={sortOptions.sortBy === "kr"}
-          />
-          Kill Rate
-        </label>
-        <label class="radio">
-          <input
-            type="radio"
-            name="sortby"
-            value="pef"
-            checked={sortOptions.sortBy === "pef"}
-          />
-          Passing Efficiency
-        </label>
-      </div>
-    </div>
-    <div class="field">
-      <div class="control">
-        <label class="checkbox">
-          <input type="checkbox" name="reverse" checked={sortOptions.reverse} />
-          Reverse Order
-        </label>
-      </div>
-    </div>
-    <div class="field">
-      <div class="control is-grouped">
-        <button class="button is-primary">Apply</button>
-        <button
-          class="button"
-          type="button"
-          on:click={() => (filterModalIsOpen = false)}
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  </form>
-</Modal>
+<SortOptionsModal
+  bind:isOpen={filterModalIsOpen}
+  options={[
+    ["name", "Team Name (A-Z)"],
+    ["year", "Year"],
+    ["setRatio", "Set Ratio"],
+    ["kr", "Kill Rate"],
+    ["pef", "Passing Efficiency"],
+  ]}
+  value={sortOptions}
+  on:submit={(e) => {
+    sortOptions = e.detail;
+    filterModalIsOpen = false;
+  }}
+/>
 
 <section class="section">
   <div class="container">
