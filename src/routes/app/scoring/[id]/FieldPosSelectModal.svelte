@@ -103,30 +103,38 @@
       </div>
     {/if}
 
-    <div class="grid-container">
-      <img src={svg} class="court-img" alt="Volleyball Court Birds-Eye View" />
-      <div class="grid-overlay">
-        {#each { length: 13 * 22 } as _, i}
-          {@const x = i % 13}
-          {@const y = 21 - Math.floor(i / 13)}
-          {@const isPos1 = from && from[0] === x && from[1] === y}
-          {@const isPos2 = to && to[0] === x && to[1] === y}
+    <div class="has-text-centered">
+      <p class="has-text-weight-bold">Opposition Side</p>
+      <div class="grid-container">
+        <img
+          src={svg}
+          class="court-img"
+          alt="Volleyball Court Birds-Eye View"
+        />
+        <div class="grid-overlay">
+          {#each { length: 13 * 22 } as _, i}
+            {@const x = i % 13}
+            {@const y = 21 - Math.floor(i / 13)}
+            {@const isPos1 = from && from[0] === x && from[1] === y}
+            {@const isPos2 = to && to[0] === x && to[1] === y}
 
-          <button
-            class="grid-cell"
-            class:pos1={isPos1}
-            class:pos2={isPos2}
-            on:click={() => handleGridClick(x, y)}
-            disabled={from !== null && to !== null}
-          >
-            {#if isPos1}
-              1
-            {:else if isPos2}
-              2
-            {/if}
-          </button>
-        {/each}
+            <button
+              class="grid-cell"
+              class:pos1={isPos1}
+              class:pos2={isPos2}
+              on:click={() => handleGridClick(x, y)}
+              disabled={from !== null && to !== null}
+            >
+              {#if isPos1}
+                1
+              {:else if isPos2}
+                2
+              {/if}
+            </button>
+          {/each}
+        </div>
       </div>
+      <p class="has-text-weight-bold">Our Side</p>
     </div>
   </div>
 

@@ -26,7 +26,7 @@
   };
 </script>
 
-<div class="panel">
+<div class="panel has-background-white">
   <p class="panel-heading">{title}</p>
   <div class="panel-block">
     <div class="control has-icons-left">

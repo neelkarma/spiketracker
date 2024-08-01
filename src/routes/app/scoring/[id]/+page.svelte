@@ -141,8 +141,8 @@
     />
     {#if scoringData.length === 0}
       <p class="has-text-centered">
-        No scoring data to display. Use the above search box to add scoring data
-        for a player first.
+        No scoring data to display. Please add scoring data for a player by
+        selecting their name above first.
       </p>
     {:else}
       <table class="table is-fullwidth">
