@@ -47,7 +47,7 @@
   <div class="tags are-medium mb-2">
     {#if value.length}
       {#each value as { name, id }}
-        <div class="tag">
+        <div class="tag has-background-grey-lighter">
           {name}
           <button
             class="delete is-small"
