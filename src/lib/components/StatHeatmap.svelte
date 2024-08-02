@@ -98,8 +98,14 @@
         width,
         aspectRatio: 1,
         marks: [
-          ruleX([0]),
-          ruleY([0]),
+          // these inscribe the court markings onto the graph
+          ruleX([0, 13]),
+          ruleY([0, 8.4, 13.6, 22]),
+          ruleX([2, 11], { y1: 2, y2: 20 }),
+          ruleX([2, 11], { y1: 2, y2: 20 }),
+          ruleY([2, 11, 20], { x1: 2, x2: 11 }),
+
+          // these plot the actual data
           density(filtered, {
             x: "x",
             y: "y",
