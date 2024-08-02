@@ -118,11 +118,16 @@
 
 {#if data}
   <div class="is-flex is-flex-direction-column is-align-items-center">
-    <div class="is-flex is-flex-wrap-wrap no-print" style="gap: 14px;">
-      <label class="label is-flex is-align-items-center">
-        <span class="mr-2">Rating:</span>
+    <div
+      class="is-flex is-flex-wrap-wrap no-print is-align-items-center"
+      style="gap: 14px;"
+    >
+      <span class="is-flex is-align-items-center">
+        <label for="ratingSelect" class="has-text-weight-bold mr-2"
+          >Rating:</label
+        >
         <div class="select">
-          <select bind:value={rating}>
+          <select id="ratingSelect" bind:value={rating}>
             <option value={-1}>All</option>
             <option value={0}>0</option>
             <option value={1}>1</option>
@@ -130,11 +135,13 @@
             <option value={3}>3</option>
           </select>
         </div>
-      </label>
-      <label class="label is-flex is-align-items-center">
-        <span class="mr-2">Action Type:</span>
+      </span>
+      <span class="is-flex is-align-items-center">
+        <label for="actionSelect" class="has-text-weight-bold mr-2"
+          >Action Type:</label
+        >
         <div class="select">
-          <select bind:value={action}>
+          <select id="actionSelect" bind:value={action}>
             <option value="set">Set</option>
             <option value="atk">Attack</option>
             <option value="blk">Block</option>
@@ -143,16 +150,18 @@
             <option value="frc">Freeball Receive</option>
           </select>
         </div>
-      </label>
-      <label class="label is-flex is-align-items-center">
-        <span class="mr-2">Show where the shot:</span>
-        <div class="select">
-          <select bind:value={showFrom}>
-            <option value={true}>Started</option>
-            <option value={false}>Ended</option>
-          </select>
-        </div>
-      </label>
+      </span>
+      <span class="is-flex is-align-items-center">
+        <span class="has-text-weight-bold mr-2">Show where the shot:</span>
+        <label class="radio mr-2">
+          <input type="radio" value={true} bind:group={showFrom} />
+          Contacted
+        </label>
+        <label class="radio">
+          <input type="radio" value={false} bind:group={showFrom} />
+          Landed
+        </label>
+      </span>
     </div>
     <div bind:this={div} role="img"></div>
   </div>
