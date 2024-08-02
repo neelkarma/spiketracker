@@ -38,7 +38,7 @@ export async function processTeamRow(row: any) {
 
     if (matchSetWins > matchSetLosses) {
       wins++;
-    } else {
+    } else if (matchSetWins < matchSetLosses) {
       losses++;
     }
 
