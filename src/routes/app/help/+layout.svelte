@@ -5,9 +5,9 @@
     <div class="columns" style="gap: 8px;">
       <div class="column is-narrow has-background-white rounded">
         <aside class="menu">
-          <p class="menu-label">Users</p>
+          <p class="menu-label">Usage</p>
           <ul class="menu-list">
-            <li><a href="/app/help/quick-start">Quick Help</a></li>
+            <li><a href="/app/help/overview">Overview</a></li>
             <li><a href="/app/help/dashboard">Dashboard</a></li>
             <li><a href="/app/help/search-and-sort">Search and Sort</a></li>
             <li><a href="/app/help/matches">Matches</a></li>
@@ -19,7 +19,6 @@
             <li><a href="/app/help/scoring">Scoring</a></li>
             <li><a href="/app/help/reviewing-matches">Reviewing Matches</a></li>
             <li><a href="/app/help/team-settings">Team Settings</a></li>
-            <li><a href="/app/help/andrew-wang">Andrew Wang</a></li>
           </ul>
         </aside>
       </div>

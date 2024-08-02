@@ -9,3 +9,5 @@ You can search through teams and filter through them by name or year created.
 Clicking on the team allows you to view more statistics including a player list with individual stats.
 
 ![Team page image](/help/team-page-image.jpg)
+
+_🚧 Sorry, this help article is currently under construction. Please check again later! 🚧_

@@ -8,3 +8,5 @@ You can click on the open icon on the left of each row to view more detailed sta
 The page for each individual player includes radar charts, heat maps, and a match history.
 
 ![Player page image](/help/player-page-image.jpg)
+
+_🚧 Sorry, this help article is currently under construction. Please check again later! 🚧_
