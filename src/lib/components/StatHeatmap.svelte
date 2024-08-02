@@ -122,7 +122,7 @@
       class="is-flex is-flex-wrap-wrap no-print is-align-items-center"
       style="gap: 14px;"
     >
-      <span class="is-flex is-align-items-center">
+      <span class="is-flex is-align-items-center mb-4">
         <label for="ratingSelect" class="has-text-weight-bold mr-2"
           >Rating:</label
         >
@@ -163,7 +163,9 @@
         </label>
       </span>
     </div>
+    <p class="has-text-centered has-text-weight-bold">Opponent Side</p>
     <div bind:this={div} role="img"></div>
+    <p class="has-text-centered has-text-weight-bold">Our Side</p>
   </div>
 {:else}
   <div class="has-text-centered">Loading heatmap...</div>
