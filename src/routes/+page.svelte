@@ -27,7 +27,12 @@
         SpikeTracker
       </h1>
       <h5 class="subtitle">Volleyball reporting software for SBHS.</h5>
-      <a href="/api/auth/login/sbhs" class="button is-primary">Student Login</a>
+      <!-- we need to use data-sveltekit-reload because for some reason the link 404s otherwise (i'm guessing due to some sort of client-side routing error)-->
+      <a
+        data-sveltekit-reload
+        href="/api/auth/login/sbhs"
+        class="button is-primary">Student Login</a
+      >
       <a class="button" href="/adminauth">Coach Login</a>
     </div>
   </div>
