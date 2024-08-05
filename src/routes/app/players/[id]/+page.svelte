@@ -36,7 +36,7 @@
         </div>
         <div class="level-right has-text-white">
           <div class="level-item">
-            <Stat label="Avg PPG" value={data.player.ppg} />
+            <Stat label="PPG" value={data.player.ppg} />
           </div>
           <div class="level-item">
             <Stat label="Kill Rate" value={data.player.kr.toFixed(3)} />

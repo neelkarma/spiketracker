@@ -54,7 +54,7 @@
             <th class="no-print">Open</th>
             <th>First Name</th>
             <th>Surname</th>
-            <th>Avg PPG</th>
+            <th>PPG</th>
             <th>Avg Kill Rate</th>
             <th>Avg Passing Efficiency</th>
             <th>Total Points</th>

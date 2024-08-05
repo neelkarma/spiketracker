@@ -55,7 +55,7 @@
   options={[
     ["firstName", "First Name (A-Z)"],
     ["surname", "Surname (A-Z)"],
-    ["ppg", "Avg PPG (Desc)"],
+    ["ppg", "PPG (Desc)"],
     ["kr", "Kill Rate (Desc)"],
     ["pef", "Passing Efficiency (Desc)"],
     ["totalPoints", "Total Points (Desc)"],
@@ -117,7 +117,7 @@
                 <th>First Name</th>
                 <th>Surname</th>
                 <th>Team(s)</th>
-                <th>Avg PPG</th>
+                <th>PPG</th>
                 <th>Kill Rate</th>
                 <th>Passing Efficiency</th>
                 <th>Total Points</th>
