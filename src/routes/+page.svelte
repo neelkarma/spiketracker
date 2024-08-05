@@ -20,7 +20,12 @@
           {/if}
         </div>
       {/if}
-      <h1 class="title">SpikeTracker</h1>
+      <h1 class="title mb-1">
+        <span class="icon mr-1">
+          <i class="fa-solid fa-volleyball"></i>
+        </span>
+        SpikeTracker
+      </h1>
       <h5 class="subtitle">Volleyball reporting software for SBHS.</h5>
       <a href="/api/auth/login/sbhs" class="button is-primary">Student Login</a>
       <a class="button" href="/adminauth">Coach Login</a>
