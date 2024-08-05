@@ -7,7 +7,23 @@
 </script>
 
 <div class="block">
-  <div class="title">Your Stats</div>
+  <div class="level">
+    <div class="level-left">
+      <div class="level-item">
+        <h1 class="title">Your Stats</h1>
+      </div>
+    </div>
+    <div class="level-right">
+      <div class="level-item">
+        <a href="/app/players/{$page.data.id}" class="button">
+          <span class="icon">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </span>
+          <span>View Details</span>
+        </a>
+      </div>
+    </div>
+  </div>
   <div class="box" style="height: 100%;">
     <div class="fixed-grid has-4-cols has-2-cols-mobile">
       <div class="grid">
