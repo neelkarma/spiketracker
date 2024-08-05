@@ -72,7 +72,7 @@
               </td>
               <td>{firstName}</td>
               <td>{surname}</td>
-              <td>{ppg}</td>
+              <td>{ppg.toFixed(3)}</td>
               <td>{kr.toFixed(3)}</td>
               <td>{pef.toFixed(3)}</td>
               <td>{points}</td>
