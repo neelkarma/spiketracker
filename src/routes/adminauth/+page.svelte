@@ -25,7 +25,7 @@
   <form class="column is-half" on:submit|preventDefault={handleSubmit}>
     {#if error}
       <div class="notification is-danger" role="alert">
-        Error: {error}
+        {error}
       </div>
     {/if}
 
