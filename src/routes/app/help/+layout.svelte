@@ -13,10 +13,10 @@
             <li><a href="/app/help/matches">Matches</a></li>
             <li><a href="/app/help/players">Players</a></li>
             <li><a href="/app/help/teams">Teams</a></li>
+            <li><a href="/app/help/scoring">Scoring</a></li>
           </ul>
           <p class="menu-label">Administration</p>
           <ul class="menu-list">
-            <li><a href="/app/help/scoring">Scoring</a></li>
             <li><a href="/app/help/reviewing-matches">Reviewing Matches</a></li>
             <li><a href="/app/help/team-settings">Team Settings</a></li>
           </ul>
