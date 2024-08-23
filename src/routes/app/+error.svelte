@@ -7,10 +7,7 @@
     <h1>Whoops!</h1>
     <h2>Looks like something went wrong.</h2>
     {#if $page.data.admin}
-      <p>
-        Please contact the developers of this error, and send the error details
-        below.
-      </p>
+      <p>Please contact the developers, and send the error details below.</p>
     {:else}
       <p>
         Most likely, you were not allowed access to the page you were going to.
