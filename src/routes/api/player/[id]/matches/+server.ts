@@ -3,6 +3,7 @@ import { error, json } from "@sveltejs/kit";
 import { calculateStatRate } from "../../../common";
 import type { RequestHandler } from "./$types";
 
+/** Gets the matches associated with a specific player */
 export const GET: RequestHandler = async ({ params }) => {
   const id = parseInt(params.id);
   if (isNaN(id)) {

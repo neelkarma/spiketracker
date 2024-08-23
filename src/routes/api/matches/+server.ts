@@ -2,6 +2,7 @@ import { db } from "$lib/server/db";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
+/** Endpoint to search and sort through all matches. */
 export const GET: RequestHandler = async ({ url, locals }) => {
   const query = url.searchParams.get("q") ?? "";
   const sortBy = url.searchParams.get("sort") ?? "time";

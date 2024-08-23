@@ -2,7 +2,7 @@ import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 /**
- * Auth status endpoint - provides:
+ * Auth status endpoint - responds with:
  * - whether the user is authorized
  * - whether the user is an admin
  * - the student id (if the user is a student)

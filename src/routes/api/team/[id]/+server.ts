@@ -3,6 +3,7 @@ import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { processTeamRow } from "./common";
 
+/** Gets the details of a team */
 export const GET: RequestHandler = async ({ params, locals }) => {
   const id = parseInt(params.id);
   if (isNaN(id)) {
@@ -28,6 +29,7 @@ export const GET: RequestHandler = async ({ params, locals }) => {
   return json(processedTeam);
 };
 
+/** Edits a team. */
 export const PUT: RequestHandler = async ({ params, locals, request }) => {
   if (!locals.auth?.admin) error(403, "Forbidden");
 
@@ -71,6 +73,7 @@ export const PUT: RequestHandler = async ({ params, locals, request }) => {
   }
 };
 
+/** Deletes a team. */
 export const DELETE: RequestHandler = async ({ params, locals }) => {
   if (!locals.auth?.admin) error(403, "Forbidden");
 

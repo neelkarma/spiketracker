@@ -2,6 +2,7 @@ import { db } from "$lib/server/db";
 import { error } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
+/** Creates a team. */
 export const POST: RequestHandler = async ({ locals, request }) => {
   if (!locals.auth?.admin) {
     error(403, "Forbidden");

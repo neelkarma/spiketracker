@@ -2,6 +2,7 @@ import { db } from "$lib/server/db";
 import { error } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
+/** Endpoint for submitting stats for a given match. */
 export const PUT: RequestHandler = async ({ params, locals, request }) => {
   const matchId = parseInt(params.matchId);
   if (isNaN(matchId)) {

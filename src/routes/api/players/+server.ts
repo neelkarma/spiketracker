@@ -3,6 +3,7 @@ import { json } from "@sveltejs/kit";
 import { processPlayerRow } from "../player/[id]/common";
 import type { RequestHandler } from "./$types";
 
+/** Search and sort for players. */
 export const GET: RequestHandler = async ({ url, locals }) => {
   const query = url.searchParams.get("q") ?? "";
   const sortBy = url.searchParams.get("sort") ?? "time";

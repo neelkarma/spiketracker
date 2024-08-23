@@ -3,6 +3,7 @@ import { error, json } from "@sveltejs/kit";
 import { calculateStatRate } from "../../common";
 import type { RequestHandler } from "./$types";
 
+/** Gets overall stats for the entire application. This is what is displayed on the admin dashboard. */
 export const GET: RequestHandler = async ({ locals }) => {
   if (!locals.auth?.admin) error(403, "Forbidden");
 

@@ -2,7 +2,7 @@ import { verifySessionToken } from "$lib/server/session";
 import { error, redirect, type Handle } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
-  const { fetch, cookies, locals, url } = event;
+  const { cookies, locals, url } = event;
 
   // verify auth token in cookie
   locals.auth = null;
@@ -30,6 +30,8 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (locals.auth && !event.url.pathname.startsWith("/app"))
     redirect(302, "/app");
   if (!locals.auth && event.url.pathname.startsWith("/app")) redirect(302, "/");
+
+  // block players from accessing the create or edit pages for matches, teams and players.
   if (
     !locals.auth?.admin &&
     event.url.pathname.split("/").some((seg) => ["new", "edit"].includes(seg))

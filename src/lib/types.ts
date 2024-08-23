@@ -10,6 +10,7 @@ export interface MatchInfo {
   scoring: boolean;
 }
 
+/** Sample match info, useful for UI mock-ups. Don't actually use in production, though. */
 export const SAMPLE_MATCH_INFO: MatchInfo = {
   id: 0,
   ourTeamId: 1,
@@ -26,6 +27,7 @@ export const SAMPLE_MATCH_INFO: MatchInfo = {
   scoring: false,
 };
 
+/** The default/empty match info. Used when creating a new match. */
 export const EMPTY_MATCH_INFO: MatchInfo = {
   id: 0,
   ourTeamId: 1,
@@ -55,6 +57,7 @@ export interface PlayerInfo {
   visible: boolean;
 }
 
+/** Sample player info. Useful for UI mockups. Don't use in production. */
 export const SAMPLE_PLAYER_INFO: PlayerInfo = {
   id: 440805299,
   firstName: "Guppy",
@@ -72,6 +75,7 @@ export const SAMPLE_PLAYER_INFO: PlayerInfo = {
   visible: true,
 };
 
+/** The empty/default player info. Used when creating a new player. */
 export const EMPTY_PLAYER_INFO: PlayerInfo = {
   id: 0,
   firstName: "",
@@ -99,6 +103,7 @@ export interface TeamInfo {
   visible: boolean;
 }
 
+/** Sample team info. Useful for UI mockups. Don't use in production. */
 export const SAMPLE_TEAM_INFO: TeamInfo = {
   id: 0,
   name: "SBHS 1sts",
@@ -112,6 +117,7 @@ export const SAMPLE_TEAM_INFO: TeamInfo = {
   year: new Date().getFullYear(),
 };
 
+/** The empty/default team info. Used when creating a new team. */
 export const EMPTY_TEAM_INFO: TeamInfo = {
   id: 0,
   name: "",
@@ -125,6 +131,7 @@ export const EMPTY_TEAM_INFO: TeamInfo = {
   year: new Date().getFullYear(),
 };
 
+/** Type for a single "stat" i.e. action on court */
 export interface Stat {
   playerId: number;
   action: string;

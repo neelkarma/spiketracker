@@ -2,6 +2,7 @@ import { db } from "$lib/server/db";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
+/** Get a list of stats matching the given criteria (match, team, and/or player). Mainly used in the stat heatmap */
 export const GET: RequestHandler = async ({ url }) => {
   const matchIdStr = url.searchParams.get("match_id");
   const teamIdStr = url.searchParams.get("team_id");

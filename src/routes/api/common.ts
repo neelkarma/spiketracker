@@ -3,6 +3,8 @@ import type { InStatement } from "@libsql/client";
 
 /**
  * Calculates a stat rate given an sql query that outputs columns for rating and count.
+ * @param stmt - The sql query to execute.
+ * @returns the number of total and successful stats, and the rate (successful / total).
  */
 export async function calculateStatRate(stmt: InStatement) {
   const res = await db.execute(stmt);

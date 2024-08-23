@@ -3,6 +3,7 @@ import { signSessionToken } from "$lib/server/session";
 import { error } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
+/** Admin login endpoint. */
 export const POST: RequestHandler = async ({ cookies, request }) => {
   const { password } = await request.json();
 

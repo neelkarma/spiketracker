@@ -3,6 +3,7 @@ import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { processPlayerRow } from "./common";
 
+/** Gets details on a player */
 export const GET: RequestHandler = async ({ params, locals }) => {
   const id = parseInt(params.id);
   if (isNaN(id)) {
@@ -32,6 +33,7 @@ export const GET: RequestHandler = async ({ params, locals }) => {
   return json(processedPlayer);
 };
 
+/** Edits a player. */
 export const PUT: RequestHandler = async ({ params, locals, request }) => {
   if (!locals.auth?.admin) error(403, "Forbidden");
 
@@ -58,6 +60,7 @@ export const PUT: RequestHandler = async ({ params, locals, request }) => {
   }
 };
 
+/** Deletes a player. */
 export const DELETE: RequestHandler = async ({ params, locals }) => {
   if (!locals.auth?.admin) error(403, "Forbidden");
 

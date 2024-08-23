@@ -1,6 +1,10 @@
 import { db } from "$lib/server/db";
 import { calculateStatRate } from "../../common";
 
+/**
+ * Gets associated team, match and statistics for a player row and attaches them to the provided row
+ * @param row - the desired player's database row
+ */
 export async function processPlayerRow(row: any) {
   const id = row.id;
 

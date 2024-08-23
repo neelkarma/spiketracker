@@ -1,6 +1,10 @@
 import { db } from "$lib/server/db";
 import { calculateStatRate } from "../../common";
 
+/**
+ * Adds associated statistics (wins, losses, set ratio, etc.) to a given team database row.
+ * @param row - the database row for the team
+ */
 export async function processTeamRow(row: any) {
   const id = row.id;
 
