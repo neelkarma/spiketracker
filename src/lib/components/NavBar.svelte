@@ -42,7 +42,13 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <a href="/app/help" title="Help" class="has-text-white">
+        <!-- we data-sveltekit-reload here because the csr doesn't see the server route for some reason and renders the 404 instead -->
+        <a
+          href="/app/help"
+          title="Help"
+          class="has-text-white"
+          data-sveltekit-reload
+        >
           <i class="fa-solid fa-question-circle"></i>
           <span class="is-hidden-desktop">Help</span>
         </a>
