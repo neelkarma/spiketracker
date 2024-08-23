@@ -125,10 +125,10 @@
 {#if data}
   <div class="is-flex is-flex-direction-column is-align-items-center">
     <div
-      class="is-flex is-flex-wrap-wrap no-print is-align-items-center"
+      class="is-flex is-flex-wrap-wrap no-print is-align-items-center mb-4"
       style="gap: 14px;"
     >
-      <span class="is-flex is-align-items-center mb-4">
+      <span class="is-flex is-align-items-center">
         <label for="ratingSelect" class="has-text-weight-bold mr-2"
           >Rating:</label
         >
