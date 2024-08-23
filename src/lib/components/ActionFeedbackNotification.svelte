@@ -10,12 +10,12 @@
 
 {#if !closed}
   {#if $page.url.searchParams.get("success") === "1"}
-    <div class="notification is-success">
+    <div class="notification is-success no-print">
       <button class="delete" on:click={() => (closed = true)}></button>
       {successMessage}
     </div>
   {:else if $page.url.searchParams.get("success") === "0"}
-    <div class="notification is-danger">
+    <div class="notification is-danger no-print">
       <button class="delete" on:click={() => (closed = true)}></button>
       {errorMessage}
     </div>
