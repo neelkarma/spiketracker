@@ -155,7 +155,7 @@
                         {#if visible}
                           <i
                             class="fa-solid fa-eye"
-                            title="All players can see this players."
+                            title="All players can see this player."
                           ></i>
                         {:else}
                           <i
