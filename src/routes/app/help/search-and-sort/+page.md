@@ -1,12 +1,15 @@
 # Search and Sort
 
-There is a searchbar in the Matches, Teams, and Players pages.
-Type in your query and SpikeTracker will display all relevant items.
+At the top of the Matches, Teams and Players pages, you can search and sort.
 
-![Searchbar image](/help/searchbar-image.jpg)
+![Search bar with sorting options button next to it](/help/searchbar.png)
 
-On the right of the searchbar is a button to open up filter options. This is where you can sort items based on alphabetical order, creation date, etc.
+Typing in the searchbar will filter results by the keywords you type. For
+example, typing the name of a player in the players searchbox will display all
+players with the matching name.
 
-![Sorting options image](/help/sorting-options-image.jpg)
+![Sorting options popup](/help/sorting-options.png)
 
-_🚧 Sorry, this help article is currently under construction. Please check again later! 🚧_
+The sorting options can be accessed by clicking the **Sorting Options** button.
+Here, you can select what to sort the results by, as well as reverse the order
+of results.

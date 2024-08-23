@@ -1,13 +1,23 @@
 # Teams
 
-In the teams page, you can view all the volleyball teams that represent High.
+In the teams list, you can view all the teams in SpikeTracker, including details
+such as number of members, win-loss ratio, passing efficiency, kill rate, among
+others.
 
-You can search through teams and filter through them by name or year created.
+You can search, filter and sort the teams using the search box on the top of the
+page. Please see [this page](/app/help/search-and-sort) for more information.
 
-![Teams page image](/help/teams-page-image.jpg)
+![Teams list](/help/teams-list.png)
 
-Clicking on the team allows you to view more statistics including a player list with individual stats.
+Clicking on the team allows you to view more details, including the statistics
+associated with each player and a court heatmap. See
+[this page](/app/help/heatmap) for details on how to use the heatmap.
 
-![Team page image](/help/team-page-image.jpg)
+![Team page](/help/team-page.png)
 
-_🚧 Sorry, this help article is currently under construction. Please check again later! 🚧_
+## For Admins
+
+When viewing all teams, you can click the **Create Team** button to create a new
+team. To edit a specific team, click the **Edit** button on the team to edit,
+make the desired changes, and click **Apply**. The team can also be deleted from
+this page, using the **Delete** button.
