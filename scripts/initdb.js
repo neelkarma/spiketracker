@@ -1,6 +1,7 @@
 import { createClient } from "@libsql/client";
 import { existsSync, readFileSync, rmSync } from "fs";
 
+// change this to "live-test-data.sql" for the live test data
 const SCHEMA_PATH = "schema.sql";
 const DB_PATH = "data.sqlite3";
 
