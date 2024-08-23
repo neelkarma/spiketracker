@@ -1,8 +1,6 @@
 <script lang="ts" generics="T">
   import { createEventDispatcher } from "svelte";
 
-  // TODO: Use fuzzy searching with fuse.js
-
   type Item = {
     label: string;
     value: T;
@@ -41,10 +39,11 @@
       </span>
     </div>
   </div>
-  <!-- I know this is terrible for accessibility, but bulma has forced my hand -->
   {#each items.filter(({ label }) => label
       .toLowerCase()
       .includes(filterString.toLowerCase())) as { label, value }}
+    <!-- I know this is terrible for accessibility, but bulma has forced my hand -->
+    <!-- svelte-ignore a11y-missing-attribute a11y-no-static-element-interactions a11y-click-events-have-key-events -->
     <a class="panel-block" on:click={() => handleClick({ label, value })}>
       {label}
     </a>

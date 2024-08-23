@@ -96,6 +96,8 @@
         </a>
       </div>
       <div class="cell">
+        <!-- again, bulma has forced my hand -->
+        <!-- svelte-ignore a11y-missing-attribute a11y-no-static-element-interactions a11y-click-events-have-key-events -->
         <a on:click={() => (showLockdownConfirmModal = true)} class="box mb-0">
           <div class="level">
             <div class="level-left">
