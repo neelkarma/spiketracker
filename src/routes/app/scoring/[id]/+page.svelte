@@ -13,16 +13,27 @@
     playerId: number;
     from: [number, number];
     to: [number, number];
-    action: string;
+    action: keyof typeof ACTION_TYPE_MAPPINGS;
     rating: number;
   }[] = [];
   let confirmDialogOpen = false;
   let submitStatus: "idle" | "loading" | "error" = "idle";
 
-  $: playerItems = data.players.map(({ id, firstName, surname }) => ({
-    label: `${firstName} ${surname}`,
-    value: id,
-  }));
+  // TODO: clean up the typings in the entire project when we have the time
+  $: playerItems = (<any[]>data.players).map(
+    ({
+      id,
+      firstName,
+      surname,
+    }: {
+      id: number;
+      firstName: string;
+      surname: string;
+    }) => ({
+      label: `${firstName} ${surname}`,
+      value: id,
+    }),
+  );
 
   const handlePlayerSelect = ({
     label: name,
@@ -37,7 +48,7 @@
   const handleScoringSubmit = (data: {
     from: [number, number];
     to: [number, number];
-    action: string;
+    action: keyof typeof ACTION_TYPE_MAPPINGS;
     rating: number;
   }) => {
     if (!playerScoring) return;

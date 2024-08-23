@@ -14,9 +14,9 @@ export const logout = async () => {
 
 export const debounce = <F extends (...args: any[]) => void>(
   callback: F,
-  wait = 300
+  wait = 300,
 ) => {
-  let timeout: number;
+  let timeout: ReturnType<typeof setTimeout>;
 
   return (...args: Parameters<F>) => {
     clearTimeout(timeout);

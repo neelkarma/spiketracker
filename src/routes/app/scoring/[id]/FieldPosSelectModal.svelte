@@ -8,7 +8,7 @@
     submit: {
       from: [number, number];
       to: [number, number];
-      action: string;
+      action: keyof typeof ACTION_TYPE_MAPPINGS;
       rating: number;
     };
   }>();
@@ -24,7 +24,7 @@
 
   let from: [number, number] | null = null;
   let to: [number, number] | null = null;
-  let action = "set";
+  let action: keyof typeof ACTION_TYPE_MAPPINGS = "set";
 
   const handleGridClick = (x: number, y: number) => {
     if (from === null) {
