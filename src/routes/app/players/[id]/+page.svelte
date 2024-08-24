@@ -110,7 +110,7 @@
       </div>
     {/if}
 
-    <h1 class="title">Heatmap</h1>
+    <h1 class="title page-break-before">Heatmap</h1>
     <div class="box">
       <StatHeatmap type="player" id={data.player.id} />
     </div>

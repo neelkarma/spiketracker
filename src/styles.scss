@@ -1,5 +1,5 @@
 @use "bulma/sass" with (
-  $family-primary: '"Montserrat", sans-serif', 
+  $family-primary: '"Montserrat", sans-serif',
   $primary: #094369,
   $table-background-color: #ffffff00
 );
@@ -16,14 +16,26 @@ html {
   height: 100vh;
 }
 
-@media print
-{    
-  .no-print, .no-print *, .navbar, .footer, .button, .field
-  {
+.page-break-before {
+  page-break-before: always;
+}
+
+.page-break-after {
+  page-break-after: always;
+}
+
+@media print {
+  .no-print,
+  .no-print *,
+  .navbar,
+  .footer,
+  .button,
+  .field {
     display: none !important;
   }
 
-  *, .has-text-white {
+  *,
+  .has-text-white {
     background-color: white !important;
     color: black !important;
   }
