@@ -1,5 +1,6 @@
 import { db } from "$lib/server/db";
 import { json } from "@sveltejs/kit";
+import { compare } from "../common";
 import type { RequestHandler } from "./$types";
 
 /** Endpoint to search and sort through all matches. */
@@ -57,13 +58,13 @@ export const GET: RequestHandler = async ({ url, locals }) => {
   }));
 
   processedMatches.sort((a: any, b: any) => {
-    if (reverse) {
-      [a, b] = [b, a];
-    }
+    let aField, bField;
     if (sortBy === "time") {
-      return Date.parse(a.time) - Date.parse(b.time);
+      [aField, bField] = [Date.parse(a.time), Date.parse(b.time)];
+    } else {
+      [aField, bField] = [a[sortBy], b[sortBy]];
     }
-    return a[sortBy] - b[sortBy];
+    return compare(aField, bField, reverse);
   });
 
   return json(processedMatches);

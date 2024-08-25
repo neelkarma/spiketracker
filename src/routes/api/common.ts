@@ -23,3 +23,26 @@ export async function calculateStatRate(stmt: InStatement) {
 
   return { total, successful, rate };
 }
+
+/**
+ * Compares two strings or two numbers. Mainly for use in JavaScript's Array.prototype.sort() function.
+ * @param a - First item to compare.
+ * @param b - Second item to compare.
+ * @param reverse - Whether to reverse the final output. Defaults to false.
+ * @returns A positive number if a > b, negative if b < a or 0 if a == b or the inputs are invalid
+ */
+export function compare<T extends string | number>(
+  a: T,
+  b: T,
+  reverse = false,
+): number {
+  if (reverse) {
+    [a, b] = [b, a];
+  }
+  if (typeof a === "string" && typeof b === "string") {
+    return a.localeCompare(b);
+  } else if (typeof a === "number" && typeof b === "number") {
+    return a - b;
+  }
+  return 0;
+}

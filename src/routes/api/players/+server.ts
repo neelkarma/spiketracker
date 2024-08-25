@@ -1,5 +1,6 @@
 import { db } from "$lib/server/db";
 import { json } from "@sveltejs/kit";
+import { compare } from "../common";
 import { processPlayerRow } from "../player/[id]/common";
 import type { RequestHandler } from "./$types";
 
@@ -32,15 +33,9 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 
   const processedPlayers = await Promise.all(players.map(processPlayerRow));
 
-  processedPlayers.sort((a: any, b: any) => {
-    if (reverse) {
-      [a, b] = [b, a];
-    }
-    if (typeof a[sortBy] === "string") {
-      return a[sortBy].toLowerCase().localeCompare(b[sortBy].toLowerCase());
-    }
-    return a[sortBy] - b[sortBy];
-  });
+  processedPlayers.sort((a: any, b: any) =>
+    compare(a[sortBy], b[sortBy], reverse),
+  );
 
   return json(processedPlayers);
 };
