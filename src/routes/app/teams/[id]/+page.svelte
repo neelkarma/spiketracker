@@ -81,7 +81,7 @@
         </tbody>
       </table>
     </div>
-    <h1 class="title">Heatmap</h1>
+    <h1 class="title page-break-before">Heatmap</h1>
     <div class="box">
       <StatHeatmap type="team" id={data.team.id} />
     </div>
