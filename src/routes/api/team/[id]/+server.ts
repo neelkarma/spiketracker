@@ -45,10 +45,10 @@ export const PUT: RequestHandler = async ({ params, locals, request }) => {
       [
         {
           sql: `
-          UPDATE teams
-          SET name = ?, year = ?, visible = ?
-          WHERE id = ?
-        `,
+            UPDATE teams
+            SET name = ?, year = ?, visible = ?
+            WHERE id = ?
+          `,
           args: [body.name, body.year, body.visible, id],
         },
         {
@@ -57,9 +57,9 @@ export const PUT: RequestHandler = async ({ params, locals, request }) => {
         },
         ...body.playerIds.map((playerId: number) => ({
           sql: `
-          INSERT INTO teamPlayers (teamId, playerId)
-          VALUES (?, ?)
-        `,
+            INSERT INTO teamPlayers (teamId, playerId)
+            VALUES (?, ?)
+          `,
           args: [id, playerId],
         })),
       ],

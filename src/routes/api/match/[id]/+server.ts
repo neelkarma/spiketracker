@@ -12,15 +12,15 @@ export const GET: RequestHandler = async ({ params, locals }) => {
   const res = await db.execute({
     sql: `
       SELECT
-          matches.id,
-          matches.teamId,
-          teams.name AS ourTeamName,
-          matches.oppName AS oppTeamName,
-          matches.location,
-          matches.time,
-          matches.points,
-          matches.visible,
-          matches.scoring
+        matches.id,
+        matches.teamId,
+        teams.name AS ourTeamName,
+        matches.oppName AS oppTeamName,
+        matches.location,
+        matches.time,
+        matches.points,
+        matches.visible,
+        matches.scoring
       FROM matches
       INNER JOIN teams ON teams.id = matches.teamId
       WHERE matches.id = ?

@@ -18,23 +18,23 @@ export const GET: RequestHandler = async ({ url, locals }) => {
   const res = await db.execute({
     sql: `
       SELECT
-          matches.id,
-          matches.teamId as ourTeamId,
-          teams.name as ourTeamName,
-          matches.oppName as oppTeamName,
-          matches.location,
-          matches.time,
-          matches.points,
-          matches.visible,
-          matches.scoring
+        matches.id,
+        matches.teamId as ourTeamId,
+        teams.name as ourTeamName,
+        matches.oppName as oppTeamName,
+        matches.location,
+        matches.time,
+        matches.points,
+        matches.visible,
+        matches.scoring
       FROM matches
       INNER JOIN teams ON teams.id = matches.teamId
       WHERE
-          teams.name LIKE ?
-          OR matches.oppName LIKE ?
-          OR matches.location LIKE ?
-          OR matches.id = ?
-          OR teams.id = ?
+        teams.name LIKE ?
+        OR matches.oppName LIKE ?
+        OR matches.location LIKE ?
+        OR matches.id = ?
+        OR teams.id = ?
     `,
     args: [
       queryPattern,

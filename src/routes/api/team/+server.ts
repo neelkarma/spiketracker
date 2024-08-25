@@ -25,9 +25,9 @@ export const POST: RequestHandler = async ({ locals, request }) => {
     await txn.batch(
       body.playerIds.map((playerId: number) => ({
         sql: `
-        INSERT INTO teamPlayers (teamId, playerId)
-        VALUES (?, ?)
-      `,
+          INSERT INTO teamPlayers (teamId, playerId)
+          VALUES (?, ?)
+        `,
         args: [teamId, playerId],
       })),
     );

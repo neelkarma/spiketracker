@@ -13,15 +13,15 @@ export const GET: RequestHandler = async ({ params }) => {
   const res = await db.execute({
     sql: `
       SELECT
-          matches.id,
-          matches.teamId as ourTeamId,
-          teams.name as ourTeamName,
-          matches.oppName as oppTeamName,
-          matches.location,
-          matches.time,
-          matches.points,
-          matches.visible,
-          matches.scoring
+        matches.id,
+        matches.teamId as ourTeamId,
+        teams.name as ourTeamName,
+        matches.oppName as oppTeamName,
+        matches.location,
+        matches.time,
+        matches.points,
+        matches.visible,
+        matches.scoring
       FROM matches
       INNER JOIN teams ON teams.id = matches.teamId
       INNER JOIN teamPlayers ON teamPlayers.teamId = matches.teamId
@@ -35,9 +35,9 @@ export const GET: RequestHandler = async ({ params }) => {
     SELECT rating, count(*) AS count
     FROM stats
     WHERE
-        playerId = ?
-        AND matchId = ?
-        AND action = ?
+      playerId = ?
+      AND matchId = ?
+      AND action = ?
     GROUP BY rating
   `;
 

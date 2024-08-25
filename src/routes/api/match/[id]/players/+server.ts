@@ -23,9 +23,9 @@ export const GET: RequestHandler = async ({ params }) => {
   const ratingSql = `
     SELECT rating, count(*) AS count FROM stats
     WHERE
-        matchId = ?
-        AND playerId = ?
-        AND action = ?
+      matchId = ?
+      AND playerId = ?
+      AND action = ?
     GROUP BY rating
   `;
 
