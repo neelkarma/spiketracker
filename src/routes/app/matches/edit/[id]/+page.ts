@@ -3,6 +3,7 @@ import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 
 export const load = (async ({ fetch, params }): Promise<MatchInfo> => {
+  // we load the details of the match by calling the API here
   const res = await fetch(`/api/match/${params.id}`);
 
   if (res.status === 404) {

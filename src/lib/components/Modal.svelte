@@ -1,5 +1,7 @@
 <script lang="ts">
+  /** Whether the modal is open or not. */
   export let isOpen = false;
+  /** Whether the modal can be closed by the user (by either clicking on the background or the close button) */
   export let canClose = true;
 
   function handleClose() {

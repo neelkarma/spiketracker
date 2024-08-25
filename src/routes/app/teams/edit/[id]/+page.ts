@@ -6,6 +6,7 @@ export const load = (async ({
   fetch,
   params,
 }): Promise<{ team: TeamInfo; players: PlayerInfo[] }> => {
+  // we fetch the team and its players from the api to populate the initial form values
   const [teamDataRes, playersRes] = await Promise.all([
     fetch(`/api/team/${params.id}`),
     fetch(`/api/team/${params.id}/players`),

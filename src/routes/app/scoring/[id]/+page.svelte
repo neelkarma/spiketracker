@@ -37,9 +37,10 @@
     }) => ({
       label: `${firstName} ${surname}`,
       value: id,
-    })
+    }),
   );
 
+  /** this is called whenever a player is selected from the list */
   const handlePlayerSelect = ({
     label: name,
     value: id,
@@ -47,9 +48,11 @@
     label: string;
     value: number;
   }) => {
+    // by setting playerScoring, we also open the modal.
     playerScoring = { name, id };
   };
 
+  /** this is called when new scoring data is added */
   const handleScoringSubmit = (data: {
     from: [number, number];
     to: [number, number];
@@ -57,15 +60,21 @@
     rating: number;
   }) => {
     if (!playerScoring) return;
+    // this adds the new data to the array of scoring data
     scoringData.unshift({
       name: playerScoring.name,
       playerId: playerScoring.id,
       ...data,
     });
+    // this might look weird, but it's necessary for svelte to see that scoringData has changed
+    // svelte only tracks assignments, not mutations
+    // it sucks, but apparently it's fixed in v5
     scoringData = scoringData;
+    // we reset playerScoring to dismiss the modal
     playerScoring = null;
   };
 
+  /** this is called when submitting the final scoring data */
   const handleSubmit = async () => {
     submitStatus = "loading";
 
@@ -79,7 +88,7 @@
     });
 
     if (!res.ok) {
-      // if something goes wrong sends api an error msg
+      // if something goes wrong an error message is displayed
       console.log(await res.text());
       submitStatus = "error";
       return;
@@ -88,13 +97,14 @@
     goto("/app/matches?success=1");
   };
 
+  // this is for preventing users from leaving when there's unsubmitted scoring data
   beforeNavigate(({ type, cancel }) => {
     if (scoringData.length === 0 || submitStatus === "loading") return;
     if (type === "leave") {
       cancel();
     } else if (
       !confirm(
-        "Warning: Your scoring data is unsaved, and will be lost if you leave now. Press 'Ok' if you still want to leave."
+        "Warning: Your scoring data is unsaved, and will be lost if you leave now. Press 'Ok' if you still want to leave.",
       )
     ) {
       cancel();

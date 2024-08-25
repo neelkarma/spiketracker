@@ -2,8 +2,11 @@
   import { browser } from "$app/environment";
   import { density, dot, plot, ruleX, ruleY } from "@observablehq/plot";
 
+  /** the type of data item to display stats for */
   export let type: "team" | "player" | "match";
+  /** the id of the data item to display the stats for */
   export let id: number;
+  /** the width, in pixels, of the heatmap */
   export let width = 420;
 
   const GRID_WIDTH = 13;
@@ -24,7 +27,9 @@
   let action = "set";
   let showFrom = true;
 
+  // this gets called to get the stats data for the specific data item (type and id).
   const handleSourceChange = async () => {
+    // this object holds the search params for the stats endpoint
     let searchParamsObject: { [key: string]: any } = {};
 
     switch (type) {
@@ -41,6 +46,7 @@
 
     const searchParams = new URLSearchParams(searchParamsObject).toString();
 
+    // query the stats
     const res = await fetch("/api/stats/?" + searchParams);
 
     if (!res.ok) {
@@ -50,6 +56,7 @@
     }
 
     const stats = await res.json();
+    // we split each stat into its contact and land points so we can easily filter in the heatmap logic.
     data = stats.flatMap((stat: any) => [
       {
         rating: stat.rating,
@@ -69,6 +76,8 @@
   };
 
   $: if (browser) {
+    // referencing `type` and `id` will re-execute this block whenever they change
+    // again, another svelte gimmick. apparently v5 fixes all of this with runtime reactivity.
     type;
     id;
     handleSourceChange();
@@ -82,7 +91,10 @@
         d.action === action,
     );
 
+    // remove the existing plot
     div?.firstChild?.remove();
+
+    // the behemoth.
     div?.append(
       plot({
         x: {

@@ -8,11 +8,13 @@
 
   let status: "success" | "loading" | "error" | null = null;
 
+  /** This handles the submit event of the PlayerInfoForm component */
   const handleSubmit = async (e: CustomEvent<PlayerInfo>) => {
     const player = e.detail;
 
     status = "loading";
 
+    // make api call to update the player
     const res = await fetch(`/api/player/${player.id}`, {
       method: "PUT",
       body: JSON.stringify(player),
@@ -23,7 +25,7 @@
 
     window.scrollTo({ top: 0 });
 
-    if (res.status === 200) {
+    if (res.ok) {
       status = "success";
     } else {
       status = "error";
@@ -31,14 +33,17 @@
     }
   };
 
+  /** this handles the delete event of the PlayerInfoForm component */
   const handleDelete = async () => {
     status = "loading";
 
+    // api call to delete the player
     const res = await fetch(`/api/player/${data.id}`, {
       method: "DELETE",
     });
 
-    if (res.status === 200) {
+    if (res.ok) {
+      // we redirect back to the player list on success
       await goto("/app/players?success=1");
     } else {
       status = "error";

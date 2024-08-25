@@ -15,6 +15,7 @@ export const load = (async ({
     pef: number;
   };
 }> => {
+  // we request the team and the data of its players from the api
   const [teamDataRes, playersRes] = await Promise.all([
     fetch(`/api/team/${params.id}`),
     fetch(`/api/team/${params.id}/players`),

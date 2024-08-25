@@ -1,23 +1,9 @@
 <script lang="ts">
   import StatHeatmap from "$lib/components/StatHeatmap.svelte";
+  import { calculateSetsWon } from "$lib/utils";
   import type { PageData } from "./$types";
 
   export let data: PageData;
-
-  const calculateSetsWon = (points: { our: number; opp: number }[]) => {
-    let ourSets = 0;
-    let oppSets = 0;
-
-    for (const { our, opp } of points) {
-      if (our > opp) ourSets += 1;
-      else if (opp > our) oppSets += 1;
-    }
-
-    return {
-      our: ourSets,
-      opp: oppSets,
-    };
-  };
 
   $: setsWon = calculateSetsWon(data.match.points);
 </script>

@@ -3,6 +3,7 @@ import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 
 export const load = (async ({ params, fetch }): Promise<PlayerInfo> => {
+  // we must fetch the existing player from the api to populate the form values
   const res = await fetch(`/api/player/${params.id}`);
 
   if (res.status === 404) {

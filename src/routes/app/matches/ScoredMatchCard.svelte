@@ -2,23 +2,9 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import type { MatchInfo } from "$lib/types";
+  import { calculateSetsWon } from "$lib/utils";
 
   export let data: MatchInfo;
-
-  const calculateSetsWon = (points: { our: number; opp: number }[]) => {
-    let ourSets = 0;
-    let oppSets = 0;
-
-    for (const { our, opp } of points) {
-      if (our > opp) {
-        ourSets += 1;
-      } else if (opp > our) {
-        oppSets += 1;
-      }
-    }
-
-    return { our: ourSets, opp: oppSets };
-  };
 
   $: date = new Date(data.time);
   $: setsWon = calculateSetsWon(data.points);

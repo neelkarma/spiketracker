@@ -5,7 +5,9 @@ export const load = (async ({ fetch, parent }) => {
   const auth = await parent();
   if (!auth.authorized) return;
 
+  // we load different data depending on if it's an admin or a player that's logged in
   if (auth.admin) {
+    // for admins, we fetch overall stats and matches (to check if a match is currently scorable)
     const [matchesRes, overallStatsRes] = await Promise.all([
       fetch("/api/matches"),
       fetch("/api/stats/overall"),
@@ -19,6 +21,8 @@ export const load = (async ({ fetch, parent }) => {
 
     const overallStats = await overallStatsRes.json();
     const matches = await matchesRes.json();
+
+    // if any match is scoring, we need to display that
     const currentlyScoring = matches.some((match: any) => match.scoring);
 
     return {
@@ -26,6 +30,7 @@ export const load = (async ({ fetch, parent }) => {
       currentlyScoring,
     };
   } else {
+    // for players, we get personalised player and team stats, as well as checking if there's a match currently scorable
     const [matchesRes, playerRes, teamsRes] = await Promise.all([
       fetch("/api/matches"),
       fetch(`/api/player/${auth.id}`),

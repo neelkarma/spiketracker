@@ -24,13 +24,14 @@
 
   let filteredTeams: TeamInfo[];
 
+  /** this gets called to update the results */
   const handleChange = async (query: string, sortOptions: SortOptions) => {
+    // construct the search params and execute api request to search and sort teams
     const searchParams = new URLSearchParams({
       q: query,
       sort: sortOptions.sortBy,
       reverse: sortOptions.reverse ? "1" : "0",
     }).toString();
-
     const res = await fetch("/api/teams/?" + searchParams);
 
     if (!res.ok) {
@@ -41,9 +42,11 @@
     filteredTeams = await res.json();
   };
 
+  // we debounce the handleChange function to make sure we're not spamming the api
   const handleChangeDebounced = debounce(handleChange);
 
   onMount(async () => {
+    // this is to initialize results on opening the page
     await handleChange(query, sortOptions);
   });
 </script>

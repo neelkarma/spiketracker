@@ -5,9 +5,11 @@
 
   let status: "loading" | "error" | null = null;
 
+  /** This handles the submit event of the MatchInfoForm component */
   const handleSubmit = async (e: CustomEvent<MatchInfo>) => {
     status = "loading";
 
+    // create the match with an api request
     const res = await fetch("/api/match/", {
       method: "POST",
       body: JSON.stringify(e.detail),
@@ -16,7 +18,7 @@
       },
     });
 
-    if (res.status === 200) {
+    if (res.ok) {
       await goto("/app/matches?success=1");
     } else {
       console.log(await res.text());

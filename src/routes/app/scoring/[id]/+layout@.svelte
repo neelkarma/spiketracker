@@ -1,2 +1,2 @@
-<!-- This removes the default navbar, since we use a different nav for the scoring ui. -->
+<!-- This removes the default navbar and footer, since we want the scoring ui to be as minimal as possible -->
 <slot />

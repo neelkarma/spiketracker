@@ -26,12 +26,12 @@
   let filteredPastMatches: MatchInfo[];
 
   const handleChange = async (query: string, sortOptions: SortOptions) => {
+    // construct search param string and make api request to search and sort matches
     const searchParams = new URLSearchParams({
       q: query,
       sort: sortOptions.sortBy,
       reverse: sortOptions.reverse ? "1" : "0",
     }).toString();
-
     const res = await fetch("/api/matches/?" + searchParams);
 
     if (!res.ok) {
@@ -48,11 +48,13 @@
     const past = [];
 
     for (const match of matches) {
+      // we consider a match "ongoing" if the player scoring permission is enabled, regardless of match time
       if (match.scoring) {
         ongoing.push(match);
         continue;
       }
 
+      // otherwise, we compare the time of the match with the current type and categorise accordingly
       const matchTime = new Date(match.time);
       if (matchTime.getTime() > now) {
         upcoming.push(match);
@@ -61,14 +63,17 @@
       }
     }
 
+    // update the state of the page
     filteredOngoingMatches = ongoing;
     filteredUpcomingMatches = upcoming;
     filteredPastMatches = past;
   };
 
+  // we debounce the handleChange function to avoid spamming the api
   const handleChangeDebounced = debounce(handleChange);
 
   onMount(async () => {
+    // this loads the initial results
     await handleChange(query, sortOptions);
   });
 </script>

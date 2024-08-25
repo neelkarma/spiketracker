@@ -1,8 +1,8 @@
-import { SAMPLE_MATCH_INFO, type MatchInfo } from "$lib/types";
 import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 
 export const load = (async ({ fetch, params }) => {
+  // we fetch the given match and players for that match
   const [matchRes, playerRes] = await Promise.all([
     fetch(`/api/match/${params.id}`),
     fetch(`/api/match/${params.id}/players`),

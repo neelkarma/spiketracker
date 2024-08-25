@@ -6,8 +6,11 @@
     value: T;
   };
 
+  /** The title of the quick picker panel. */
   export let title: string;
+  /** The items in the quick picker. */
   export let items: Item[];
+
   let filterString = "";
 
   const dispatch = createEventDispatcher<{ click: Item }>();
@@ -17,6 +20,10 @@
     const itemIndex = items.findIndex((other) => item.value === other.value);
     items.splice(itemIndex, 1);
     items.unshift(item);
+
+    // we do this to trigger svelte's reactivity, since it only registers that a variable has changed when it's assigned, not mutated
+    // kinda stupid, but it is what it is
+    // (i heard svelte v5 fixes this with it's runes system - we should migrate when it comes out)
     items = items;
 
     filterString = "";

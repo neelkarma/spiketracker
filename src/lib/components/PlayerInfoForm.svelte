@@ -19,10 +19,12 @@
   let deleteModalOpen = false;
   let teams = data.teams;
 
+  /** Handles the form's submit event. */
   const handleSubmit: EventHandler<SubmitEvent, HTMLFormElement> = async (
     e,
   ) => {
     const formData = new FormData(e.currentTarget);
+    // We dispatch a submit event with the form data to allow consumers of the components to decide what to do
     dispatch("submit", {
       ...data,
       firstName: formData.get("firstName")!.toString(),

@@ -1,6 +1,6 @@
+import type { MatchInfo, PlayerInfo } from "$lib/types";
 import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
-import type { MatchInfo, PlayerInfo } from "$lib/types";
 
 export const load = (async ({
   fetch,
@@ -14,6 +14,7 @@ export const load = (async ({
     points: number;
   }[];
 }> => {
+  // we load the player data and the data for their matches
   const [playerDataRes, matchInfoRes] = await Promise.all([
     fetch(`/api/player/${params.id}`),
     fetch(`/api/player/${params.id}/matches`),

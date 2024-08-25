@@ -1,3 +1,4 @@
+/** This maps internal action types to their respective names */
 export const ACTION_TYPE_MAPPINGS = {
   set: "Set",
   atk: "Attack",

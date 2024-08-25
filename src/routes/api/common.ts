@@ -19,6 +19,7 @@ export async function calculateStatRate(stmt: InStatement) {
     }
   }
 
+  // we have to check if total > 0 to protect against a division-by-zero error
   const rate = total > 0 ? successful / total : 0;
 
   return { total, successful, rate };

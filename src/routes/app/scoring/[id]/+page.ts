@@ -2,6 +2,7 @@ import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 
 export const load = (async ({ fetch, params }) => {
+  // we fetch the match data from the api
   const matchRes = await fetch(`/api/match/${params.id}`);
 
   if (matchRes.status === 404) {

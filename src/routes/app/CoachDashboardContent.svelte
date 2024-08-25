@@ -3,9 +3,12 @@
   import Modal from "$lib/components/Modal.svelte";
   import Stat from "$lib/components/Stat.svelte";
 
+  /** Whether the lockdown modal is open or not. */
   let showLockdownConfirmModal = false;
+  /** The loading indicator in the lockdown modal. */
   let lockdownLoading = false;
 
+  /** This triggers lockdown from the API. */
   const handleConfirmLockdown = async () => {
     lockdownLoading = true;
     const res = await fetch("/api/matches/lockdown");

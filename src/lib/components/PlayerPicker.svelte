@@ -2,8 +2,11 @@
   import type { PlayerInfo } from "$lib/types";
   import { debounce } from "$lib/utils";
 
+  /** The picked players. This should be bound. */
   export let value: PlayerInfo[] = [];
+  /** The HTML input id. Use for accessibilty - i.e. when pairing with an HTML label element */
   export let inputId = "";
+  /** Whether there must be at least 1 selected player or not. */
   export let required = false;
 
   let isLoading = false;
@@ -17,21 +20,32 @@
     );
   }
 
+  /** This gets called to refresh the filtered player list. */
   const fetchFilteredPlayers = async () => {
+    // edge case where the search query is empty - we simply don't display any players
     if (searchQuery.length === 0) {
       isLoading = false;
       filteredPlayers = [];
       return;
     }
 
+    // construct and execute api request
     const searchParams = new URLSearchParams({
       q: searchQuery,
     }).toString();
     const res = await fetch("/api/players/?" + searchParams);
+
+    if (!res.ok) {
+      alert("Sorry, something went wrong.");
+      isLoading = false;
+      return;
+    }
+
     filteredPlayers = await res.json();
     isLoading = false;
   };
 
+  // We debounce the filtered players request to make sure we don't spam the API with requests
   const debouncedMakeRequest = debounce(fetchFilteredPlayers);
 </script>
 

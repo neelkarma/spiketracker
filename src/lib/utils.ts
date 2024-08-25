@@ -56,3 +56,23 @@ export const dateToDateTimeLocalInputString = (date: Date) => {
   copy.setMinutes(copy.getMinutes() - copy.getTimezoneOffset());
   return copy.toISOString().slice(0, 16);
 };
+
+/**
+ * Calculates the number of sets won by each team given an array of points scored by each team each set
+ * @param points - The points array containing the number of points scored by each team in each set
+ * @returns An object representing the number of sets won by each team
+ */
+export const calculateSetsWon = (points: { our: number; opp: number }[]) => {
+  let ourSets = 0;
+  let oppSets = 0;
+
+  for (const { our, opp } of points) {
+    if (our > opp) ourSets += 1;
+    else if (opp > our) oppSets += 1;
+  }
+
+  return {
+    our: ourSets,
+    opp: oppSets,
+  };
+};

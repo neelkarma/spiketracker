@@ -23,13 +23,14 @@
 
   let filteredPlayers: PlayerInfo[];
 
+  /** this gets called whenever the search query or sorting options are changed */
   const handleChange = async (query: string, sortOptions: SortOptions) => {
+    // construct the search params and execute the api request to get the searched, sorted players
     const searchParams = new URLSearchParams({
       q: query,
       sort: sortOptions.sortBy,
       reverse: sortOptions.reverse ? "1" : "0",
     }).toString();
-
     const res = await fetch("/api/players/?" + searchParams);
 
     if (!res.ok) {
@@ -41,9 +42,11 @@
     filteredPlayers = await res.json();
   };
 
+  // we debounce the handleChange function bc we don't want the api to be spammed
   const handleChangeDebounced = debounce(handleChange);
 
   onMount(async () => {
+    // this initializes the data on the page
     await handleChange(query, sortOptions);
   });
 </script>

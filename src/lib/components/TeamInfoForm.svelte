@@ -17,12 +17,15 @@
     delete: null;
   }>();
 
+  /** Whether the delete modal is open or not */
   let deleteModalOpen = false;
 
+  /** This handles the submit event of the form. */
   const handleSubmit: EventHandler<SubmitEvent, HTMLFormElement> = async (
     e,
   ) => {
     const formData = new FormData(e.currentTarget);
+    // we dispatch the submit event with the form data to give control of what happens to the consumer of the component
     dispatch("submit", {
       ...data,
       playerIds: players.map(({ id }) => id),

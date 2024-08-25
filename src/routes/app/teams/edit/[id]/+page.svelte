@@ -8,11 +8,13 @@
 
   let status: "success" | "loading" | "error" | null = null;
 
+  /** this handles the submit event of the TeamInfoForm component */
   const handleSubmit = async (e: CustomEvent<TeamInfo>) => {
     const team = e.detail;
 
     status = "loading";
 
+    // api request to update the team
     const res = await fetch(`/api/team/${team.id}`, {
       method: "PUT",
       body: JSON.stringify(team),
@@ -23,7 +25,7 @@
 
     window.scrollTo({ top: 0 });
 
-    if (res.status === 200) {
+    if (res.ok) {
       status = "success";
     } else {
       status = "error";
@@ -31,14 +33,16 @@
     }
   };
 
+  /** this handles the delete event */
   const handleDelete = async () => {
     status = "loading";
 
+    // api request to delete the team
     const res = await fetch(`/api/team/${data.team.id}`, {
       method: "DELETE",
     });
 
-    if (res.status === 200) {
+    if (res.ok) {
       await goto("/app/teams?success=1");
     } else {
       status = "error";

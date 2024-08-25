@@ -2,9 +2,7 @@
 
 > Volleyball stat tracking software for SBHS.
 
-## Dev Guide
-
-### Setting Up
+## Setting Up
 
 1. Make sure you have installed the following software:
 
@@ -27,17 +25,20 @@ DB_PATH=data.sqlite3
 DB_AUTH_TOKEN=
 ```
 
-### Start Developing
+5. Run `pnpm i` to install all the required dependencies.
+6. Run `pnpm initdb` to initialize the local database.
+
+## Start Developing
 
 1. Open the project in VS Code and create a new terminal.
-2. If this is your first time, run `pnpm i` to install all the required dependencies.
-3. Run `pnpm dev` to start the development server.
+2. Run `pnpm dev` to start the development server.
 
-### Common Issues
+## Common Issues
 
-#### Getting a backend error whenever the database is instantiated
+### Getting a backend error whenever the database is instantiated
 
-Check if the database schema is valid by installing SQLite, opening a new terminal and typing
+Check if the database schema is valid by installing SQLite, opening a new
+terminal and typing
 
 ```sh
 sqlite3 < schema.sql
@@ -50,3 +51,14 @@ schema. If there's no problem in the schema, gg.
 
 Use a tool like SQLiteBrowser to open the `data.sqlite3` file, which has all the
 data of the app.
+
+## Helpful Resources
+
+- [Bulma Docs](https://bulma.io/documentation) - Documentation for the CSS
+  (Styling) framework we're using
+- [Svelte Website](https://svelte.dev) - Docs, tutorials, and examples on using
+  Svelte (the UI framework we're using)
+- [SvelteKit Website](https://kit.svelte.dev) - Docs, tutorials, and examples on
+  using SvelteKit (the web framework we're using)
+- [LibSQL Docs](https://docs.turso.tech/sdk/ts/reference) - Docs for LibSQL, the
+  SQLite database library we're using

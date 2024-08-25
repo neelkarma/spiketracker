@@ -13,6 +13,7 @@
     };
   }>();
 
+  /** these are the fontawesome icons for the ratings */
   const ratingIcons = [
     "fa-face-frown",
     "fa-face-meh",
@@ -26,6 +27,7 @@
   let to: [number, number] | null = null;
   let action: keyof typeof ACTION_TYPE_MAPPINGS = "set";
 
+  /** this is called when a grid cell is clicked */
   const handleGridClick = (x: number, y: number) => {
     if (from === null) {
       from = [x, y];
@@ -38,13 +40,18 @@
     }
   };
 
+  /** this is called to reset the state */
   const handleReset = () => {
     from = null;
     to = null;
+    action = "set";
   };
 
+  /** this is called when submitting the scoring data */
   const handleSubmit = (rating: number) => {
+    // we exit early if the data is not complete
     if (from === null || to === null) return;
+
     dispatch("submit", {
       from,
       to,
@@ -52,11 +59,11 @@
       rating,
     });
 
-    from = null;
-    to = null;
-    action = "set";
+    // we reset afterwards
+    handleReset();
   };
 
+  // this ensures that the state is reset when the modal is closed
   $: if (!isOpen) {
     handleReset();
   }

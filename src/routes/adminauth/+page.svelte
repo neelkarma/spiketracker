@@ -3,6 +3,7 @@
 
   let error: string | null = null;
 
+  /** this handles the submit event of the login form. */
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     const password = new FormData(e.currentTarget).get("password")!;
     const res = await fetch("/api/auth/login/admin", {
@@ -13,8 +14,10 @@
       },
     });
     if (res.ok) {
+      // the login was successful - redirect to the home page
       window.location.href = "/";
     } else {
+      // the login was not successful - show the user the issue
       const data = await res.json();
       error = data.message;
     }

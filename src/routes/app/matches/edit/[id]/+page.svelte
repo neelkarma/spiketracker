@@ -8,11 +8,13 @@
 
   let status: "success" | "loading" | "error" | null = null;
 
+  /** This handles the submit event of the MatchInfoForm component */
   const handleSubmit = async (e: CustomEvent<MatchInfo>) => {
     const match = e.detail;
 
     status = "loading";
 
+    // make api request to update match
     const res = await fetch(`/api/match/${match.id}`, {
       method: "PUT",
       body: JSON.stringify(match),
@@ -23,7 +25,7 @@
 
     window.scrollTo({ top: 0 });
 
-    if (res.status === 200) {
+    if (res.ok) {
       status = "success";
     } else {
       status = "error";
@@ -31,14 +33,16 @@
     }
   };
 
+  /** This handles the delete event of the MatchInfoForm */
   const handleDelete = async () => {
     status = "loading";
 
+    // make the api request to delete the match
     const res = await fetch(`/api/match/${data.id}`, {
       method: "DELETE",
     });
 
-    if (res.status === 200) {
+    if (res.ok) {
       await goto("/app/matches?success=1");
     } else {
       status = "error";

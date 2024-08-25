@@ -12,7 +12,7 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
   }
 
   if (password != ADMIN_PASSWORD) {
-    error(401, "Invalid password");
+    error(401, "Invalid password.");
   }
 
   const sessionToken = await signSessionToken({ admin: true, id: undefined });

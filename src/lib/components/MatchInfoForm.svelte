@@ -25,6 +25,7 @@
   let teamsPromise: Promise<{ name: string; id: number }[]>;
   let deleteModalOpen = false;
 
+  /** Fetches the teams from the database */
   const fetchTeams = async () => {
     const res = await fetch("/api/teams/");
 
@@ -39,6 +40,7 @@
 
   onMount(() => (teamsPromise = fetchTeams()));
 
+  /** Converts the form data points into the API-compatible points array */
   const pointsArrayFromFormData = (formData: FormData) => {
     const out = [];
     for (let i = 0; formData.has(`our-${i}`); i++) {
@@ -50,6 +52,7 @@
     return out;
   };
 
+  /** Handles the submit event of the match info form */
   const handleSubmit: EventHandler<SubmitEvent, HTMLFormElement> = async (
     e,
   ) => {
@@ -58,6 +61,9 @@
     const formData = new FormData(e.currentTarget);
     const ourTeamId = Number.parseInt(formData.get("ourTeamId")!.toString());
 
+    // dispatch the submit event on the element
+    // this allows the consumer of the component to decide what to do with the data.
+    // (i.e. edit an existing match, or create a new one)
     dispatch("submit", {
       id: data.id,
       ourTeamId,
