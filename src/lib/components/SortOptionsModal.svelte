@@ -20,6 +20,7 @@
     on:submit|preventDefault={(e) => {
       const formData = new FormData(e.currentTarget);
 
+      // e.detail
       dispatch("submit", {
         //@ts-ignore
         sortBy: formData.get("sortby").toString(),

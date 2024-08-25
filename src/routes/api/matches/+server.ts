@@ -44,6 +44,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
     ],
   });
 
+  // levels of access
   const matches = locals.auth?.admin
     ? res.rows
     : res.rows.filter((row) => row.visible);
