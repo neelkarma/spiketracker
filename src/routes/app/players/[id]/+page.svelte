@@ -10,10 +10,13 @@
 <div class="hero is-primary has-background-primary-dark">
   <div class="hero-body">
     <div class="container">
-      <div class="level">
+      <div class="level vertical-print">
         <div class="level-left">
           <div>
-            <a href="/app/players" class="has-text-link-light is-underlined">
+            <a
+              href="/app/players"
+              class="has-text-link-light is-underlined no-print"
+            >
               <span>
                 <i class="fas fa-arrow-left"></i>
                 Back to All Players
@@ -65,7 +68,7 @@
         <table class="table is-fullwidth">
           <thead>
             <tr>
-              <th>Open</th>
+              <th class="no-print">Open</th>
               <th>Date</th>
               <th>Opponent</th>
               <th>Team</th>
@@ -77,7 +80,7 @@
           <tbody>
             {#each data.matches as { match, points, kr, pef }}
               <tr>
-                <td>
+                <td class="no-print">
                   <a class="button" href="/app/matches/{match.id}">
                     <span class="icon">
                       <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -116,3 +119,12 @@
     </div>
   </div>
 </div>
+
+<style>
+  @media print {
+    .vertical-print {
+      flex-direction: column;
+      align-items: baseline;
+    }
+  }
+</style>

@@ -9,7 +9,7 @@
 <div class="hero is-primary has-background-primary-dark">
   <div class="hero-body">
     <div class="container">
-      <div class="level is-fullwidth">
+      <div class="level is-fullwidth vertical-print">
         <div class="level-left">
           <div>
             <a
@@ -87,3 +87,12 @@
     </div>
   </div>
 </div>
+
+<style>
+  @media print {
+    .vertical-print {
+      flex-direction: column;
+      align-items: baseline;
+    }
+  }
+</style>
