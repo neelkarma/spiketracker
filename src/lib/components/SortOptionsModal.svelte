@@ -14,7 +14,7 @@
   const dispatch = createEventDispatcher<{ submit: SortOptions }>();
 </script>
 
-<Modal bind:isOpen>
+<Modal bind:isOpen canClose={false}>
   <form
     class="box"
     on:submit|preventDefault={(e) => {
@@ -56,9 +56,6 @@
     <div class="field">
       <div class="control is-grouped">
         <button class="button is-primary">Apply</button>
-        <button type="button" class="button" on:click={() => (isOpen = false)}>
-          Cancel
-        </button>
       </div>
     </div>
   </form>

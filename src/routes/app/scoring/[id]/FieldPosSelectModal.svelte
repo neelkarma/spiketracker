@@ -62,6 +62,7 @@
   }
 </script>
 
+<!-- This is to define popup of scoring ui -->
 <Modal bind:isOpen>
   <div class="box">
     {#if from == null}
