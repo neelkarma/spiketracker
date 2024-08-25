@@ -1,9 +1,14 @@
 <script lang="ts">
+  // these import the specialist components
   import FieldPosSelectModal from "./FieldPosSelectModal.svelte";
+  // for scoring ui popup
   import Modal from "$lib/components/Modal.svelte";
+  // for the confirm submission popup
   import QuickPicker from "$lib/components/QuickPicker.svelte";
-  import { ACTION_TYPE_MAPPINGS } from "./mappings.js";
+  // this is the component for the player search in scoring
+
   import { beforeNavigate, goto } from "$app/navigation";
+  import { ACTION_TYPE_MAPPINGS } from "./mappings.js";
 
   export let data;
 
@@ -32,7 +37,7 @@
     }) => ({
       label: `${firstName} ${surname}`,
       value: id,
-    }),
+    })
   );
 
   const handlePlayerSelect = ({
@@ -65,6 +70,7 @@
     submitStatus = "loading";
 
     const res = await fetch(`/api/stats/${data.match.id}`, {
+      // sending
       method: "PUT",
       body: JSON.stringify(scoringData),
       headers: {
@@ -73,6 +79,7 @@
     });
 
     if (!res.ok) {
+      // if something goes wrong sends api an error msg
       console.log(await res.text());
       submitStatus = "error";
       return;
@@ -87,7 +94,7 @@
       cancel();
     } else if (
       !confirm(
-        "Warning: Your scoring data is unsaved, and will be lost if you leave now. Press 'Ok' if you still want to leave.",
+        "Warning: Your scoring data is unsaved, and will be lost if you leave now. Press 'Ok' if you still want to leave."
       )
     ) {
       cancel();
@@ -116,7 +123,7 @@
     </div>
   </div>
 </Modal>
-
+<!-- This is class of the scoring ui popup -->
 <FieldPosSelectModal
   isOpen={playerScoring !== null}
   on:submit={(e) => handleScoringSubmit(e.detail)}

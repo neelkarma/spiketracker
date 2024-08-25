@@ -62,7 +62,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
     if (sortBy === "time") {
       return Date.parse(a.time) - Date.parse(b.time);
     }
-    return a[sortBy] - b[sortBy];
+    return a[sortBy].localeCompare(b[sortBy]);
   });
 
   return json(processedMatches);

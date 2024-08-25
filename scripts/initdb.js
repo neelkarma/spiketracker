@@ -2,7 +2,7 @@ import { createClient } from "@libsql/client";
 import { existsSync, readFileSync, rmSync } from "fs";
 
 // change this to "live-test-data.sql" for the live test data
-const SCHEMA_PATH = "schema.sql";
+const SCHEMA_PATH = "live-test-data.sql";
 const DB_PATH = "data.sqlite3";
 
 if (process.argv.includes("--reset")) {

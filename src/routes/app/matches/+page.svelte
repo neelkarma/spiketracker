@@ -1,12 +1,11 @@
 <script lang="ts">
-  import Modal from "$lib/components/Modal.svelte";
+  import SortOptionsModal from "$lib/components/SortOptionsModal.svelte";
   import { type MatchInfo } from "$lib/types";
   import { debounce } from "$lib/utils";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
-  import UnscoredMatchCard from "./UnscoredMatchCard.svelte";
   import ScoredMatchCard from "./ScoredMatchCard.svelte";
-  import SortOptionsModal from "$lib/components/SortOptionsModal.svelte";
+  import UnscoredMatchCard from "./UnscoredMatchCard.svelte";
 
   interface SortOptions {
     sortBy: string;

@@ -1,13 +1,11 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import Modal from "$lib/components/Modal.svelte";
+  import ActionFeedbackNotification from "$lib/components/ActionFeedbackNotification.svelte";
+  import SortOptionsModal from "$lib/components/SortOptionsModal.svelte";
   import { type PlayerInfo } from "$lib/types";
   import { debounce } from "$lib/utils";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
-  import ActionFeedbackNotification from "$lib/components/ActionFeedbackNotification.svelte";
-  import SortOptionsModal from "$lib/components/SortOptionsModal.svelte";
-  import { filter } from "@observablehq/plot";
 
   interface SortOptions {
     sortBy: string;
@@ -53,13 +51,13 @@
 <SortOptionsModal
   bind:isOpen={filterModalIsOpen}
   options={[
-    ["firstName", "First Name (A-Z)"],
-    ["surname", "Surname (A-Z)"],
-    ["ppg", "PPG (Desc)"],
-    ["kr", "Kill Rate (Desc)"],
-    ["pef", "Passing Efficiency (Desc)"],
-    ["totalPoints", "Total Points (Desc)"],
-    ["gradYear", "Graduation Year (Desc)"],
+    ["firstName", "First Name"],
+    ["surname", "Surname"],
+    ["ppg", "PPG"],
+    ["kr", "Kill Rate"],
+    ["pef", "Passing Efficiency"],
+    ["totalPoints", "Total Points"],
+    ["gradYear", "Graduation Year"],
   ]}
   value={sortOptions}
   on:submit={(e) => {
