@@ -76,7 +76,7 @@
   };
 
   $: if (browser) {
-    // referencing `type` and `id` will re-execute this block whenever they change
+    // referencing `type` and `id` will re-execute this block whenever they change.
     // again, another svelte gimmick. apparently v5 fixes all of this with runtime reactivity.
     type;
     id;
