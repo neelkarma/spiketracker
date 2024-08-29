@@ -26,7 +26,6 @@
   let confirmDialogOpen = false;
   let submitStatus: "idle" | "loading" | "error" = "idle";
 
-  // TODO: clean up the typings in the entire project when we have the time
   $: playerItems = (<any[]>data.players).map(
     ({
       id,

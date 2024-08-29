@@ -20,14 +20,14 @@
         action: string;
         x: number;
         y: number;
-        isStart: boolean; // true is for contact and false is for landing
+        isContactPoint: boolean; // true is for contact and false is for landing
       }[]
     | null = null; // Svelte requirement to update data, will be fixed in v5
 
   // default options
   let rating = 3;
   let action = "set";
-  let showFrom = true; // ???
+  let showContact = true;
 
   const handleSourceChange = async () => {
     // Function to fetch and process stats data based on the type and id
@@ -60,21 +60,20 @@
 
     const stats = await res.json(); // Parse the JSON response
 
-    // ???
     data = stats.flatMap((stat: any) => [
       {
         rating: stat.rating,
         action: stat.action,
         x: stat.from[0], // X-coordinate for the start of the action
         y: stat.from[1], // Y-coordinate for the start of the action
-        isStart: true, // Mark as start
+        isContactPoint: true, // Mark as start
       },
       {
         rating: stat.rating,
         action: stat.action,
         x: stat.to[0], // X-coordinate for the end of the action
         y: stat.to[1], // Y-coordinate for the end of the action
-        isStart: false, // Mark as end
+        isContactPoint: false, // Mark as end
       },
     ]);
   };
@@ -91,7 +90,7 @@
     const filtered = data.filter(
       (d) =>
         (rating === -1 || d.rating === rating) && // Filter by rating
-        d.isStart === showFrom && // Filter by whether to show start or end
+        d.isContactPoint === showContact && // Filter by whether to show start or end
         d.action === action // Filter by action type
     );
 
@@ -124,7 +123,7 @@
           density(filtered, {
             x: "x",
             y: "y",
-            thresholds: 10, // ???
+            thresholds: 10, // contour density
           }),
           dot(filtered, {
             x: "x",
@@ -175,11 +174,11 @@
       <span class="is-flex is-align-items-center">
         <span class="has-text-weight-bold mr-2">Show where the shot:</span>
         <label class="radio mr-2">
-          <input type="radio" value={true} bind:group={showFrom} />
+          <input type="radio" value={true} bind:group={showContact} />
           Contacted
         </label>
         <label class="radio">
-          <input type="radio" value={false} bind:group={showFrom} />
+          <input type="radio" value={false} bind:group={showContact} />
           Landed
         </label>
       </span>
