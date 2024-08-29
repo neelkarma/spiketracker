@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Modal from "$lib/components/Modal.svelte";
   import TeamCard from "$lib/components/TeamCard.svelte";
   import type { SortOptions, TeamInfo } from "$lib/types";
   import { debounce } from "$lib/utils";
