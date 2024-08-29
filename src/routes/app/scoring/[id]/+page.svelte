@@ -38,7 +38,7 @@
     }) => ({
       label: `${firstName} ${surname}`,
       value: id,
-    })
+    }),
   );
 
   /** this is called whenever a player is selected from the list */
@@ -107,7 +107,7 @@
       cancel();
     } else if (
       !confirm(
-        "Warning: Your scoring data is unsaved, and will be lost if you leave now. Press 'Ok' if you still want to leave."
+        "Warning: Your scoring data is unsaved, and will be lost if you leave now. Press 'Ok' if you still want to leave.",
       )
     ) {
       cancel();
@@ -178,36 +178,38 @@
         selecting their name above first.
       </p>
     {:else}
-      <table class="table is-fullwidth">
-        <thead>
-          <tr>
-            <th>Player Name</th>
-            <th>Action Type</th>
-            <th>Rating</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each scoringData as { name, action, rating }, i}
+      <div class="table-container">
+        <table class="table is-fullwidth">
+          <thead>
             <tr>
-              <td>{name}</td>
-              <td>{ACTION_TYPE_MAPPINGS[action]}</td>
-              <td>{rating}</td>
-              <td>
-                <button
-                  class="button is-danger"
-                  on:click={() => {
-                    scoringData.splice(i, 1);
-                    scoringData = scoringData;
-                  }}
-                >
-                  Delete
-                </button>
-              </td>
+              <th>Player Name</th>
+              <th>Action Type</th>
+              <th>Rating</th>
+              <th>Delete</th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {#each scoringData as { name, action, rating }, i}
+              <tr>
+                <td>{name}</td>
+                <td>{ACTION_TYPE_MAPPINGS[action]}</td>
+                <td>{rating}</td>
+                <td>
+                  <button
+                    class="button is-danger"
+                    on:click={() => {
+                      scoringData.splice(i, 1);
+                      scoringData = scoringData;
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
     {/if}
   </div>
 </section>
