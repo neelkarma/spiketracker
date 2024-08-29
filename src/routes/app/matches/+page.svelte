@@ -1,16 +1,11 @@
 <script lang="ts">
   import SortOptionsModal from "$lib/components/SortOptionsModal.svelte";
-  import { type MatchInfo } from "$lib/types";
+  import type { MatchInfo, SortOptions } from "$lib/types";
   import { debounce } from "$lib/utils";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
   import ScoredMatchCard from "./ScoredMatchCard.svelte";
   import UnscoredMatchCard from "./UnscoredMatchCard.svelte";
-
-  interface SortOptions {
-    sortBy: string;
-    reverse: boolean;
-  }
 
   export let data: PageData;
 

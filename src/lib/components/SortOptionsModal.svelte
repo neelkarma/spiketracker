@@ -1,11 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import Modal from "./Modal.svelte";
-
-  interface SortOptions {
-    sortBy: string;
-    reverse: boolean;
-  }
+  import type { SortOptions } from "$lib/types";
 
   /** whether the sort modal is open or not */
   export let isOpen = false;

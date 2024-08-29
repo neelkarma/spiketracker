@@ -139,3 +139,9 @@ export interface Stat {
   from: [number, number];
   to: [number, number];
 }
+
+/** Sorting options */
+export interface SortOptions {
+  sortBy: string;
+  reverse: boolean;
+}

@@ -2,15 +2,10 @@
   import { page } from "$app/stores";
   import ActionFeedbackNotification from "$lib/components/ActionFeedbackNotification.svelte";
   import SortOptionsModal from "$lib/components/SortOptionsModal.svelte";
-  import { type PlayerInfo } from "$lib/types";
+  import type { PlayerInfo, SortOptions } from "$lib/types";
   import { debounce } from "$lib/utils";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
-
-  interface SortOptions {
-    sortBy: string;
-    reverse: boolean;
-  }
 
   export let data: PageData;
 
