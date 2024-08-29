@@ -5,9 +5,11 @@
 
   export let data: PageData;
 
+  // this contains the number of sets won for both our team and the opposition team
   $: setsWon = calculateSetsWon(data.match.points);
 </script>
 
+<!-- header with general match details -->
 <div class="hero is-primary has-background-primary-dark">
   <div class="hero-body has-text-centered">
     <div class="container">
@@ -74,6 +76,8 @@
     </div>
   </div>
 </div>
+
+<!-- table with rows of statistics for each player -->
 <div class="section">
   <div class="container">
     <h1 class="title">Statistics by Player</h1>
@@ -109,6 +113,8 @@
         </tbody>
       </table>
     </div>
+
+    <!-- stat heatmap for the match -->
     <h1 class="title page-break-before">Heatmap</h1>
     <div class="box">
       <StatHeatmap type="match" id={data.match.id} />

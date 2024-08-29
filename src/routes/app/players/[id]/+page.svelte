@@ -1,12 +1,12 @@
 <script lang="ts">
   import Stat from "$lib/components/Stat.svelte";
-  import { onMount } from "svelte";
   import type { PageData } from "./$types";
   import StatHeatmap from "$lib/components/StatHeatmap.svelte";
 
   export let data: PageData;
 </script>
 
+<!-- header section - shows player stats and details -->
 <div class="hero is-primary has-background-primary-dark">
   <div class="hero-body">
     <div class="container">
@@ -58,6 +58,8 @@
     </div>
   </div>
 </div>
+
+<!-- table for match history with rows for each match including details and a link to the match details -->
 <div class="section">
   <div class="container">
     <h1 class="title">Match History</h1>
@@ -113,6 +115,7 @@
       </div>
     {/if}
 
+    <!-- heatmap for the player -->
     <h1 class="title page-break-before">Heatmap</h1>
     <div class="box">
       <StatHeatmap type="player" id={data.player.id} />
@@ -121,6 +124,7 @@
 </div>
 
 <style>
+  /* this makes the stats print below the player name in the header */
   @media print {
     .vertical-print {
       flex-direction: column;

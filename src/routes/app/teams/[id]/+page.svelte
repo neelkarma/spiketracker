@@ -6,6 +6,7 @@
   export let data: PageData;
 </script>
 
+<!-- header (hero) section for team name + general stats -->
 <div class="hero is-primary has-background-primary-dark">
   <div class="hero-body">
     <div class="container">
@@ -44,6 +45,8 @@
     </div>
   </div>
 </div>
+
+<!-- player list - table with rows for each player listing their details and stats -->
 <div class="section">
   <div class="container">
     <h1 class="title">Player List</h1>
@@ -81,6 +84,8 @@
         </tbody>
       </table>
     </div>
+
+    <!-- stat heatmap -->
     <h1 class="title page-break-before">Heatmap</h1>
     <div class="box">
       <StatHeatmap type="team" id={data.team.id} />
@@ -89,6 +94,7 @@
 </div>
 
 <style>
+  /* this is for printing the stats below the team name */
   @media print {
     .vertical-print {
       flex-direction: column;
