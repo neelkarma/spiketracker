@@ -30,7 +30,7 @@ export async function calculateStatRate(stmt: InStatement) {
  * @param a - First item to compare.
  * @param b - Second item to compare.
  * @param reverse - Whether to reverse the final output. Defaults to false.
- * @returns A positive number if a > b, negative if b < a or 0 if a == b or the inputs are invalid
+ * @returns A negative number if a should come before b, positive if a should come after b or 0 if a and b are equivalent or invalid
  */
 export function compare<T extends string | number>(
   a: T,
