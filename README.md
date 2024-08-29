@@ -62,3 +62,5 @@ data of the app.
   using SvelteKit (the web framework we're using)
 - [LibSQL Docs](https://docs.turso.tech/sdk/ts/reference) - Docs for LibSQL, the
   SQLite database library we're using
+- [Observable Plot](https://observablehq.com/plot/getting-started) - Docs for
+  Observable Plot, the plotting library we're using for the heatmap

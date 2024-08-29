@@ -1,14 +1,16 @@
 <script lang="ts">
   // these import the specialist components
   import FieldPosSelectModal from "./FieldPosSelectModal.svelte";
-  // for scoring ui popup
+  // scoring ui popup
   import Modal from "$lib/components/Modal.svelte";
-  // for the confirm submission popup
+  // confirm submission popup
   import QuickPicker from "$lib/components/QuickPicker.svelte";
-  // this is the component for the player search in scoring
+  // player search in scoring
 
   import { beforeNavigate, goto } from "$app/navigation";
+  // import the path
   import { ACTION_TYPE_MAPPINGS } from "./mappings.js";
+  // import the predfined structure of stats
 
   export let data;
 
@@ -24,7 +26,6 @@
   let confirmDialogOpen = false;
   let submitStatus: "idle" | "loading" | "error" = "idle";
 
-  // TODO: clean up the typings in the entire project when we have the time
   $: playerItems = (<any[]>data.players).map(
     ({
       id,
@@ -37,7 +38,7 @@
     }) => ({
       label: `${firstName} ${surname}`,
       value: id,
-    }),
+    })
   );
 
   /** this is called whenever a player is selected from the list */
@@ -66,11 +67,13 @@
       playerId: playerScoring.id,
       ...data,
     });
-    // this might look weird, but it's necessary for svelte to see that scoringData has changed
-    // svelte only tracks assignments, not mutations
-    // it sucks, but apparently it's fixed in v5
+
+    /** this might look weird, but it's necessary for svelte to see that scoringData has changed
+    svelte only tracks assignments, not mutations
+    it sucks, but apparently it's fixed in v5 **/
     scoringData = scoringData;
-    // we reset playerScoring to dismiss the modal
+
+    // reset playerScoring to dismiss the modal
     playerScoring = null;
   };
 
@@ -104,7 +107,7 @@
       cancel();
     } else if (
       !confirm(
-        "Warning: Your scoring data is unsaved, and will be lost if you leave now. Press 'Ok' if you still want to leave.",
+        "Warning: Your scoring data is unsaved, and will be lost if you leave now. Press 'Ok' if you still want to leave."
       )
     ) {
       cancel();
@@ -112,6 +115,7 @@
   });
 </script>
 
+<!-- This is class of the confirmation popup -->
 <Modal bind:isOpen={confirmDialogOpen}>
   <div class="box">
     <p class="title is-4 mb-3">Confirm Submission</p>
@@ -133,7 +137,8 @@
     </div>
   </div>
 </Modal>
-<!-- This is class of the scoring ui popup -->
+
+<!-- This is the class of the scoring ui popup -->
 <FieldPosSelectModal
   isOpen={playerScoring !== null}
   on:submit={(e) => handleScoringSubmit(e.detail)}
