@@ -25,8 +25,8 @@
     | null = null; // Svelte requirement to update data, will be fixed in v5
 
   // default options
-  let rating = 3;
-  let action = "set";
+  let rating = -1; // indicates all
+  let action = "atk";
   let showContact = true;
 
   const handleSourceChange = async () => {
