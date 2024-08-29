@@ -1,37 +1,40 @@
 <script lang="ts">
+  // Importing necessary modules
   import { browser } from "$app/environment";
+  // Checks if the code is running in a browser environment
   import { density, dot, plot, ruleX, ruleY } from "@observablehq/plot";
+  // Importing functions from Observable Plot for creating plots
 
-  /** the type of data item to display stats for */
-  export let type: "team" | "player" | "match";
-  /** the id of the data item to display the stats for */
-  export let id: number;
-  /** the width, in pixels, of the heatmap */
-  export let width = 420;
+  export let type: "team" | "player" | "match"; // Define the type of stats to display (team, player, or match)
+  export let id: number; // The specific ID of the team, player, or match
+  export let width = 420; // Default width for the heatmap in pixels
 
+  // defining heatmap dimensions
   const GRID_WIDTH = 13;
   const GRID_HEIGHT = 22;
 
-  let div: HTMLDivElement;
+  let div: HTMLDivElement; // A reference to the div element where the plot will be rendered
   let data:
     | {
         rating: number;
         action: string;
         x: number;
         y: number;
-        isStart: boolean;
+        isStart: boolean; // true is for contact and false is for landing
       }[]
-    | null = null;
+    | null = null; // Svelte requirement to update data, will be fixed in v5
 
+  // default options
   let rating = 3;
   let action = "set";
-  let showFrom = true;
+  let showFrom = true; // ???
 
-  // this gets called to get the stats data for the specific data item (type and id).
   const handleSourceChange = async () => {
-    // this object holds the search params for the stats endpoint
-    let searchParamsObject: { [key: string]: any } = {};
+    // Function to fetch and process stats data based on the type and id
 
+    let searchParamsObject: { [key: string]: any } = {}; // Object to hold search parameters for the API request
+
+    // Add the appropriate search parameter based on the type of data
     switch (type) {
       case "match":
         searchParamsObject.match_id = id;
@@ -44,9 +47,9 @@
         break;
     }
 
-    const searchParams = new URLSearchParams(searchParamsObject).toString();
+    const searchParams = new URLSearchParams(searchParamsObject).toString(); // Convert the search parameters to a query string
 
-    // query the stats
+    // Fetch the stats data from the API
     const res = await fetch("/api/stats/?" + searchParams);
 
     if (!res.ok) {
@@ -55,52 +58,52 @@
       return;
     }
 
-    const stats = await res.json();
-    // we split each stat into its contact and land points so we can easily filter in the heatmap logic.
+    const stats = await res.json(); // Parse the JSON response
+
+    // ???
     data = stats.flatMap((stat: any) => [
       {
         rating: stat.rating,
         action: stat.action,
-        x: stat.from[0],
-        y: stat.from[1],
-        isStart: true,
+        x: stat.from[0], // X-coordinate for the start of the action
+        y: stat.from[1], // Y-coordinate for the start of the action
+        isStart: true, // Mark as start
       },
       {
         rating: stat.rating,
         action: stat.action,
-        x: stat.to[0],
-        y: stat.to[1],
-        isStart: false,
+        x: stat.to[0], // X-coordinate for the end of the action
+        y: stat.to[1], // Y-coordinate for the end of the action
+        isStart: false, // Mark as end
       },
     ]);
   };
 
+  // Reactive block to fetch data when type or id changes
   $: if (browser) {
-    // referencing `type` and `id` will re-execute this block whenever they change.
-    // again, another svelte gimmick. apparently v5 fixes all of this with runtime reactivity.
     type;
     id;
-    handleSourceChange();
+    handleSourceChange(); // Fetch data whenever type or id changes
   }
 
+  // Reactive block to update the plot when data changes
   $: if (data) {
     const filtered = data.filter(
       (d) =>
-        (rating === -1 || d.rating === rating) &&
-        d.isStart === showFrom &&
-        d.action === action,
+        (rating === -1 || d.rating === rating) && // Filter by rating
+        d.isStart === showFrom && // Filter by whether to show start or end
+        d.action === action // Filter by action type
     );
 
-    // remove the existing plot
-    div?.firstChild?.remove();
+    div?.firstChild?.remove(); // Remove the existing plot if it exists
 
-    // the behemoth.
+    // Append the new plot to the div
     div?.append(
       plot({
         x: {
-          domain: [0, GRID_WIDTH],
-          ticks: GRID_WIDTH,
-          grid: true,
+          domain: [0, GRID_WIDTH], // Set the domain for the x-axis
+          ticks: GRID_WIDTH, // Set the number of ticks on the x-axis
+          grid: true, // Enable grid lines
         },
         y: {
           domain: [0, GRID_HEIGHT],
@@ -110,18 +113,18 @@
         width,
         aspectRatio: 1,
         marks: [
-          // these inscribe the court markings onto the graph
+          // Add court markings to the plot
           ruleX([0, 13]),
           ruleY([0, 8.4, 13.6, 22]),
           ruleX([2, 11], { y1: 2, y2: 20 }),
           ruleX([2, 11], { y1: 2, y2: 20 }),
           ruleY([2, 11, 20], { x1: 2, x2: 11 }),
 
-          // these plot the actual data
+          // Plot the data points as density and dots
           density(filtered, {
             x: "x",
             y: "y",
-            thresholds: 10,
+            thresholds: 10, // ???
           }),
           dot(filtered, {
             x: "x",
@@ -129,7 +132,7 @@
             fill: "black",
           }),
         ],
-      }),
+      })
     );
   }
 </script>
