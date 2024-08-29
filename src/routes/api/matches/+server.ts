@@ -60,9 +60,11 @@ export const GET: RequestHandler = async ({ url, locals }) => {
   processedMatches.sort((a: any, b: any) => {
     let aField, bField;
     if (sortBy === "time") {
-      [aField, bField] = [Date.parse(a.time), Date.parse(b.time)];
+      aField = Date.parse(a.time);
+      bField = Date.parse(b.time);
     } else {
-      [aField, bField] = [a[sortBy], b[sortBy]];
+      aField = a[sortBy];
+      bField = b[sortBy];
     }
     return compare(aField, bField, reverse);
   });
