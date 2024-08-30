@@ -10,10 +10,6 @@ export const GET: RequestHandler = async ({ params, locals }) => {
     error(400, "id must be an integer");
   }
 
-  if (!(locals.auth?.admin || locals.auth?.id === id)) {
-    error(403, "Forbidden");
-  }
-
   const res = await db.execute({
     sql: `
       SELECT teams.*
@@ -25,7 +21,11 @@ export const GET: RequestHandler = async ({ params, locals }) => {
     args: [id],
   });
 
-  const processedTeams = await Promise.all(res.rows.map(processTeamRow));
+  const teams = locals.auth?.admin
+    ? res.rows
+    : res.rows.filter((row) => row.visible);
+
+  const processedTeams = await Promise.all(teams.map(processTeamRow));
 
   return json(processedTeams);
 };
