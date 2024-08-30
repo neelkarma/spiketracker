@@ -6,7 +6,7 @@
 
   export let data: PageData;
 
-  let status: "success" | "loading" | "error" | null = null;
+  let status: "loading" | "error" | null = null;
 
   /** this handles the submit event of the TeamInfoForm component */
   const handleSubmit = async (e: CustomEvent<TeamInfo>) => {
@@ -26,7 +26,7 @@
     window.scrollTo({ top: 0 });
 
     if (res.ok) {
-      status = "success";
+      goto("/app/teams?success=1");
     } else {
       status = "error";
       console.log(await res.text());
@@ -53,9 +53,7 @@
 
 <section class="section">
   <div class="container">
-    {#if status === "success"}
-      <div class="notification is-success">Successfully updated.</div>
-    {:else if status === "error"}
+    {#if status === "error"}
       <div class="notification is-danger">
         Sorry, something went wrong. Please try again after a few minutes.
       </div>
