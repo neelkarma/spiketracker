@@ -25,7 +25,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
     sql: `
       SELECT DISTINCT teams.*
       FROM teams
-      INNER JOIN teamPlayers ON teamPlayers.teamId = teams.id
+      LEFT JOIN teamPlayers ON teamPlayers.teamId = teams.id
       WHERE
         teams.name LIKE ?
         OR teams.id = ?
