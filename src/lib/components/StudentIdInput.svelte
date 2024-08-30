@@ -1,5 +1,5 @@
 <script lang="ts">
-  let value: number;
+  export let value: number;
   let inputEl: HTMLInputElement;
 
   $: if (inputEl) {
