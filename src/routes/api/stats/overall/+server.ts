@@ -20,21 +20,22 @@ export const GET: RequestHandler = async ({ locals }) => {
   );
   const numPlayers = playerCountRes.rows[0].count;
 
-  const ratingSql = `
-    SELECT rating, count(*) AS count
-    FROM stats
-    WHERE
-      action = ?
-  `;
-
-  const { successful: points, rate: kr } = await calculateStatRate({
-    sql: ratingSql,
-    args: ["atk"],
-  });
-  const { rate: pef } = await calculateStatRate({
-    sql: ratingSql,
-    args: ["set"],
-  });
+  const { successful: points, rate: kr } = await calculateStatRate(
+    `
+      SELECT rating, count(*) AS count
+      FROM stats
+      WHERE
+        action IN ('atk', 'blk', 'srv')
+    `,
+  );
+  const { rate: pef } = await calculateStatRate(
+    `
+      SELECT rating, count(*) AS count
+      FROM stats
+      WHERE
+        action IN ('set', 'frc', 'src')
+    `,
+  );
 
   return json({
     players: numPlayers,
