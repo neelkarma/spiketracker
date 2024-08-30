@@ -45,11 +45,11 @@ export const GET: RequestHandler = async ({ params }) => {
     matches.map(async (match) => {
       const { successful: points, rate: kr } = await calculateStatRate({
         sql: ratingSql,
-        args: [match.id, id, "atk"],
+        args: [id, match.id, "atk"],
       });
       const { rate: pef } = await calculateStatRate({
         sql: ratingSql,
-        args: [match.id, id, "set"],
+        args: [id, match.id, "set"],
       });
 
       return { match, kr, pef, points };
