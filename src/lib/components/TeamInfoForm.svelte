@@ -62,7 +62,7 @@
 
     <div class="field">
       <label class="label" for="playersInput">Players</label>
-      <PlayerPicker bind:value={players} inputId="playersInput" required />
+      <PlayerPicker bind:value={players} inputId="playersInput" />
     </div>
 
     <div class="field">
