@@ -80,44 +80,48 @@
 <!-- table with rows of statistics for each player -->
 <div class="section">
   <div class="container">
-    <h1 class="title">Statistics by Player</h1>
-    <div class="table-container">
-      <table class="table is-fullwidth">
-        <thead>
-          <tr>
-            <th class="no-print">Open</th>
-            <th>First Name</th>
-            <th>Surname</th>
-            <th>Points</th>
-            <th>Kill Rate</th>
-            <th>Passing Efficiency</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each data.players as { player, kr, pef, points }}
+    <div class="block">
+      <h1 class="title">Statistics by Player</h1>
+      <div class="table-container">
+        <table class="table is-fullwidth">
+          <thead>
             <tr>
-              <td class="no-print">
-                <a href="/app/players/{player.id}" class="button">
-                  <span class="icon">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                  </span>
-                </a>
-              </td>
-              <td>{player.firstName}</td>
-              <td>{player.surname}</td>
-              <td>{points}</td>
-              <td>{kr.toFixed(3)}</td>
-              <td>{pef.toFixed(3)}</td>
+              <th class="no-print">Open</th>
+              <th>First Name</th>
+              <th>Surname</th>
+              <th>Points</th>
+              <th>Kill Rate</th>
+              <th>Passing Efficiency</th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {#each data.players as { player, kr, pef, points }}
+              <tr>
+                <td class="no-print">
+                  <a href="/app/players/{player.id}" class="button">
+                    <span class="icon">
+                      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </span>
+                  </a>
+                </td>
+                <td>{player.firstName}</td>
+                <td>{player.surname}</td>
+                <td>{points}</td>
+                <td>{kr.toFixed(3)}</td>
+                <td>{pef.toFixed(3)}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- stat heatmap for the match -->
-    <h1 class="title page-break-before">Heatmap</h1>
-    <div class="box">
-      <StatHeatmap type="match" id={data.match.id} />
+    <div class="block page-break-before">
+      <h1 class="title">Heatmap</h1>
+      <div class="box">
+        <StatHeatmap type="match" id={data.match.id} />
+      </div>
     </div>
   </div>
 </div>

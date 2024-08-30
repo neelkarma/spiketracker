@@ -62,63 +62,68 @@
 <!-- table for match history with rows for each match including details and a link to the match details -->
 <div class="section">
   <div class="container">
-    <h1 class="title">Match History</h1>
-    {#if data.matches.length === 0}
-      <p>No matches found.</p>
-    {:else}
-      <div class="table-container">
-        <table class="table is-fullwidth">
-          <thead>
-            <tr>
-              <th class="no-print">Open</th>
-              <th>Date</th>
-              <th>Opponent</th>
-              <th>Team</th>
-              <th>Points Scored</th>
-              <th>Kill Rate</th>
-              <th>Passing Efficiency</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each data.matches as { match, points, kr, pef }}
+    <div class="block">
+      <h1 class="title">Match History</h1>
+      {#if data.matches.length === 0}
+        <p>No matches found.</p>
+      {:else}
+        <div class="table-container">
+          <table class="table is-fullwidth">
+            <thead>
               <tr>
-                <td class="no-print">
-                  <a class="button" href="/app/matches/{match.id}">
-                    <span class="icon">
-                      <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </span>
-                  </a>
-                </td>
-                <td
-                  >{new Date(match.time).toLocaleDateString("en-AU", {
-                    hour: "numeric",
-                    hour12: true,
-                    minute: "2-digit",
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                    weekday: "short",
-                  })}</td
-                >
-                <td>{match.oppTeamName}</td>
-                <td
-                  ><a href="/app/teams/{match.ourTeamId}">{match.ourTeamName}</a
-                  ></td
-                >
-                <td>{points}</td>
-                <td>{kr.toFixed(3)}</td>
-                <td>{pef.toFixed(3)}</td>
+                <th class="no-print">Open</th>
+                <th>Date</th>
+                <th>Opponent</th>
+                <th>Team</th>
+                <th>Points Scored</th>
+                <th>Kill Rate</th>
+                <th>Passing Efficiency</th>
               </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
-    {/if}
+            </thead>
+            <tbody>
+              {#each data.matches as { match, points, kr, pef }}
+                <tr>
+                  <td class="no-print">
+                    <a class="button" href="/app/matches/{match.id}">
+                      <span class="icon">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                      </span>
+                    </a>
+                  </td>
+                  <td
+                    >{new Date(match.time).toLocaleDateString("en-AU", {
+                      hour: "numeric",
+                      hour12: true,
+                      minute: "2-digit",
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                      weekday: "short",
+                    })}</td
+                  >
+                  <td>{match.oppTeamName}</td>
+                  <td
+                    ><a href="/app/teams/{match.ourTeamId}"
+                      >{match.ourTeamName}</a
+                    ></td
+                  >
+                  <td>{points}</td>
+                  <td>{kr.toFixed(3)}</td>
+                  <td>{pef.toFixed(3)}</td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {/if}
+    </div>
 
     <!-- heatmap for the player -->
-    <h1 class="title page-break-before">Heatmap</h1>
-    <div class="box">
-      <StatHeatmap type="player" id={data.player.id} />
+    <div class="block page-break-before">
+      <h1 class="title">Heatmap</h1>
+      <div class="box">
+        <StatHeatmap type="player" id={data.player.id} />
+      </div>
     </div>
   </div>
 </div>
