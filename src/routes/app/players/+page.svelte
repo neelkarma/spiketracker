@@ -136,9 +136,10 @@
                   <td>{firstName}</td>
                   <td>{surname}</td>
                   <td
-                    >{#each teams as { name: teamName, id: teamId }}<a
-                        href="/app/teams/{teamId}">{teamName}</a
-                      >
+                    >{#each teams as { name: teamName, id: teamId }}
+                      <a class="is-underlined" href="/app/teams/{teamId}">
+                        {teamName}
+                      </a>
                     {/each}</td
                   >
                   <td>{ppg.toFixed(3)}</td>
