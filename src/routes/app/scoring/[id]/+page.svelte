@@ -158,7 +158,7 @@
       <div class="level-right">
         <div class="level-item">
           <div class="buttons">
-            <a href="/app" class="button">Exit</a>
+            <a href="/app/matches" class="button">Exit</a>
             <button
               on:click={() => (confirmDialogOpen = true)}
               class="button is-primary">Submit</button
