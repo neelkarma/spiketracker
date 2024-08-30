@@ -4,6 +4,7 @@
   import type { EventHandler } from "svelte/elements";
   import DeleteConfirmModal from "./DeleteConfirmModal.svelte";
   import MultiTeamSelect from "./MultiTeamSelect.svelte";
+  import StudentIdInput from "./StudentIdInput.svelte";
 
   export let data: PlayerInfo;
   export let isLoading = false;
@@ -77,24 +78,12 @@
     <div class="field">
       <label for="idInput" class="label">Student ID</label>
       <div class="control">
-        <input
-          type="number"
+        <StudentIdInput
           class="input"
           id="idInput"
           name="id"
           value={data.id}
           required
-          on:input={(e) => {
-            // we do some custom logic for the student id input to give a better error message
-            // since the default error message isn't exactly user friendly
-            const el = e.currentTarget;
-            const value = parseInt(el.value);
-            if (isNaN(value) || value < 100000000 || value > 999999999) {
-              el.setCustomValidity("Please enter a 9-digit number.");
-            } else {
-              el.setCustomValidity("");
-            }
-          }}
         />
       </div>
     </div>
