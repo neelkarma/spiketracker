@@ -34,7 +34,7 @@ export const load = (async ({ fetch, parent }) => {
     const [matchesRes, playerRes, teamsRes] = await Promise.all([
       fetch("/api/matches"),
       fetch(`/api/player/${auth.id}`),
-      fetch(`/api/teams?player_id=${auth.id}`),
+      fetch(`/api/player/${auth.id}/teams`),
     ]);
 
     if (!playerRes.ok || !matchesRes.ok || !teamsRes.ok) {
