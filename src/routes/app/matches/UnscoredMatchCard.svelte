@@ -48,6 +48,7 @@
                   month: "short",
                   hour: "2-digit",
                   minute: "2-digit",
+                  year: "numeric",
                 })}
               </span>
             </span>
