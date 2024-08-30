@@ -95,7 +95,7 @@
       <div class="control">
         <input
           type="number"
-          min={0}
+          min={2000}
           class="input"
           id="gradYearInput"
           name="gradYear"

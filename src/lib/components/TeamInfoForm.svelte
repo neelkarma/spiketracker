@@ -71,6 +71,7 @@
         type="number"
         class="input"
         id="yearInput"
+        min={2000}
         value={data.year}
         name="year"
         required
