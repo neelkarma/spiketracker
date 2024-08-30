@@ -1,5 +1,6 @@
 import { redirect } from "@sveltejs/kit";
+import type { PageLoad } from "./$types";
 
-export const GET = () => {
+export const load: PageLoad = () => {
   redirect(301, "/app/help/overview");
 };
