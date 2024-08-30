@@ -9,7 +9,7 @@
 <section class="section">
   <div class="container">
     {#if data.currentlyScoring}
-      <div class="notification is-primary">
+      <div class="notification is-primary no-print">
         <div class="level">
           <div class="level-left">
             <div class="level-item has-text-weight-bold">
