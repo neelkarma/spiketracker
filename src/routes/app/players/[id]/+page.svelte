@@ -84,7 +84,11 @@
               {#each data.matches as { match, points, kr, pef }}
                 <tr>
                   <td class="no-print">
-                    <a class="button" href="/app/matches/{match.id}">
+                    <a
+                      class="button"
+                      href="/app/matches/{match.id}"
+                      title="Open"
+                    >
                       <span class="icon">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
                       </span>
@@ -103,8 +107,9 @@
                   >
                   <td>{match.oppTeamName}</td>
                   <td
-                    ><a href="/app/teams/{match.ourTeamId}"
-                      >{match.ourTeamName}</a
+                    ><a
+                      href="/app/teams/{match.ourTeamId}"
+                      class="is-underlined">{match.ourTeamName}</a
                     ></td
                   >
                   <td>{points}</td>

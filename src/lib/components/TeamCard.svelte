@@ -34,7 +34,12 @@
       </div>
     </div>
     <div class="level-right">
-      <Stat label="W/L" value="{data.wins}-{data.losses}" class="mr-4" />
+      <Stat
+        label="W/L"
+        value="{data.wins}-{data.losses}"
+        class="mr-4"
+        title="Win-Loss Ratio"
+      />
       <Stat label="Set Ratio" value={data.setRatio.toFixed(3)} class="mr-4" />
       <Stat label="Kill Rate" value={data.kr.toFixed(3)} class="mr-4" />
       <Stat

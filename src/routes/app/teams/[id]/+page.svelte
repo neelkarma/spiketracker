@@ -71,7 +71,7 @@
               {#each data.players as { id, firstName, surname, ppg, kr, pef, points }}
                 <tr>
                   <td class="no-print">
-                    <a href="/app/players/{id}" class="button">
+                    <a href="/app/players/{id}" class="button" title="Open">
                       <span class="icon">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
                       </span>

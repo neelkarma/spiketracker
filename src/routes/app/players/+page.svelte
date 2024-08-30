@@ -113,7 +113,7 @@
                 <th>First Name</th>
                 <th>Surname</th>
                 <th>Team(s)</th>
-                <th>PPG</th>
+                <th title="Points Per Game">PPG</th>
                 <th>Kill Rate</th>
                 <th>Passing Efficiency</th>
                 <th>Total Points</th>
@@ -127,7 +127,7 @@
               {#each filteredPlayers as { id, firstName, surname, teams, ppg, kr, pef, totalPoints, visible }}
                 <tr>
                   <td class="no-print">
-                    <a href="/app/players/{id}" class="button">
+                    <a href="/app/players/{id}" class="button" title="Open">
                       <span class="icon">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
                       </span>
@@ -163,7 +163,11 @@
                       </span>
                     </td>
                     <td class="no-print">
-                      <a href="/app/players/edit/{id}" class="button">
+                      <a
+                        href="/app/players/edit/{id}"
+                        class="button"
+                        title="Edit"
+                      >
                         <span class="icon">
                           <i class="fa-solid fa-pencil"></i>
                         </span>
