@@ -26,6 +26,7 @@ export const GET: RequestHandler = async ({ locals }) => {
       FROM stats
       WHERE
         action IN ('atk', 'blk', 'srv')
+      GROUP BY rating
     `,
   );
   const { rate: pef } = await calculateStatRate(
@@ -34,6 +35,7 @@ export const GET: RequestHandler = async ({ locals }) => {
       FROM stats
       WHERE
         action IN ('set', 'frc', 'src')
+      GROUP BY rating
     `,
   );
 
