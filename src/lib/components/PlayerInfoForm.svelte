@@ -79,13 +79,22 @@
       <div class="control">
         <input
           type="number"
-          min={400000000}
-          max={999999999}
           class="input"
           id="idInput"
           name="id"
           value={data.id}
           required
+          on:input={(e) => {
+            // we do some custom logic for the student id input to give a better error message
+            // since the default error message isn't exactly user friendly
+            const el = e.currentTarget;
+            const value = parseInt(el.value);
+            if (isNaN(value) || value < 100000000 || value > 999999999) {
+              el.setCustomValidity("Please enter a 9-digit number.");
+            } else {
+              el.setCustomValidity("");
+            }
+          }}
         />
       </div>
     </div>
