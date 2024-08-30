@@ -113,11 +113,21 @@
       cancel();
     }
   });
+
+  // this resets the submit status whenever the confirmation dialog is closed
+  $: if (!confirmDialogOpen) {
+    submitStatus = "idle";
+  }
 </script>
 
 <!-- This is class of the confirmation popup -->
 <Modal bind:isOpen={confirmDialogOpen}>
   <div class="box">
+    {#if submitStatus === "error"}
+      <div class="notification is-danger">
+        Submission failed. Did the coach revoke scoring access?
+      </div>
+    {/if}
     <p class="title is-4 mb-3">Confirm Submission</p>
     <p class="mb-3">
       Are you sure you want to submit the provided scoring data?
