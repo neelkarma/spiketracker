@@ -24,6 +24,15 @@ html {
   page-break-after: always;
 }
 
+.avoid-print-split,
+.box {
+  page-break-inside: avoid;
+}
+
+.print-only {
+  display: none !important;
+}
+
 @media print {
   .no-print,
   .no-print *,
@@ -38,5 +47,14 @@ html {
   .has-text-white {
     background-color: white !important;
     color: black !important;
+  }
+
+  a,
+  .is-underlined {
+    text-decoration: none !important;
+  }
+
+  .print-only {
+    display: inline !important;
   }
 }
