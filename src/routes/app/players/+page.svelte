@@ -187,3 +187,13 @@
     {/if}
   </div>
 </section>
+
+<style>
+  /* reduce size of table cells in print layout to fit all content */
+  @media print {
+    td,
+    th {
+      font-size: 0.9rem;
+    }
+  }
+</style>
