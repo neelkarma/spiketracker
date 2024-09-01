@@ -77,7 +77,7 @@
       </div>
       <div class="level-item">
         <div>
-          <span class="tag is-medium mb-1" style="width: 100%;">
+          <span class="tag is-medium mb-1" style="width: 100%;" title="Time">
             <span class="icon-text">
               <span class="icon">
                 <i class="fa-solid fa-clock"></i>
@@ -88,12 +88,13 @@
                   month: "short",
                   hour: "2-digit",
                   minute: "2-digit",
+                  year: "numeric",
                 })}
               </span>
             </span>
           </span>
           <br />
-          <span class="tag is-medium" style="width: 100%;">
+          <span class="tag is-medium" style="width: 100%;" title="Location">
             <span class="icon-text">
               <span class="icon">
                 <i class="fa-solid fa-location-dot"></i>

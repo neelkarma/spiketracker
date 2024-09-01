@@ -31,25 +31,31 @@ export const GET: RequestHandler = async ({ params }) => {
   });
   const matches = res.rows;
 
-  const ratingSql = `
-    SELECT rating, count(*) AS count
-    FROM stats
-    WHERE
-      playerId = ?
-      AND matchId = ?
-      AND action = ?
-    GROUP BY rating
-  `;
-
   const processedMatches = await Promise.all(
     matches.map(async (match) => {
       const { successful: points, rate: kr } = await calculateStatRate({
-        sql: ratingSql,
-        args: [match.id, id, "atk"],
+        sql: `
+          SELECT rating, count(*) AS count
+          FROM stats
+          WHERE
+            playerId = ?
+            AND matchId = ?
+            AND action IN ('atk', 'blk', 'srv')
+          GROUP BY rating
+        `,
+        args: [id, match.id],
       });
       const { rate: pef } = await calculateStatRate({
-        sql: ratingSql,
-        args: [match.id, id, "set"],
+        sql: `
+          SELECT rating, count(*) AS count
+          FROM stats
+          WHERE
+            playerId = ?
+            AND matchId = ?
+            AND action IN ('set', 'frc', 'src')
+          GROUP BY rating
+        `,
+        args: [id, match.id],
       });
 
       return { match, kr, pef, points };

@@ -53,21 +53,29 @@ export async function processTeamRow(row: any) {
   const setRatio = setLosses > 0 ? setWins / setLosses : 0;
 
   // calculate kr and pef
-  const ratingSql = `
-    SELECT stats.rating, count(*) AS count
-    FROM stats
-    INNER JOIN matches ON matches.id = stats.matchId
-    WHERE stats.action = ? AND matches.teamId = ?
-    GROUP BY stats.rating;
-  `;
-
   const { rate: kr } = await calculateStatRate({
-    sql: ratingSql,
-    args: ["atk", id],
+    sql: `
+      SELECT stats.rating, count(*) AS count
+      FROM stats
+      INNER JOIN matches ON matches.id = stats.matchId
+      WHERE
+        stats.action IN ('atk', 'blk', 'srv')
+        AND matches.teamId = ?
+      GROUP BY stats.rating;
+    `,
+    args: [id],
   });
   const { rate: pef } = await calculateStatRate({
-    sql: ratingSql,
-    args: ["set", id],
+    sql: `
+      SELECT stats.rating, count(*) AS count
+      FROM stats
+      INNER JOIN matches ON matches.id = stats.matchId
+      WHERE
+        stats.action IN ('set', 'frc', 'src')
+        AND matches.teamId = ?
+      GROUP BY stats.rating;
+    `,
+    args: [id],
   });
 
   return {

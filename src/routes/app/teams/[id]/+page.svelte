@@ -6,6 +6,7 @@
   export let data: PageData;
 </script>
 
+<!-- header (hero) section for team name + general stats -->
 <div class="hero is-primary has-background-primary-dark">
   <div class="hero-body">
     <div class="container">
@@ -44,51 +45,64 @@
     </div>
   </div>
 </div>
+
+<!-- player list - table with rows for each player listing their details and stats -->
 <div class="section">
   <div class="container">
-    <h1 class="title">Player List</h1>
-    <div class="table-container">
-      <table class="table is-fullwidth">
-        <thead>
-          <tr>
-            <th class="no-print">Open</th>
-            <th>First Name</th>
-            <th>Surname</th>
-            <th>PPG</th>
-            <th>Avg Kill Rate</th>
-            <th>Avg Passing Efficiency</th>
-            <th>Total Points</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each data.players as { id, firstName, surname, ppg, kr, pef, points }}
-            <tr>
-              <td class="no-print">
-                <a href="/app/players/{id}" class="button">
-                  <span class="icon">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                  </span>
-                </a>
-              </td>
-              <td>{firstName}</td>
-              <td>{surname}</td>
-              <td>{ppg.toFixed(3)}</td>
-              <td>{kr.toFixed(3)}</td>
-              <td>{pef.toFixed(3)}</td>
-              <td>{points}</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
+    <div class="block">
+      <h1 class="title">Player List</h1>
+      {#if data.players.length === 0}
+        This team has no players.
+      {:else}
+        <div class="table-container">
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th class="no-print">Open</th>
+                <th>First Name</th>
+                <th>Surname</th>
+                <th>PPG</th>
+                <th>Avg Kill Rate</th>
+                <th>Avg Passing Efficiency</th>
+                <th>Total Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each data.players as { id, firstName, surname, ppg, kr, pef, points }}
+                <tr>
+                  <td class="no-print">
+                    <a href="/app/players/{id}" class="button" title="Open">
+                      <span class="icon">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                      </span>
+                    </a>
+                  </td>
+                  <td>{firstName}</td>
+                  <td>{surname}</td>
+                  <td>{ppg.toFixed(3)}</td>
+                  <td>{kr.toFixed(3)}</td>
+                  <td>{pef.toFixed(3)}</td>
+                  <td>{points}</td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {/if}
     </div>
-    <h1 class="title page-break-before">Heatmap</h1>
-    <div class="box">
-      <StatHeatmap type="team" id={data.team.id} />
+
+    <!-- stat heatmap -->
+    <div class="block page-break-before">
+      <h1 class="title">Heatmap</h1>
+      <div class="box">
+        <StatHeatmap type="team" id={data.team.id} />
+      </div>
     </div>
   </div>
 </div>
 
 <style>
+  /* this is for printing the stats below the team name */
   @media print {
     .vertical-print {
       flex-direction: column;

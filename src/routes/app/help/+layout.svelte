@@ -16,6 +16,7 @@
             <li><a href="/app/help/teams">Teams</a></li>
             <li><a href="/app/help/matches">Matches</a></li>
             <li><a href="/app/help/printing">Printing</a></li>
+            <li><a href="/app/help/support">Support</a></li>
           </ul>
         </aside>
       </div>

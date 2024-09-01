@@ -4,6 +4,7 @@
   import type { EventHandler } from "svelte/elements";
   import DeleteConfirmModal from "./DeleteConfirmModal.svelte";
   import MultiTeamSelect from "./MultiTeamSelect.svelte";
+  import StudentIdInput from "./StudentIdInput.svelte";
 
   export let data: PlayerInfo;
   export let isLoading = false;
@@ -77,10 +78,7 @@
     <div class="field">
       <label for="idInput" class="label">Student ID</label>
       <div class="control">
-        <input
-          type="number"
-          min={400000000}
-          max={999999999}
+        <StudentIdInput
           class="input"
           id="idInput"
           name="id"
@@ -95,7 +93,7 @@
       <div class="control">
         <input
           type="number"
-          min={0}
+          min={2000}
           class="input"
           id="gradYearInput"
           name="gradYear"

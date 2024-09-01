@@ -33,19 +33,27 @@ export async function processPlayerRow(row: any) {
   const matchIds = matchIdsRes.rows.map((row) => row.id);
 
   // get stat rates
-  const ratingSql = `
-    SELECT rating, count(*) AS count
-    FROM stats
-    WHERE action = ? AND playerId = ?
-    GROUP BY rating;
-  `;
   const { successful: totalPoints, rate: kr } = await calculateStatRate({
-    sql: ratingSql,
-    args: ["atk", id],
+    sql: `
+      SELECT rating, count(*) AS count
+      FROM stats
+      WHERE
+        action IN ('atk', 'blk', 'srv')
+        AND playerId = ?
+      GROUP BY rating;
+    `,
+    args: [id],
   });
   const { rate: pef } = await calculateStatRate({
-    sql: ratingSql,
-    args: ["set", id],
+    sql: `
+      SELECT rating, count(*) AS count
+      FROM stats
+      WHERE
+        action IN ('set', 'frc', 'src')
+        AND playerId = ?
+      GROUP BY rating;
+    `,
+    args: [id],
   });
 
   // calculate ppg

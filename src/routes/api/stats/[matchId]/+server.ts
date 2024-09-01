@@ -28,8 +28,12 @@ export const PUT: RequestHandler = async ({ params, locals, request }) => {
   const data = await request.json();
 
   try {
-    db.batch(
-      data.map((stat: any) => ({
+    db.batch([
+      {
+        sql: "DELETE FROM stats WHERE matchId = ?",
+        args: [matchId],
+      },
+      ...data.map((stat: any) => ({
         sql: `
         INSERT INTO stats (playerId, matchId, action, rating, fromX, fromY, toX, toY)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -45,7 +49,7 @@ export const PUT: RequestHandler = async ({ params, locals, request }) => {
           stat.to[1],
         ],
       })),
-    );
+    ]);
 
     return new Response("Success");
   } catch (e) {

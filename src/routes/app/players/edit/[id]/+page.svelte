@@ -6,7 +6,7 @@
 
   export let data: PageData;
 
-  let status: "success" | "loading" | "error" | null = null;
+  let status: "loading" | "error" | null = null;
 
   /** This handles the submit event of the PlayerInfoForm component */
   const handleSubmit = async (e: CustomEvent<PlayerInfo>) => {
@@ -26,7 +26,7 @@
     window.scrollTo({ top: 0 });
 
     if (res.ok) {
-      status = "success";
+      goto("/app/players?success=1");
     } else {
       status = "error";
       console.log(await res.text());
@@ -54,9 +54,7 @@
 
 <section class="section">
   <div class="container">
-    {#if status === "success"}
-      <div class="notification is-success">Successfully updated.</div>
-    {:else if status === "error"}
+    {#if status === "error"}
       <div class="notification is-danger">
         Sorry, something went wrong. Is the student's ID correct?
       </div>

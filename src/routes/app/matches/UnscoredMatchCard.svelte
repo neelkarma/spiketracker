@@ -37,7 +37,7 @@
             {/if}
             {data.ourTeamName} vs. {data.oppTeamName}
           </p>
-          <span class="tag is-medium">
+          <span class="tag is-medium" title="Time">
             <span class="icon-text">
               <span class="icon">
                 <i class="fa-solid fa-clock"></i>
@@ -48,11 +48,12 @@
                   month: "short",
                   hour: "2-digit",
                   minute: "2-digit",
+                  year: "numeric",
                 })}
               </span>
             </span>
           </span>
-          <span class="tag is-medium">
+          <span class="tag is-medium" title="Location">
             <span class="icon-text">
               <span class="icon">
                 <i class="fa-solid fa-location-dot"></i>

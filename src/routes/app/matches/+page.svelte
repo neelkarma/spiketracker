@@ -6,6 +6,7 @@
   import type { PageData } from "./$types";
   import ScoredMatchCard from "./ScoredMatchCard.svelte";
   import UnscoredMatchCard from "./UnscoredMatchCard.svelte";
+  import ActionFeedbackNotification from "$lib/components/ActionFeedbackNotification.svelte";
 
   export let data: PageData;
 
@@ -90,6 +91,7 @@
 
 <section class="section">
   <div class="container">
+    <ActionFeedbackNotification />
     <h1 class="title">Matches</h1>
     <div class="field is-grouped is-grouped-multiline">
       {#if data.admin}

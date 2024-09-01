@@ -20,24 +20,29 @@ export const GET: RequestHandler = async ({ params }) => {
     args: [id],
   });
 
-  const ratingSql = `
-    SELECT rating, count(*) AS count FROM stats
-    WHERE
-      matchId = ?
-      AND playerId = ?
-      AND action = ?
-    GROUP BY rating
-  `;
-
   const processedPlayers = await Promise.all(
     res.rows.map(async (player) => {
       const { successful: points, rate: kr } = await calculateStatRate({
-        sql: ratingSql,
-        args: [id, player.id, "atk"],
+        sql: `
+          SELECT rating, count(*) AS count FROM stats
+          WHERE
+            matchId = ?
+            AND playerId = ?
+            AND action IN ('atk', 'blk', 'srv')
+          GROUP BY rating
+        `,
+        args: [id, player.id],
       });
       const { rate: pef } = await calculateStatRate({
-        sql: ratingSql,
-        args: [id, player.id, "set"],
+        sql: `
+          SELECT rating, count(*) AS count FROM stats
+          WHERE
+            matchId = ?
+            AND playerId = ?
+            AND action IN ('set', 'frc', 'src')
+          GROUP BY rating
+        `,
+        args: [id, player.id],
       });
       return { player, kr, pef, points };
     }),

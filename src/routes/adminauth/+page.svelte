@@ -2,9 +2,12 @@
   import type { FormEventHandler } from "svelte/elements";
 
   let error: string | null = null;
+  let isLoading = false;
 
   /** this handles the submit event of the login form. */
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    isLoading = true;
+
     const password = new FormData(e.currentTarget).get("password")!;
     const res = await fetch("/api/auth/login/admin", {
       method: "POST",
@@ -13,6 +16,7 @@
         "Content-Type": "application/json",
       },
     });
+
     if (res.ok) {
       // the login was successful - redirect to the home page
       window.location.href = "/";
@@ -21,6 +25,8 @@
       const data = await res.json();
       error = data.message;
     }
+
+    isLoading = false;
   };
 </script>
 
@@ -44,7 +50,9 @@
       </div>
     </div>
     <div class="buttons">
-      <button class="button is-primary">Login</button>
+      <button class="button is-primary" class:is-loading={isLoading}
+        >Login</button
+      >
       <a href="/" class="button">Back</a>
     </div>
   </form>

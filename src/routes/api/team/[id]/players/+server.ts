@@ -21,23 +21,29 @@ export const GET: RequestHandler = async ({ params }) => {
 
   const processedPlayers: any[] = await Promise.all(
     res.rows.map(async (player) => {
-      const ratingSql = `
-        SELECT rating, count(*) AS count FROM stats
-        INNER JOIN matches ON matches.id = stats.matchId
-        WHERE
-          matches.teamId = ?
-          AND stats.playerId = ?
-          AND stats.action = ?
-        GROUP BY rating
-      `;
-
       const { successful: points, rate: kr } = await calculateStatRate({
-        sql: ratingSql,
-        args: [id, player.id, "atk"],
+        sql: `
+          SELECT rating, count(*) AS count FROM stats
+          INNER JOIN matches ON matches.id = stats.matchId
+          WHERE
+            matches.teamId = ?
+            AND stats.playerId = ?
+            AND stats.action IN ('atk', 'blk', 'srv')
+          GROUP BY rating
+        `,
+        args: [id, player.id],
       });
       const { rate: pef } = await calculateStatRate({
-        sql: ratingSql,
-        args: [id, player.id, "set"],
+        sql: `
+          SELECT rating, count(*) AS count FROM stats
+          INNER JOIN matches ON matches.id = stats.matchId
+          WHERE
+            matches.teamId = ?
+            AND stats.playerId = ?
+            AND stats.action IN ('set', 'frc', 'src')
+          GROUP BY rating
+        `,
+        args: [id, player.id],
       });
 
       const matchCountRes = await db.execute({

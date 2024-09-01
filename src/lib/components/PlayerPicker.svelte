@@ -10,7 +10,7 @@
   export let required = false;
 
   let isLoading = false;
-  let filteredPlayers: PlayerInfo[] = [];
+  let filteredPlayers: PlayerInfo[] | null = null;
   let inputEl: HTMLInputElement;
   let searchQuery = "";
 
@@ -25,7 +25,7 @@
     // edge case where the search query is empty - we simply don't display any players
     if (searchQuery.length === 0) {
       isLoading = false;
-      filteredPlayers = [];
+      filteredPlayers = null;
       return;
     }
 
@@ -76,6 +76,7 @@
       <input
         class="input"
         type="text"
+        autocomplete="off"
         placeholder="Search players..."
         id={inputId}
         bind:value={searchQuery}
@@ -92,19 +93,23 @@
   </div>
   {#if isLoading}
     <p class="panel-block">Loading...</p>
-  {:else}
-    {#each filteredPlayers.filter((player) => !value.some((other) => player.id === other.id)) as player}
-      <button
-        class="panel-block button is-fullwidth"
-        type="button"
-        on:click={() => {
-          if (value.some(({ id }) => id === player.id)) {
-            alert("Student already selected.");
-            return;
-          }
-          value = [...value, player];
-        }}>{player.firstName} {player.surname} ({player.id})</button
-      >
-    {/each}
+  {:else if filteredPlayers}
+    {#if filteredPlayers.length === 0}
+      <div class="panel-block">No players found.</div>
+    {:else}
+      {#each filteredPlayers.filter((player) => !value.some((other) => player.id === other.id)) as player}
+        <button
+          class="panel-block button is-fullwidth"
+          type="button"
+          on:click={() => {
+            if (value.some(({ id }) => id === player.id)) {
+              alert("Student already selected.");
+              return;
+            }
+            value = [...value, player];
+          }}>{player.firstName} {player.surname} ({player.id})</button
+        >
+      {/each}
+    {/if}
   {/if}
 </div>

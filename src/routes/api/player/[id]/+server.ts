@@ -45,14 +45,27 @@ export const PUT: RequestHandler = async ({ params, locals, request }) => {
   const body = await request.json();
 
   try {
-    await db.execute({
-      sql: `
-        UPDATE players
-        SET firstName = ?, surname = ?, gradYear = ?, visible = ?
-        WHERE id = ?
-      `,
-      args: [body.firstName, body.surname, body.gradYear, body.visible, id],
-    });
+    await db.batch([
+      {
+        sql: `
+          UPDATE players
+          SET firstName = ?, surname = ?, gradYear = ?, visible = ?
+          WHERE id = ?
+        `,
+        args: [body.firstName, body.surname, body.gradYear, body.visible, id],
+      },
+      {
+        sql: "DELETE FROM teamPlayers WHERE playerId = ?",
+        args: [id],
+      },
+      ...body.teams.map(({ id: teamId }: { id: number }) => ({
+        sql: `
+          INSERT INTO teamPlayers (teamId, playerId)
+          VALUES (?, ?)
+        `,
+        args: [teamId, id],
+      })),
+    ]);
     return new Response("Success");
   } catch (e) {
     console.warn(e);
