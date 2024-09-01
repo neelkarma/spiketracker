@@ -1,7 +1,7 @@
 <script lang="ts">
-  // Importing necessary modules
   import { browser } from "$app/environment";
   // Checks if the code is running in a browser environment
+
   import { density, dot, plot, ruleX, ruleY } from "@observablehq/plot";
   // Importing functions from Observable Plot for creating plots
 
@@ -64,16 +64,16 @@
       {
         rating: stat.rating,
         action: stat.action,
-        x: stat.from[0], // X-coordinate for the start of the action
-        y: stat.from[1], // Y-coordinate for the start of the action
-        isContactPoint: true, // Mark as start
+        x: stat.from[0],
+        y: stat.from[1],
+        isContactPoint: true, // 'from' marks this stat as start
       },
       {
         rating: stat.rating,
         action: stat.action,
-        x: stat.to[0], // X-coordinate for the end of the action
-        y: stat.to[1], // Y-coordinate for the end of the action
-        isContactPoint: false, // Mark as end
+        x: stat.to[0],
+        y: stat.to[1],
+        isContactPoint: false, // 'to' marks this stat as start
       },
     ]);
   };
