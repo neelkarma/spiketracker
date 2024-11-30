@@ -13,7 +13,6 @@
   // import the predfined structure of stats
 
   export let data;
-
   let playerScoring: { name: string; id: number } | null = null;
   let scoringData: {
     name: string;
@@ -38,7 +37,7 @@
     }) => ({
       label: `${firstName} ${surname}`,
       value: id,
-    }),
+    })
   );
 
   /** this is called whenever a player is selected from the list */
@@ -70,7 +69,7 @@
 
     /** this might look weird, but it's necessary for svelte to see that scoringData has changed
     svelte only tracks assignments, not mutations
-    it sucks, but apparently it's fixed in v5 **/
+    apparently it's fixed in v5 **/
     scoringData = scoringData;
 
     // reset playerScoring to dismiss the modal
@@ -107,7 +106,7 @@
       cancel();
     } else if (
       !confirm(
-        "Warning: Your scoring data is unsaved, and will be lost if you leave now. Press 'Ok' if you still want to leave.",
+        "Warning: Your scoring data is unsaved, and will be lost if you leave now. Press 'Ok' if you still want to leave."
       )
     ) {
       cancel();
